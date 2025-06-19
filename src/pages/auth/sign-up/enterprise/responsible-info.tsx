@@ -50,7 +50,7 @@ export const ResponsibleInfo = () => {
           <Button
             type="button"
             variant="ghost"
-            className={cn('text-blue-source vis')}
+            className={cn('text-blue-source')}
             onClick={previousStep}
           >
             <CornerUpLeft /> Voltar

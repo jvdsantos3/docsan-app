@@ -8,39 +8,37 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { cn } from '@/lib/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
 import { CornerUpLeft } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { enterpriseSignUpSchema } from './schema'
-import type { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useEnterpriseSignUpMultiStepForm } from './useEnterpriseSignUpMultiStepForm'
+import { professionalSignUpFormSchema } from './schema'
+import { z } from 'zod'
+import { useProfessionalSignUpMultiStepForm } from './useProfessionalSignUpMultiStepForm'
 
-const businessAddressInfoSchema = enterpriseSignUpSchema.pick({
-  address: true,
+const professionalInfoSchema = professionalSignUpFormSchema.pick({
+  fieldOfActivity: true,
+  proRegistration: true,
+  proRegistrationState: true,
+  cnae: true,
 })
 
-type BusinessAddressInfoSchema = z.infer<typeof businessAddressInfoSchema>
+type ProfessionalInfoSchema = z.infer<typeof professionalInfoSchema>
 
-export const BusinessAddressInfo = () => {
-  const { data, nextStep, previousStep, setData } = useEnterpriseSignUpMultiStepForm()
-  const form = useForm<BusinessAddressInfoSchema>({
-    resolver: zodResolver(businessAddressInfoSchema),
+export const ProfessionalInfo = () => {
+  const { data, setData, nextStep, previousStep } =
+    useProfessionalSignUpMultiStepForm()
+  const form = useForm<ProfessionalInfoSchema>({
+    resolver: zodResolver(professionalInfoSchema),
     defaultValues: {
-      address: {
-        zipCode: data?.address?.zipCode || '',
-        state: data?.address?.state || '',
-        city: data?.address?.city || '',
-        street: data?.address?.street || '',
-        number: data?.address?.number || '',
-        neighborhood: data?.address?.neighborhood || '',
-        complement: data?.address?.complement || '',
-      },
+      fieldOfActivity: data?.fieldOfActivity || '',
+      proRegistration: data?.proRegistration || '',
+      proRegistrationState: data?.proRegistrationState || '',
+      cnae: data?.cnae || '',
     },
   })
 
-  function onSubmit(data: BusinessAddressInfoSchema) {
+  function onSubmit(data: ProfessionalInfoSchema) {
     setData(data)
     nextStep()
   }
@@ -52,51 +50,20 @@ export const BusinessAddressInfo = () => {
           <Button
             type="button"
             variant="ghost"
-            className={cn('text-blue-source')}
+            className="text-blue-source"
             onClick={previousStep}
           >
             <CornerUpLeft /> Voltar
           </Button>
+
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="address.zipCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-lato text-gray-300">
-                      Cep
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="address.state"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-lato text-gray-300">
-                      UF
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             <FormField
               control={form.control}
-              name="address.city"
+              name="fieldOfActivity"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Cidade
+                    Ramo de atuação
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -107,24 +74,11 @@ export const BusinessAddressInfo = () => {
             />
             <FormField
               control={form.control}
-              name="address.street"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">Rua</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="address.number"
+              name="proRegistration"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Número
+                    Registro profissional
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -135,11 +89,11 @@ export const BusinessAddressInfo = () => {
             />
             <FormField
               control={form.control}
-              name="address.neighborhood"
+              name="proRegistrationState"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Bairro
+                    UF do registro
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -150,11 +104,11 @@ export const BusinessAddressInfo = () => {
             />
             <FormField
               control={form.control}
-              name="address.complement"
+              name="cnae"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Complemento <em>(opcional)</em>
+                    CNAE
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />

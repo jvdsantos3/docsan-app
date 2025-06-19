@@ -8,39 +8,41 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { cn } from '@/lib/utils'
+import { PasswordInput } from '@/components/ui/password-input'
 import { CornerUpLeft } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { enterpriseSignUpSchema } from './schema'
-import type { z } from 'zod'
+import { professionalSignUpFormSchema } from './schema'
+import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEnterpriseSignUpMultiStepForm } from './useEnterpriseSignUpMultiStepForm'
+import { useProfessionalSignUpMultiStepForm } from './useProfessionalSignUpMultiStepForm'
 
-const businessAddressInfoSchema = enterpriseSignUpSchema.pick({
-  address: true,
+const personalInfoSchema = professionalSignUpFormSchema.pick({
+  fullName: true,
+  cpf: true,
+  birthDate: true,
+  email: true,
+  password: true,
+  phone: true,
 })
 
-type BusinessAddressInfoSchema = z.infer<typeof businessAddressInfoSchema>
+type PersonalInfoSchema = z.infer<typeof personalInfoSchema>
 
-export const BusinessAddressInfo = () => {
-  const { data, nextStep, previousStep, setData } = useEnterpriseSignUpMultiStepForm()
-  const form = useForm<BusinessAddressInfoSchema>({
-    resolver: zodResolver(businessAddressInfoSchema),
+export const PersonalInfo = () => {
+  const { data, setData, nextStep } = useProfessionalSignUpMultiStepForm()
+  const form = useForm<PersonalInfoSchema>({
+    resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      address: {
-        zipCode: data?.address?.zipCode || '',
-        state: data?.address?.state || '',
-        city: data?.address?.city || '',
-        street: data?.address?.street || '',
-        number: data?.address?.number || '',
-        neighborhood: data?.address?.neighborhood || '',
-        complement: data?.address?.complement || '',
-      },
+      fullName: data?.fullName || '',
+      cpf: data?.cpf || '',
+      birthDate: data?.birthDate || '',
+      email: data?.email || '',
+      password: data?.password || '',
+      phone: data?.phone || '',
     },
   })
 
-  function onSubmit(data: BusinessAddressInfoSchema) {
+  function onSubmit(data: PersonalInfoSchema) {
     setData(data)
     nextStep()
   }
@@ -52,51 +54,19 @@ export const BusinessAddressInfo = () => {
           <Button
             type="button"
             variant="ghost"
-            className={cn('text-blue-source')}
-            onClick={previousStep}
+            className="text-blue-source invisible"
           >
             <CornerUpLeft /> Voltar
           </Button>
+
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="address.zipCode"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-lato text-gray-300">
-                      Cep
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="address.state"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-lato text-gray-300">
-                      UF
-                    </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
             <FormField
               control={form.control}
-              name="address.city"
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Cidade
+                    Nome completo
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -107,10 +77,10 @@ export const BusinessAddressInfo = () => {
             />
             <FormField
               control={form.control}
-              name="address.street"
+              name="cpf"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-lato text-gray-300">Rua</FormLabel>
+                  <FormLabel className="font-lato text-gray-300">CPF</FormLabel>
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
@@ -120,11 +90,11 @@ export const BusinessAddressInfo = () => {
             />
             <FormField
               control={form.control}
-              name="address.number"
+              name="birthDate"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Número
+                    Data de nascimento
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -135,11 +105,11 @@ export const BusinessAddressInfo = () => {
             />
             <FormField
               control={form.control}
-              name="address.neighborhood"
+              name="email"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Bairro
+                    E-mail
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -150,11 +120,26 @@ export const BusinessAddressInfo = () => {
             />
             <FormField
               control={form.control}
-              name="address.complement"
+              name="password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Complemento <em>(opcional)</em>
+                    Senha
+                  </FormLabel>
+                  <FormControl>
+                    <PasswordInput {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-lato text-gray-300">
+                    Telefone
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
