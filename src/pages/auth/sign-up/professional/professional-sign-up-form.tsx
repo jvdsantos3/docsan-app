@@ -66,7 +66,36 @@ const professionalSignUpFormSchema = z.object({
   }),
 });
 
-type ProfessionalSignUpFormSchema = z.infer<typeof professionalSignUpFormSchema>;
+const stepFields: Record<string, string[]> = {
+  "personal-data": [
+    "fullName",
+    "cpf",
+    "birthDate",
+    "email",
+    "password",
+    "phone",
+  ],
+  "professional-data": [
+    "fieldOfActivity",
+    "proRegistration",
+    "proRegistrationState",
+    "cnae",
+  ],
+  "address-data": [
+    "address.zipCode",
+    "address.state",
+    "address.city",
+    "address.street",
+    "address.number",
+    "address.neighborhood",
+    "address.complement",
+    "terms",
+  ],
+};
+
+type ProfessionalSignUpFormSchema = z.infer<
+  typeof professionalSignUpFormSchema
+>;
 
 type ProfessionalSignUpFormProps = {
   steps: Step[];
@@ -90,8 +119,18 @@ export const ProfessionalSignUpForm = ({
     defaultValues: DEFAULT_VALUES,
   });
 
+  async function handleNextStep() {
+    const fieldsToValidate = stepFields[step.id];
+    const isValid = await form.trigger(
+      fieldsToValidate as Array<keyof ProfessionalSignUpFormSchema>
+    );
+    if (isValid) {
+      nextStep();
+    }
+  }
+
   function onSubmit(data: ProfessionalSignUpFormSchema) {
-    if (!isLastStep) nextStep();
+    // if (!isLastStep) nextStep();
     console.log("Form data submitted:", data);
   }
 
@@ -417,9 +456,10 @@ export const ProfessionalSignUpForm = ({
               </Link>
             </p>
             <Button
-              type="submit"
+              type={isLastStep ? "submit" : "button"}
               className="font-bold text-base rounded-xl"
               size="lg"
+              onClick={isLastStep ? undefined : handleNextStep}
             >
               {isLastStep ? "Cadastrar" : "Continuar"}
             </Button>
