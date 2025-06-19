@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import { AuthLayout } from "./pages/_layouts/auth";
 import { SignIn } from "./pages/auth/sign-in";
+import { ProfessionalSignUp } from "./pages/auth/sign-up/professional";
+import { EnterpriseSignUp } from "./pages/auth/sign-up/enterprise";
 
 export const router = createBrowserRouter([
   {
@@ -16,11 +18,11 @@ export const router = createBrowserRouter([
         children: [
           {
             path: "professional",
-            element: <div>Professional Sign Up</div>,
+            element: <ProfessionalSignUp />,
           },
           {
             path: "enterprise",
-            element: <div>Enterprise Sign Up</div>,
+            element: <EnterpriseSignUp />,
           }
         ]
       }

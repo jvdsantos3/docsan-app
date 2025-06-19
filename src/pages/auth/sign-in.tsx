@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -21,24 +22,25 @@ import { Google } from "@ridemountainpig/svgl-react";
 import { PasswordInput } from "@/components/ui/password-input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
 
-const SignInFormSchema = z.object({
+const signInFormSchema = z.object({
   email: z.string().email("E-mail inválido"),
   password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
 });
 
+type SignInFormSchema = z.infer<typeof signInFormSchema>;
+
 export const SignIn = () => {
   const [open, setOpen] = useState(false);
-  const form = useForm<z.infer<typeof SignInFormSchema>>({
-    resolver: zodResolver(SignInFormSchema),
+  const form = useForm<SignInFormSchema>({
+    resolver: zodResolver(signInFormSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  function signIn(data: z.infer<typeof SignInFormSchema>) {
+  function signIn(data: SignInFormSchema) {
     console.log(data);
     // Here you would typically handle the sign-in logic, such as calling an API
     // For example:
@@ -110,7 +112,7 @@ export const SignIn = () => {
           <div className="space-y-4">
             <p className="font-lato text-sm text-gray-600">Ou acesse usando</p>
             <Button
-              className="w-full text-gray-700 font-lato font-bold"
+              className="w-full text-gray-700 font-bold"
               variant="outline"
             >
               <Google />
