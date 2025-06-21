@@ -1,9 +1,22 @@
+import { isValidCPF } from '@/lib/utils'
 import { z } from 'zod'
 
 export const professionalSignUpFormSchema = z.object({
-  fullName: z.string().min(2, 'Nome completo é obrigatório'),
-  cpf: z.string().min(1, 'CPF é obrigatório'),
-  birthDate: z.string().min(1, 'Data de nascimento é obrigatória'),
+  fullName: z
+    .string()
+    .min(1, 'Nome completo é obrigatório.')
+    .regex(
+      /^[a-zA-Z'’]+(?: [a-zA-Z'’]+)+$/,
+      'Por favor, insira seu nome completo.',
+    ),
+  cpf: z
+    .string()
+    .min(11, 'O CPF deve ter pelo menos 11 caracteres (sem pontos e hífen)')
+    .max(14, 'O CPF deve ter no máximo 14 caracteres (com pontos e hífen)')
+    .refine((cpf) => isValidCPF(cpf), {
+      message: 'CPF inválido.',
+    }),
+  birthDate: z.date({ required_error: 'Data de nascimento é obrigatória' }),
   email: z.string().email('E-mail inválido'),
   password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
   phone: z.string().min(1, 'Telefone é obrigatório'),
@@ -25,4 +38,6 @@ export const professionalSignUpFormSchema = z.object({
   }),
 })
 
-export type ProfessionalSignUpFormSchema = z.infer<typeof professionalSignUpFormSchema>
+export type ProfessionalSignUpFormSchema = z.infer<
+  typeof professionalSignUpFormSchema
+>
