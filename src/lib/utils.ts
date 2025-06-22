@@ -30,3 +30,31 @@ export function isValidCPF(cpf: string) {
 
   return true
 }
+
+export function isValidCNPJ(cnpj: string): boolean {
+  cnpj = cnpj.replace(/[^\d]+/g, '')
+
+  if (cnpj.length !== 14) return false
+
+  // Reject known invalid sequences
+  if (/^(\d)\1+$/.test(cnpj)) return false
+
+  const calc = (length: number) => {
+    let sum = 0
+    let pos = length - 7
+    for (let i = length; i >= 1; i--) {
+      sum += parseInt(cnpj.charAt(length - i)) * pos--
+      if (pos < 2) pos = 9
+    }
+    const result = sum % 11 < 2 ? 0 : 11 - (sum % 11)
+    return result
+  }
+
+  const firstCheck = calc(12)
+  const secondCheck = calc(13)
+
+  return (
+    firstCheck === parseInt(cnpj.charAt(12)) &&
+    secondCheck === parseInt(cnpj.charAt(13))
+  )
+}

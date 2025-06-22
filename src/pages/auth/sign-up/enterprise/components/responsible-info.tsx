@@ -12,11 +12,12 @@ import { cn } from '@/lib/utils'
 import { CornerUpLeft } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { enterpriseSignUpSchema } from './schema'
+import { enterpriseSignUpSchema } from '../schema'
 import type { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useEnterpriseSignUpMultiStepForm } from './useEnterpriseSignUpMultiStepForm'
+import { useEnterpriseSignUpMultiStepForm } from '../use-enterprise-sign-up-multi-step-form'
+import { format, useMask } from '@react-input/mask'
 
 const responsibleInfoSchema = enterpriseSignUpSchema.pick({
   responsible: true,
@@ -25,14 +26,24 @@ const responsibleInfoSchema = enterpriseSignUpSchema.pick({
 
 type ResponsibleInfoSchema = z.infer<typeof responsibleInfoSchema>
 
+const cpfInputOptions = {
+  mask: '###.###.###-##',
+  replacement: { '#': /\d/ },
+}
+
 export const ResponsibleInfo = () => {
-  const { data: contextData, previousStep, setData } = useEnterpriseSignUpMultiStepForm()
+  const {
+    data: contextData,
+    previousStep,
+    setData,
+  } = useEnterpriseSignUpMultiStepForm()
+  const cpfInputRef = useMask(cpfInputOptions)
   const form = useForm<ResponsibleInfoSchema>({
     resolver: zodResolver(responsibleInfoSchema),
     defaultValues: {
       responsible: {
         fullName: contextData?.responsible?.fullName || '',
-        cpf: contextData?.responsible?.cpf || '',
+        cpf: format(contextData?.responsible?.cpf || '', cpfInputOptions),
       },
       terms: contextData?.terms || false,
     },
@@ -62,7 +73,7 @@ export const ResponsibleInfo = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Cidade
+                    Nome completo do responsável legal
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -76,9 +87,11 @@ export const ResponsibleInfo = () => {
               name="responsible.cpf"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-lato text-gray-300">Rua</FormLabel>
+                  <FormLabel className="font-lato text-gray-300">
+                    CPF do responsável legal
+                  </FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input {...field} ref={cpfInputRef} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

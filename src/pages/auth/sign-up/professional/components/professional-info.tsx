@@ -12,9 +12,17 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { CornerUpLeft } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { professionalSignUpFormSchema } from './schema'
+import { professionalSignUpFormSchema } from '../schema'
 import { z } from 'zod'
-import { useProfessionalSignUpMultiStepForm } from './useProfessionalSignUpMultiStepForm'
+import { useProfessionalSignUpMultiStepForm } from '../use-professional-sign-up-multi-step-form'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { states } from '@/data/states'
 
 const professionalInfoSchema = professionalSignUpFormSchema.pick({
   fieldOfActivity: true,
@@ -95,9 +103,23 @@ export const ProfessionalInfo = () => {
                   <FormLabel className="font-lato text-gray-300">
                     UF do registro
                   </FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Selecione o estado" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {states.map((state, i) => (
+                        <SelectItem key={i} value={state.acronym}>
+                          {state.acronym}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -111,7 +133,7 @@ export const ProfessionalInfo = () => {
                     CNAE
                   </FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input type="number" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

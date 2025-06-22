@@ -1,14 +1,14 @@
 import type { Step } from '@/contexts/multi-step-form/context'
 import type { ProfessionalSignUpFormSchema } from './schema'
-import type { StepType } from './useProfessionalSignUpMultiStepForm'
+import type { StepType } from './use-professional-sign-up-multi-step-form'
 
 import { Link } from 'react-router-dom'
-import { ProfessionalSignUpForm } from './professional-sign-up-form'
+import { ProfessionalSignUpForm } from './components/professional-sign-up-form'
 import { MultiStepFormProvider } from '@/contexts/multi-step-form/provider'
-import { PersonalInfo } from './personal-info'
-import { AddressInfo } from './address-info'
-import { ProfessionalInfo } from './professional-info'
-import { SignUpStepper } from './sign-up-stepper'
+import { PersonalInfo } from './components/personal-info'
+import { AddressInfo } from './components/address-info'
+import { ProfessionalInfo } from './components/professional-info'
+import { SignUpStepper } from './components/sign-up-stepper'
 
 const steps: Step<StepType>[] = [
   {

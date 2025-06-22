@@ -1,5 +1,5 @@
 import { Tabs, TabsContent } from '@/components/ui/tabs'
-import { useEnterpriseSignUpMultiStepForm } from './useEnterpriseSignUpMultiStepForm'
+import { useEnterpriseSignUpMultiStepForm } from '../use-enterprise-sign-up-multi-step-form'
 
 export const EnterpriseSignUpForm = () => {
   const { steps, activeStep } = useEnterpriseSignUpMultiStepForm()

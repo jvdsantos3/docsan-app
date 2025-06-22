@@ -1,14 +1,14 @@
 import type { Step } from '@/contexts/multi-step-form/context'
 import type { EnterpriseSignUpSchema } from './schema'
-import type { StepType } from './useEnterpriseSignUpMultiStepForm'
+import type { StepType } from './use-enterprise-sign-up-multi-step-form'
 
 import { Link } from 'react-router-dom'
-import { EnterpriseSignUpForm } from './enterprise-sign-up-form'
+import { EnterpriseSignUpForm } from './components/enterprise-sign-up-form'
 import { MultiStepFormProvider } from '@/contexts/multi-step-form/provider'
-import { BusinessInfo } from './business-info'
-import { BusinessAddressInfo } from './bussiness-address-info'
-import { ResponsibleInfo } from './responsible-info'
-import { SignUpStepper } from './sign-up-stepper'
+import { BusinessInfo } from './components/business-info'
+import { BusinessAddressInfo } from './components/bussiness-address-info'
+import { ResponsibleInfo } from './components/responsible-info'
+import { SignUpStepper } from './components/sign-up-stepper'
 
 const steps: Step<StepType>[] = [
   {

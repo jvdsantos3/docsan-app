@@ -1,4 +1,3 @@
-import { Button } from '@/components/ui/button'
 import {
   Form,
   FormControl,
@@ -9,58 +8,52 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { PasswordInput } from '@/components/ui/password-input'
-import { CalendarIcon, CornerUpLeft } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
-import { professionalSignUpFormSchema } from './schema'
-import { z } from 'zod'
+import { enterpriseSignUpSchema } from '../schema'
+import type { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useProfessionalSignUpMultiStepForm } from './useProfessionalSignUpMultiStepForm'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import { cn } from '@/lib/utils'
-import { format } from 'date-fns'
-import { ptBR } from 'date-fns/locale'
-import { Calendar } from '@/components/ui/calendar'
-import { useMask } from '@react-input/mask'
+import { Link } from 'react-router-dom'
+import { Button } from '@/components/ui/button'
+import { CornerUpLeft } from 'lucide-react'
+import { useEnterpriseSignUpMultiStepForm } from '../use-enterprise-sign-up-multi-step-form'
+import { format, useMask } from '@react-input/mask'
 
-const personalInfoSchema = professionalSignUpFormSchema.pick({
-  fullName: true,
-  cpf: true,
-  birthDate: true,
-  email: true,
-  password: true,
-  phone: true,
+const enterpriseInfoSchema = enterpriseSignUpSchema.pick({
+  business: true,
 })
 
-type PersonalInfoSchema = z.infer<typeof personalInfoSchema>
+type EnterpriseInfoSchema = z.infer<typeof enterpriseInfoSchema>
 
-export const PersonalInfo = () => {
-  const cpfInputRef = useMask({
-    mask: '###.###.###-##',
-    replacement: { '#': /\d/ },
-  })
-  const phoneInputRef = useMask({
-    mask: '############',
-    replacement: { '#': /\d/ },
-  })
-  const { data, setData, nextStep } = useProfessionalSignUpMultiStepForm()
-  const form = useForm<PersonalInfoSchema>({
-    resolver: zodResolver(personalInfoSchema),
+const cnpjInputOptions = {
+  mask: '##.###.###/####-##',
+  replacement: { '#': /\d/ },
+}
+
+const phoneInputOptions = {
+  mask: '####-####',
+  replacement: { '#': /\d/ },
+}
+
+export const BusinessInfo = () => {
+  const { data, nextStep, setData } = useEnterpriseSignUpMultiStepForm()
+  const phoneInputRef = useMask(phoneInputOptions)
+  const cnpjInputRef = useMask(cnpjInputOptions)
+  const form = useForm<EnterpriseInfoSchema>({
+    resolver: zodResolver(enterpriseInfoSchema),
     defaultValues: {
-      fullName: data?.fullName || '',
-      cpf: data?.cpf || '',
-      birthDate: data?.birthDate,
-      email: data?.email || '',
-      password: data?.password || '',
-      phone: data?.phone || '',
-    },
+      business: {
+        companyName: data?.business?.companyName || '',
+        tradeName: data?.business?.tradeName || '',
+        cnpj: format(data?.business?.cnpj || '', cnpjInputOptions),
+        email: data?.business?.email || '',
+        password: data?.business?.password || '',
+        cnae: data?.business?.cnae || '',
+        phone: format(data?.business?.phone || '', phoneInputOptions),
+      }
+    }
   })
 
-  function onSubmit(data: PersonalInfoSchema) {
+  function onSubmit(data: EnterpriseInfoSchema) {
     setData(data)
     nextStep()
   }
@@ -76,15 +69,14 @@ export const PersonalInfo = () => {
           >
             <CornerUpLeft /> Voltar
           </Button>
-
           <div className="space-y-6">
             <FormField
               control={form.control}
-              name="fullName"
+              name="business.companyName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Nome completo
+                    Razão social
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -95,67 +87,11 @@ export const PersonalInfo = () => {
             />
             <FormField
               control={form.control}
-              name="cpf"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">CPF</FormLabel>
-                  <FormControl>
-                    <Input {...field} ref={cpfInputRef} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="birthDate"
+              name="business.tradeName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Data de nascimento
-                  </FormLabel>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          className={cn(
-                            'w-full pl-3 text-left font-normal border-input',
-                            !field.value && 'text-muted-foreground',
-                          )}
-                        >
-                          {field.value ? (
-                            format(field.value, 'PPP', { locale: ptBR })
-                          ) : (
-                            <span>Selecione uma data</span>
-                          )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date('1900-01-01')
-                        }
-                        captionLayout="dropdown"
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    E-mail
+                    Nome fantasia
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />
@@ -166,7 +102,37 @@ export const PersonalInfo = () => {
             />
             <FormField
               control={form.control}
-              name="password"
+              name="business.cnpj"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-lato text-gray-300">
+                    CNPJ
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} ref={cnpjInputRef} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="business.email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-lato text-gray-300">
+                    E-mail comercial
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="business.password"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -181,11 +147,26 @@ export const PersonalInfo = () => {
             />
             <FormField
               control={form.control}
-              name="phone"
+              name="business.cnae"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Telefone
+                    CNAE
+                  </FormLabel>
+                  <FormControl>
+                    <Input type="number" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="business.phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-lato text-gray-300">
+                    Telefone comercial
                   </FormLabel>
                   <FormControl>
                     <Input {...field} ref={phoneInputRef} />

@@ -12,10 +12,19 @@ import { cn } from '@/lib/utils'
 import { CornerUpLeft } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { enterpriseSignUpSchema } from './schema'
+import { enterpriseSignUpSchema } from '../schema'
 import type { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useEnterpriseSignUpMultiStepForm } from './useEnterpriseSignUpMultiStepForm'
+import { useEnterpriseSignUpMultiStepForm } from '../use-enterprise-sign-up-multi-step-form'
+import { format, useMask } from '@react-input/mask'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { states } from '@/data/states'
 
 const businessAddressInfoSchema = enterpriseSignUpSchema.pick({
   address: true,
@@ -23,13 +32,20 @@ const businessAddressInfoSchema = enterpriseSignUpSchema.pick({
 
 type BusinessAddressInfoSchema = z.infer<typeof businessAddressInfoSchema>
 
+const cepInputOptions = {
+  mask: '#####-###',
+  replacement: { '#': /\d/ },
+}
+
 export const BusinessAddressInfo = () => {
-  const { data, nextStep, previousStep, setData } = useEnterpriseSignUpMultiStepForm()
+  const { data, nextStep, previousStep, setData } =
+    useEnterpriseSignUpMultiStepForm()
+  const cepInputRef = useMask(cepInputOptions)
   const form = useForm<BusinessAddressInfoSchema>({
     resolver: zodResolver(businessAddressInfoSchema),
     defaultValues: {
       address: {
-        zipCode: data?.address?.zipCode || '',
+        zipCode: format(data?.address?.zipCode || '', cepInputOptions),
         state: data?.address?.state || '',
         city: data?.address?.city || '',
         street: data?.address?.street || '',
@@ -68,7 +84,7 @@ export const BusinessAddressInfo = () => {
                       Cep
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} />
+                      <Input {...field} ref={cepInputRef} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -82,9 +98,23 @@ export const BusinessAddressInfo = () => {
                     <FormLabel className="font-lato text-gray-300">
                       UF
                     </FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Selecione o estado" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {states.map((state, i) => (
+                          <SelectItem key={i} value={state.acronym}>
+                            {state.acronym}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -127,7 +157,7 @@ export const BusinessAddressInfo = () => {
                     Número
                   </FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <Input type="number" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

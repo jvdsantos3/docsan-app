@@ -6,10 +6,10 @@ import {
   StepperTitle,
   StepperTrigger,
 } from '@/components/ui/stepper'
-import { useProfessionalSignUpMultiStepForm } from './useProfessionalSignUpMultiStepForm'
+import { useEnterpriseSignUpMultiStepForm } from '../use-enterprise-sign-up-multi-step-form'
 
 export const SignUpStepper = () => {
-  const { activeStep, steps } = useProfessionalSignUpMultiStepForm()
+  const { activeStep, steps } = useEnterpriseSignUpMultiStepForm()
 
   return (
     <Stepper defaultValue={1} value={activeStep + 1} orientation="vertical">
