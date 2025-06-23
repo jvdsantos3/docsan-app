@@ -60,10 +60,10 @@ export const Services = () => {
               </CardContent>
               <CardFooter>
                 <div className="w-full grid grid-cols-1 xl:grid-cols-2 gap-3">
-                  <Button variant="outline" asChild>
+                  <Button variant="outline" className="font-bold" asChild>
                     <Link to={service.id}>Ver detalhes</Link>
                   </Button>
-                  <Button>Quero contratar</Button>
+                  <Button className="font-bold">Quero contratar</Button>
                 </div>
               </CardFooter>
             </Card>
