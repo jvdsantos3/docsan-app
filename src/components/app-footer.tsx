@@ -1,0 +1,106 @@
+import { Link } from 'react-router-dom'
+import { Logo } from './logo'
+import { SiFacebook, SiX, SiInstagram } from '@icons-pack/react-simple-icons'
+import { LinkedIn, WhatsApp } from '@ridemountainpig/svgl-react'
+
+const links = [
+  {
+    href: 'https://www.facebook.com/profile.php?id=100088876842523',
+    title: 'Facebook',
+    icon: <SiFacebook size={24} />,
+  },
+  { href: '#', title: 'X', icon: <SiX size={24} /> },
+  {
+    href: 'https://www.instagram.com/docsanconsultoria/',
+    title: 'Instagram',
+    icon: <SiInstagram size={24} />,
+  },
+  {
+    href: '#',
+    title: 'LinkdIn',
+    icon: <LinkedIn className="size-6" />,
+  },
+]
+
+export const AppFooter = () => {
+  return (
+    <footer className="bg-blue-source text-white font-lato">
+      <div className="container mx-auto px-4 py-20">
+        <div className="grid grid-cols-3 gap-12">
+          <div>
+            <div className="bg-white px-8 py-4 rounded-lg inline-block">
+              <Link to={'/'}>
+                <Logo className="w-40" />
+              </Link>
+            </div>
+
+            <p className="mt-4 font-medium text-lg">
+              Conectando expertise regulatória com empresas que precisam de
+              soluções de conformidade.
+            </p>
+
+            <div className="flex gap-4">
+              {links.map((link, i) => (
+                <a
+                  key={i}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="sr-only">{link.title}</span>
+                  <span className="text-2xl">{link.icon}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="col-span-2 grid grid-cols-3 gap-6">
+            <div>
+              <strong className="text-lg">Serviços</strong>
+              <ul className="mt-2 space-y-1 text-lg">
+                <li>ANVISA Compliance</li>
+                <li>MAPA regulations</li>
+                <li>Health Surveillance</li>
+                <li>Import & Export</li>
+                <li>Corporate Compliance</li>
+                <li>Training & Certification</li>
+              </ul>
+            </div>
+            <div>
+              <strong className="text-lg">Companhia</strong>
+              <ul className="mt-2 space-y-1 text-lg">
+                <li>Sobre nós</li>
+                <li>Como funciona</li>
+                <li>Para empresas</li>
+                <li>Para profissionais</li>
+                <li>Depoimentos</li>
+              </ul>
+            </div>
+            <div>
+              <strong className="text-lg">Contato</strong>
+              <ul className="mt-2 space-y-1 text-lg">
+                <li>São Paulo, SP - Brazil</li>
+                <li>
+                  <a href="mailto:contact@docsan.com.br">
+                    contact@docsan.com.br
+                  </a>
+                </li>
+                <li>
+                  <a href="tel:+551198765432">+55 (11) 9876-5432</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-20 flex justify-between items-end">
+          <p>2025 DocSan. All rights reserved</p>
+
+          <a href="#">
+            <WhatsApp className="size-[72px]" />
+          </a>
+        </div>
+      </div>
+    </footer>
+  )
+}
