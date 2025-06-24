@@ -53,7 +53,7 @@ export const Services = () => {
                       {service.professional?.name}
                     </p>
                     <p className="font-lato text-xs text-muted-foreground">
-                      {service.professional?.role}
+                      {service.professional?.description}
                     </p>
                   </div>
                 </div>

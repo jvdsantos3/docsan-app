@@ -5,6 +5,7 @@ import { SignIn } from './pages/auth/sign-in'
 import { ProfessionalSignUp } from './pages/auth/sign-up/professional'
 import { EnterpriseSignUp } from './pages/auth/sign-up/enterprise'
 import { Services } from './pages/services'
+import { ServiceDetails } from './pages/services/service-details'
 
 export const router = createBrowserRouter([
   {
@@ -42,7 +43,7 @@ export const router = createBrowserRouter([
           },
           {
             path: ':serviceId',
-            element: <div>Service Details</div>,
+            element: <ServiceDetails />,
           },
         ],
       },
