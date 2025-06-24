@@ -1,13 +1,15 @@
 import { AppHeader } from "@/components/app-header";
 import { Outlet } from "react-router-dom";
 
-export const RootLayout = () => {
+export const LandingPageLayout = () => {
   return (
-    <div>
+    <div className="w-full">
       <AppHeader />
-      <div className="container mx-auto px-4 py-8">
+
+      <div className="container mx-auto px-4">
         <Outlet />
       </div>
+
       footer
     </div>
   );
