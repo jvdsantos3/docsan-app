@@ -19,6 +19,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { ServiceForm } from './service-form'
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export const Services = () => {
   const [open, setOpen] = useState(false)
@@ -49,7 +50,30 @@ export const Services = () => {
           )}
         </div>
 
-        <div>filtros</div>
+        <div>
+          <Tabs defaultValue="all" className="w-[400px]">
+            <TabsList className="bg-blue-100 font-bold h-12 p-2">
+              <TabsTrigger
+                value="all"
+                className="font-lato font-bold data-[state=active]:bg-white text-blue-source data-[state=active]:text-blue-900 data-[state=active]:shadow-none"
+              >
+                Todos
+              </TabsTrigger>
+              <TabsTrigger
+                value="health"
+                className="font-lato font-bold data-[state=active]:bg-white text-blue-source data-[state=active]:text-blue-900 data-[state=active]:shadow-none"
+              >
+                Assessoria sanitária
+              </TabsTrigger>
+              <TabsTrigger
+                value="environmental"
+                className="font-lato font-bold data-[state=active]:bg-white text-blue-source data-[state=active]:text-blue-900 data-[state=active]:shadow-none"
+              >
+                Assessoria ambiental
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {Array.from({ length: 10 }).map(() => {

@@ -3,19 +3,22 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { services } from '@/data/mockups/services'
 import { CornerUpLeft } from 'lucide-react'
-import { Link, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 export const ServiceDetails = () => {
+  const navigate = useNavigate()
   const { serviceId } = useParams<{ serviceId: string }>()
   const service = services.find((s) => s.id === serviceId)
 
   return (
     <div className="space-y-6">
-      <Button variant="link" className="text-blue-source" asChild>
-        <Link to="/services">
-          <CornerUpLeft />
-          Voltar
-        </Link>
+      <Button
+        variant="link"
+        className="text-blue-source"
+        onClick={() => navigate(-1)}
+      >
+        <CornerUpLeft />
+        Voltar
       </Button>
 
       <div className="flex gap-12">

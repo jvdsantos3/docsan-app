@@ -47,7 +47,7 @@ export const services = [
   },
   {
     id: 'a8b7ba4e-b2cd-4f68-a3b9-e4665df8d854',
-    title: 'Acessoria sanitária',
+    title: 'Assessoria sanitária',
     description:
       'Orientamos sua empresa para atender às exigências sanitárias vigentes, com suporte completo na obtenção de licenças, regularizações e adequações.',
     content,
@@ -56,7 +56,7 @@ export const services = [
   },
   {
     id: '39f89d6a-0174-42bd-9aa7-8068fd98b4b9',
-    title: 'Acessoria ambiental',
+    title: 'Assessoria ambiental',
     description:
       'Auxiliamos sua empresa no cumprimento das normas ambientais, com licenciamento, regularização e gestão de resíduos conforme exigências legais.',
     content,
