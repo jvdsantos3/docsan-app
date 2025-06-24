@@ -6,6 +6,7 @@ export type AuthContextData = {
     id: string
     name: string
     email: string
+    role: 'professional' | 'company'
   } | null
   signIn: (credencials: { email: string, password: string }) => void
   signOut: () => void

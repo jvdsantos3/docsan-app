@@ -134,7 +134,7 @@ export const SignIn = () => {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="bg-white sm:max-w-md md:max-w-lg lg:max-w-xl ">
+        <DialogContent className="bg-white sm:max-w-md md:max-w-lg lg:max-w-xl">
           <DialogHeader>
             <img
               className="w-[8.6875rem] mx-auto mb-4"

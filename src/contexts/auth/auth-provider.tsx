@@ -9,6 +9,7 @@ const mockupAuthUser = {
   id: '0c2f4a74-ccd5-4579-a456-07e9431929c1',
   name: 'John Doe',
   email: 'johndoe@email.com',
+  role: 'professional' as const,
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {

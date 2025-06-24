@@ -34,7 +34,7 @@ export const ServiceDetails = () => {
               className="w-full h-56 object-cover rounded-t-md"
             />
             <CardContent>
-              <Button className="w-full">Quero contratar</Button>
+              <Button className="w-full font-bold">Quero contratar</Button>
               <p className="font-lato text-center text-sm text-gray-600 mt-3">
                 Ao solicitar, você receberá uma proposta detalhada e poderá
                 tirar suas dúvidas antes de contratar.
