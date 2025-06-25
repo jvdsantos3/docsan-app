@@ -11,7 +11,7 @@ export const ServiceDetails = () => {
   const service = services.find((s) => s.id === serviceId)
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 py-6">
       <Button
         variant="link"
         className="text-blue-source"

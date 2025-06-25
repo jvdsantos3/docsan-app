@@ -27,7 +27,7 @@ export const Services = () => {
 
   return (
     <>
-      <div className="space-y-6">
+      <div className="space-y-6 py-6">
         <div className="flex justify-between">
           <div>
             <h1 className="font-lato text-3xl">

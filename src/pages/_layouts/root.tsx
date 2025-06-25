@@ -4,10 +4,10 @@ import { Outlet } from 'react-router-dom'
 
 export const RootLayout = () => {
   return (
-    <div>
+    <div className="w-full">
       <AppHeader />
 
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 xl:px-0">
         <Outlet />
       </div>
 

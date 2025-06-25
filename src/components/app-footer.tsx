@@ -25,7 +25,7 @@ const links = [
 export const AppFooter = () => {
   return (
     <footer className="bg-blue-source text-white font-lato">
-      <div className="container mx-auto px-4 py-20">
+      <div className="container mx-auto px-4 xl:px-0 py-20">
         <div className="grid grid-cols-3 gap-12">
           <div>
             <div className="bg-white px-8 py-4 rounded-lg inline-block">

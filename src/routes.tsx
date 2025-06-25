@@ -7,20 +7,9 @@ import { EnterpriseSignUp } from './pages/auth/sign-up/enterprise'
 import { Services } from './pages/services'
 import { ServiceDetails } from './pages/services/service-details'
 import { LandingPage } from './pages/landing-page'
-import { LandingPageLayout } from './pages/_layouts/landing-page'
 
 export const router = createBrowserRouter([
   {
-    element: <LandingPageLayout />,
-    children: [
-      {
-        index: true,
-        element: <LandingPage />,
-      },
-    ],
-  },
-  {
-    path: '/',
     element: <AuthLayout />,
     children: [
       {
@@ -43,9 +32,12 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: '/',
     element: <RootLayout />,
     children: [
+      {
+        index: true,
+        element: <LandingPage />,
+      },
       {
         path: '/services',
         children: [

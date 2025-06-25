@@ -17,7 +17,7 @@ const navigationLinks = [
 export const AppHeader = () => {
   return (
     <header className="border-b bg-white">
-      <div className="flex h-16 items-center justify-between gap-4 px-4 md:px-6 container mx-auto">
+      <div className="flex h-16 items-center justify-between gap-4 px-4 xl:px-0 container mx-auto">
         <Link to="/">
           <Logo />
         </Link>

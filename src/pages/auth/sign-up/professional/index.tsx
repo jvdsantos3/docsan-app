@@ -34,7 +34,7 @@ export const ProfessionalSignUp = () => {
       steps={steps}
       initialData={{} as ProfessionalSignUpFormSchema}
     >
-      <div className="min-h-[728px] w-xl md:w-2xl lg:w-5xl bg-white border border-blue-source rounded-2xl m-2 md:m-0 py-5 px-4 md:py-10 md:px-8">
+      <div className="min-h-[728px] w-xl md:w-2xl lg:w-5xl bg-white border border-blue-source rounded-2xl m-2 py-5 px-4 md:py-10 md:px-8">
         <div className="flex gap-6">
           <div className="space-y-6 flex-1">
             <div>
