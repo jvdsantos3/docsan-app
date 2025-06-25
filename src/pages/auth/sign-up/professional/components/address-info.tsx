@@ -70,7 +70,7 @@ export const AddressInfo = () => {
   async function onSubmit(data: AddressInfoSchema) {
     setData(data);
 
-    await registerProfessional(contextData)
+    await registerProfessional({...contextData, ...data})
   }
 
   return (
