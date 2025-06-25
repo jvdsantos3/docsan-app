@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
 import { Logo } from './logo'
 import { SiFacebook, SiX, SiInstagram } from '@icons-pack/react-simple-icons'
-import { LinkedIn, WhatsApp } from '@ridemountainpig/svgl-react'
+import { WhatsApp } from '@ridemountainpig/svgl-react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faLinkedin } from '@fortawesome/free-brands-svg-icons'
 
 const links = [
   {
@@ -18,7 +20,14 @@ const links = [
   {
     href: '#',
     title: 'LinkdIn',
-    icon: <LinkedIn className="size-6" />,
+    icon: (
+      <FontAwesomeIcon
+        icon={faLinkedin}
+        width={24}
+        height={24}
+        style={{ display: 'block', verticalAlign: 'middle' }}
+      />
+    ),
   },
 ]
 
@@ -28,7 +37,7 @@ export const AppFooter = () => {
       <div className="container mx-auto px-4 xl:px-0 py-20">
         <div className="grid grid-cols-3 gap-12">
           <div>
-            <div className="bg-white px-8 py-4 rounded-lg inline-block">
+            <div className="bg-white px-8 py-4 rounded-xl inline-block">
               <Link to={'/'}>
                 <Logo className="w-40" />
               </Link>
@@ -39,7 +48,7 @@ export const AppFooter = () => {
               soluções de conformidade.
             </p>
 
-            <div className="flex gap-4">
+            <div className="mt-3 flex gap-8 items-center">
               {links.map((link, i) => (
                 <a
                   key={i}
