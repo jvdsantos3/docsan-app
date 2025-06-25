@@ -2,13 +2,9 @@ import { z } from 'zod'
 import { isValidCPF } from '@/lib/utils'
 
 export const professionalSignUpFormSchema = z.object({
-  fullName: z
+  name: z
     .string()
-    .nonempty('Nome completo é obrigatório.')
-    .regex(
-      /^[a-zA-Z'’]+(?: [a-zA-Z'’]+)+$/,
-      'Por favor, insira seu nome completo.',
-    ),
+    .nonempty('Nome completo é obrigatório.'),
   cpf: z
     .string()
     .transform((cpf) => cpf.replace(/[^\d]+/g, ''))
@@ -25,22 +21,20 @@ export const professionalSignUpFormSchema = z.object({
     .string()
     .nonempty('O telefone é obrigatório.')
     .transform((phone) => phone.replace(/[^\d]+/g, '')),
-  fieldOfActivity: z.string().nonempty('Ramo de atuação é obrigatório.'),
-  proRegistration: z.string().nonempty('Registro profissional é obrigatório.'),
-  proRegistrationState: z.string().nonempty('UF do registro é obrigatório.'),
+  fieldExpertise: z.string().nonempty('Ramo de atuação é obrigatório.'),
+  professionalRegistry: z.string().nonempty('Registro profissional é obrigatório.'),
+  registryUf: z.string().nonempty('UF do registro é obrigatório.'),
   cnae: z.string().nonempty('O CNAE é obrigatório'),
-  address: z.object({
-    zipCode: z
-      .string()
-      .nonempty('O CEP é obrigatório.')
-      .transform((zipCode) => zipCode.replace(/[^\d]+/g, '')),
-    state: z.string().nonempty('UF é obrigatória.'),
-    city: z.string().nonempty('Cidade é obrigatória.'),
-    street: z.string().nonempty('Rua é obrigatória.'),
-    number: z.string().nonempty('Número é obrigatório.'),
-    neighborhood: z.string().nonempty('Bairro é obrigatório'),
-    complement: z.string().optional(),
-  }),
+  zipCode: z
+    .string()
+    .nonempty('O CEP é obrigatório.')
+    .transform((zipCode) => zipCode.replace(/[^\d]+/g, '')),
+  uf: z.string().nonempty('UF é obrigatória.'),
+  city: z.string().nonempty('Cidade é obrigatória.'),
+  street: z.string().nonempty('Rua é obrigatória.'),
+  number: z.string().nonempty('Número é obrigatório.'),
+  neighborhood: z.string().nonempty('Bairro é obrigatório'),
+  complement: z.string().optional(),
   terms: z.boolean().refine((val) => val, {
     message: 'Você deve aceitar os termos de uso',
   }),

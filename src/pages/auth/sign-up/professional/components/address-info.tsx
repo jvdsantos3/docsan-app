@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -7,59 +7,70 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { CornerUpLeft } from 'lucide-react'
-import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
-import { professionalSignUpFormSchema } from '../schema'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useProfessionalSignUpMultiStepForm } from '../use-professional-sign-up-multi-step-form'
-import { format, useMask } from '@react-input/mask'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { states } from '@/data/states'
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { CornerUpLeft } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { professionalSignUpFormSchema } from "../schema";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useProfessionalSignUpMultiStepForm } from "../use-professional-sign-up-multi-step-form";
+import { format, useMask } from "@react-input/mask";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { states } from "@/data/states";
+import { useAuth } from "@/hooks/use-auth";
 
 const addressInfoSchema = professionalSignUpFormSchema.pick({
-  address: true,
+  zipCode: true,
+  uf: true,
+  city: true,
+  street: true,
+  number: true,
+  neighborhood: true,
+  complement: true,
   terms: true,
-})
+});
 
-type AddressInfoSchema = z.infer<typeof addressInfoSchema>
+type AddressInfoSchema = z.infer<typeof addressInfoSchema>;
 
 const cepInputOptions = {
-  mask: '#####-###',
-  replacement: { '#': /\d/ },
-}
+  mask: "#####-###",
+  replacement: { "#": /\d/ },
+};
 
 export const AddressInfo = () => {
+  const { registerProfessional } = useAuth();
   const {
     data: contextData,
     setData,
     previousStep,
-  } = useProfessionalSignUpMultiStepForm()
-  const cepInputRef = useMask(cepInputOptions)
+  } = useProfessionalSignUpMultiStepForm();
+  const cepInputRef = useMask(cepInputOptions);
   const form = useForm<AddressInfoSchema>({
     resolver: zodResolver(addressInfoSchema),
     defaultValues: {
-      address: {
-        zipCode: format(contextData?.address?.zipCode || '', cepInputOptions),
-        state: contextData?.address?.state || '',
-        city: contextData?.address?.city || '',
-        street: contextData?.address?.street || '',
-        number: contextData?.address?.number || '',
-        neighborhood: contextData?.address?.neighborhood || '',
-        complement: contextData?.address?.complement || '',
-      },
+      zipCode: format(contextData?.zipCode || "", cepInputOptions),
+      uf: contextData?.uf || "",
+      city: contextData?.city || "",
+      street: contextData?.street || "",
+      number: contextData?.number || "",
+      neighborhood: contextData?.neighborhood || "",
+      complement: contextData?.complement || "",
       terms: false,
     },
-  })
+  });
 
-  function onSubmit(data: AddressInfoSchema) {
-    setData(data)
-    setTimeout(() => {
-      console.log('Form data:', contextData)
-    }, 1000)
+  async function onSubmit(data: AddressInfoSchema) {
+    setData(data);
+
+    await registerProfessional(contextData)
   }
 
   return (
@@ -79,7 +90,7 @@ export const AddressInfo = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
-                name="address.zipCode"
+                name="zipCode"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-lato text-gray-300">
@@ -94,7 +105,7 @@ export const AddressInfo = () => {
               />
               <FormField
                 control={form.control}
-                name="address.state"
+                name="uf"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-lato text-gray-300">
@@ -124,7 +135,7 @@ export const AddressInfo = () => {
             </div>
             <FormField
               control={form.control}
-              name="address.city"
+              name="city"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -140,7 +151,7 @@ export const AddressInfo = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <FormField
                 control={form.control}
-                name="address.street"
+                name="street"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-lato text-gray-300">
@@ -155,7 +166,7 @@ export const AddressInfo = () => {
               />
               <FormField
                 control={form.control}
-                name="address.number"
+                name="number"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-lato text-gray-300">
@@ -171,7 +182,7 @@ export const AddressInfo = () => {
             </div>
             <FormField
               control={form.control}
-              name="address.neighborhood"
+              name="neighborhood"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -186,7 +197,7 @@ export const AddressInfo = () => {
             />
             <FormField
               control={form.control}
-              name="address.complement"
+              name="complement"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -211,9 +222,9 @@ export const AddressInfo = () => {
                       />
                     </FormControl>
                     <FormLabel className="font-lato text-gray-300">
-                      Li e concordo com os{' '}
+                      Li e concordo com os{" "}
                       <Link
-                        to={'/terms'}
+                        to={"/terms"}
                         className="text-blue-source font-bold"
                       >
                         Termos de Uso
@@ -228,8 +239,8 @@ export const AddressInfo = () => {
 
           <div className="flex gap-3 justify-between items-end">
             <p className="font-lato text-sm text-gray-600 text-center">
-              Já possui uma conta?{' '}
-              <Link to={'/sign-in'} className="text-blue-source font-bold">
+              Já possui uma conta?{" "}
+              <Link to={"/sign-in"} className="text-blue-source font-bold">
                 Faça login!
               </Link>
             </p>
@@ -244,5 +255,5 @@ export const AddressInfo = () => {
         </div>
       </form>
     </Form>
-  )
-}
+  );
+};

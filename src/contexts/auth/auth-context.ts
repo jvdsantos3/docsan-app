@@ -1,13 +1,12 @@
+import type { ProfessionalSignUpFormSchema } from '@/pages/auth/sign-up/professional/schema'
 import { createContext } from 'react'
+import type { LoginInput, User } from './auth-provider'
 
 export type AuthContextData = {
+  registerProfessional: (data: ProfessionalSignUpFormSchema) => Promise<void>
+  login: (data: LoginInput) => Promise<void>
   isAuthenticated: boolean
-  user: {
-    id: string
-    name: string
-    email: string
-    role: 'professional' | 'company'
-  } | null
+  user: User | null
   signIn: (credencials: { email: string, password: string }) => void
   signOut: () => void
 }

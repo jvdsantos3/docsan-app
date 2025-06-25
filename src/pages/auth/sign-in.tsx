@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { Button } from '@/components/ui/button'
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -7,56 +7,51 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
+} from "@/components/ui/form";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
-import { Google } from '@ridemountainpig/svgl-react'
-import { PasswordInput } from '@/components/ui/password-input'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
+import { Google } from "@ridemountainpig/svgl-react";
+import { PasswordInput } from "@/components/ui/password-input";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/hooks/use-auth";
 
 const signInFormSchema = z.object({
-  email: z.string().email('E-mail inválido'),
-  password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
-})
+  email: z.string().email("E-mail inválido"),
+  password: z.string().min(6, "A senha deve ter pelo menos 6 caracteres"),
+});
 
-type SignInFormSchema = z.infer<typeof signInFormSchema>
+type SignInFormSchema = z.infer<typeof signInFormSchema>;
 
 export const SignIn = () => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
+
+  const { login } = useAuth()
+
   const form = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
-  })
+  });
 
-  function signIn(data: SignInFormSchema) {
-    console.log(data)
-    // Here you would typically handle the sign-in logic, such as calling an API
-    // For example:
-    // api.post("/auth/signin", data)
-    //   .then(response => {
-    //     console.log("Sign-in successful:", response.data);
-    //   })
-    //   .catch(error => {
-    //     console.error("Sign-in error:", error);
-    //   });
+  async function signIn(data: SignInFormSchema) {
+    await login(data)
   }
 
   return (
     <>
       <div className="md:w-[28.125rem] lg:w-[28.125rem] bg-white border border-blue-source rounded-2xl m-2 md:m-0 py-5 px-4 md:py-10 md:px-8 flex flex-col items-center gap-10">
-        <Link to={'/'}>
+        <Link to={"/"}>
           <img className="w-[8.6875rem]" src="/logo-02.svg" alt="Docsan logo" />
         </Link>
 
@@ -100,12 +95,14 @@ export const SignIn = () => {
               />
 
               <div className="text-right">
-                <Link to={'#'} className="text-blue-source font-lato text-xs ">
+                <Link to={"#"} className="text-blue-source font-lato text-xs ">
                   Esqueceu sua senha?
                 </Link>
               </div>
 
-              <Button className="w-full rounded-xl">Entrar</Button>
+              <Button type="submit" className="w-full rounded-xl">
+                Entrar
+              </Button>
             </form>
           </Form>
 
@@ -122,9 +119,9 @@ export const SignIn = () => {
         </div>
 
         <p className="font-lato text-sm text-gray-600 text-center">
-          Ainda não possui cadastro?{' '}
+          Ainda não possui cadastro?{" "}
           <Link
-            to={'#'}
+            to={"#"}
             onClick={() => setOpen(true)}
             className="text-blue-source font-bold"
           >
@@ -156,7 +153,7 @@ export const SignIn = () => {
                   Quero oferecer meus serviços de consultoria regulatória.
                 </p>
                 <Button variant="outline" className="w-full font-bold" asChild>
-                  <Link to={'/sign-up/professional'}>Sou profissional</Link>
+                  <Link to={"/sign-up/professional"}>Sou profissional</Link>
                 </Button>
               </div>
               <div className="border border-blue-source rounded-md flex flex-col justify-center items-center gap-3 px-3 py-4">
@@ -165,7 +162,7 @@ export const SignIn = () => {
                   Quero contratar serviços de consultoria para minha empresa.
                 </p>
                 <Button variant="outline" className="w-full font-bold" asChild>
-                  <Link to={'/sign-up/enterprise'}>Sou empresa</Link>
+                  <Link to={"/sign-up/enterprise"}>Sou empresa</Link>
                 </Button>
               </div>
             </div>
@@ -173,5 +170,5 @@ export const SignIn = () => {
         </DialogContent>
       </Dialog>
     </>
-  )
-}
+  );
+};

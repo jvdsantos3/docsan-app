@@ -1,36 +1,82 @@
-import { useState } from 'react'
-import { AuthContext } from './auth-context'
+import { useState } from "react";
+import { AuthContext } from "./auth-context";
+import type { ProfessionalSignUpFormSchema } from "@/pages/auth/sign-up/professional/schema";
+import { api } from "@/lib/axios";
+import { useNavigate } from "react-router-dom";
+import { getToken, storeTokens } from "@/utils/sessionMethods";
+import { jwtDecode } from "jwt-decode";
 
 export type AuthProviderProps = {
-  children: React.ReactNode
+  children: React.ReactNode;
+};
+
+export interface User {
+  id: string;
+  role: "professional" | "company";
 }
 
-const mockupAuthUser = {
-  id: '0c2f4a74-ccd5-4579-a456-07e9431929c1',
-  name: 'John Doe',
-  email: 'johndoe@email.com',
-  role: 'professional' as const,
+export interface LoginInput {
+  email: string;
+  password: string;
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [authUser, setAuthUser] = useState<typeof mockupAuthUser | null>(
-    mockupAuthUser,
-  )
+  const [isAuthenticated, setIsAuthenticated] = useState(!!getToken());
+  const [authUser, setAuthUser] = useState<User | null>(null);
+
+  const navigate = useNavigate();
+
+  async function registerProfessional(data: ProfessionalSignUpFormSchema) {
+    await api
+      .post("/professionals", data)
+      .then(() => {
+        navigate("/sign-in");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  async function login(data: LoginInput) {
+    await api
+      .post("/sessions", data)
+      .then((res) => {
+        const accessToken = res.data.access_token
+
+        storeTokens(res.data.access_token);
+
+        const user: {sub: string, role: "professional" | "company"} = jwtDecode(accessToken);
+
+        setAuthUser({
+          id: user.sub,
+          role: user.role
+        });
+
+        setIsAuthenticated(true);
+        navigate("/services");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   return (
     <AuthContext.Provider
       value={{
-        isAuthenticated: true,
+        registerProfessional,
+        login,
+        isAuthenticated,
         user: authUser,
+
         signIn: (credencials) => {
-          console.log(credencials)
+          console.log(credencials);
         },
         signOut: () => {
-          setAuthUser(null)
+          setAuthUser(null);
         },
       }}
     >
       {children}
     </AuthContext.Provider>
-  )
-}
+  );
+};

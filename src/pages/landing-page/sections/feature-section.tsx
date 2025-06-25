@@ -51,7 +51,9 @@ export const FeatureSection = () => {
           ))}
         </div>
 
-        <Button className={cn("self-center")}>Ver todos os serviços</Button>
+        <Button className={cn("self-center")} asChild>
+          <Link to="/services">Ver todos os serviços</Link>
+        </Button>
       </div>
     </section>
   );
