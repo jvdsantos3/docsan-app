@@ -1,5 +1,5 @@
-import { useState } from 'react'
-import { services } from '@/data/mockups/services'
+import { useState } from "react";
+import { services } from "@/data/mockups/services";
 import {
   Card,
   CardContent,
@@ -7,23 +7,23 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { useAuth } from '@/hooks/use-auth'
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/hooks/use-auth";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog'
-import { ServiceForm } from './service-form'
-import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
+} from "@/components/ui/dialog";
+import { ServiceForm } from "./service-form";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 export const Services = () => {
-  const [open, setOpen] = useState(false)
-  const { isAuthenticated, user } = useAuth()
+  const [open, setOpen] = useState(false);
+  const { isAuthenticated, user } = useAuth();
 
   return (
     <>
@@ -39,7 +39,7 @@ export const Services = () => {
             </p>
           </div>
 
-          {isAuthenticated && user?.role === 'professional' && (
+          {isAuthenticated && user?.role === "professional" && (
             <Button
               className="font-bold text-base"
               size="lg"
@@ -76,7 +76,7 @@ export const Services = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {Array.from({ length: 10 }).map(() => {
+          {Array.from({ length: 3 }).map(() => {
             return services.map((service) => (
               <Card key={service.id}>
                 <img
@@ -118,7 +118,7 @@ export const Services = () => {
                   </div>
                 </CardFooter>
               </Card>
-            ))
+            ));
           })}
         </div>
       </div>
@@ -137,5 +137,5 @@ export const Services = () => {
         </DialogContent>
       </Dialog>
     </>
-  )
-}
+  );
+};

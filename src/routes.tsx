@@ -7,53 +7,7 @@ import { EnterpriseSignUp } from "./pages/auth/sign-up/enterprise";
 import { Services } from "./pages/services";
 import { ServiceDetails } from "./pages/services/service-details";
 import { LandingPage } from "./pages/landing-page";
-
-// export const router = createBrowserRouter([
-//   {
-//     element: <AuthLayout />,
-//     children: [
-//       {
-//         path: "/sign-in",
-//         element: <SignIn />,
-//       },
-//       {
-//         path: "/sign-up",
-//         children: [
-//           {
-//             path: "professional",
-//             element: <ProfessionalSignUp />,
-//           },
-//           {
-//             path: "enterprise",
-//             element: <EnterpriseSignUp />,
-//           },
-//         ],
-//       },
-//     ],
-//   },
-//   {
-//     element: <RootLayout />,
-//     children: [
-//       {
-//         index: true,
-//         element: <LandingPage />,
-//       },
-//       {
-//         path: "/services",
-//         children: [
-//           {
-//             index: true,
-//             element: <Services />,
-//           },
-//           {
-//             path: ":serviceId",
-//             element: <ServiceDetails />,
-//           },
-//         ],
-//       },
-//     ],
-//   },
-// ]);
+import { ServicesProvider } from "./contexts/services/services-provider";
 
 export function Router() {
   return (
@@ -69,7 +23,7 @@ export function Router() {
       <Route path="/" element={<RootLayout />}>
         <Route index element={<LandingPage />} />
 
-        <Route path="services">
+        <Route path="services" element={<ServicesProvider />}>
           <Route index element={<Services />} />
 
           <Route path=":serviceId" element={<ServiceDetails />} />
