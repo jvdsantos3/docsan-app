@@ -32,7 +32,7 @@ export const ServiceDetails = () => {
         <aside className="w-full max-w-md">
           <Card className="sticky top-6">
             <img
-              src={service?.imageUrl || ''}
+              src={service?.imageUrl || '/service-banner-1.svg'}
               alt={'Service image'}
               className="w-full h-56 object-cover rounded-t-md"
             />
