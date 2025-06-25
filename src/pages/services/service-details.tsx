@@ -22,7 +22,7 @@ export const ServiceDetails = () => {
       </Button>
 
       <div className="flex gap-12">
-        <div className="space-y-4">
+        <div className="space-y-4 flex-1">
           <h1 className="font-lato font-bold text-[21px] text-blue-1000">
             {service?.title}
           </h1>

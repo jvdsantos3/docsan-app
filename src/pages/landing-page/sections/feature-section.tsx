@@ -26,7 +26,7 @@ export const FeatureSection = () => {
 
       <div className="flex flex-col gap-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {services.map((service) => (
+          {services.slice(0, 3).map((service) => (
             <Card key={service.id}>
               <img
                 src={service.imageUrl}
@@ -41,7 +41,7 @@ export const FeatureSection = () => {
               </CardHeader>
               <CardFooter>
                 <div className="w-full grid grid-cols-1 xl:grid-cols-2 gap-3">
-                  <Button variant="outline" className="font-bold" asChild>
+                  <Button variant="outline" className="font-bold text-blue-source" asChild>
                     <Link to={`services/${service.id}`}>Ver detalhes</Link>
                   </Button>
                   <Button className="font-bold">Quero contratar</Button>

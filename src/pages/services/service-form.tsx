@@ -1,36 +1,66 @@
-import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { useServices } from "@/hooks/use-services";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import { Button } from '@/components/ui/button'
+import { Form, FormField, FormItem, FormLabel } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { services } from '@/data/mockups/services'
+// import { useServices } from '@/hooks/use-services'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const serviceCreateFormSchema = z.object({
   title: z.string(),
   description: z.string(),
   content: z.string(),
-});
+})
 
 // Define the form data type
-export type ServiceCreateFormSchema = z.infer<typeof serviceCreateFormSchema>;
+export type ServiceCreateFormSchema = z.infer<typeof serviceCreateFormSchema>
 
-export const ServiceForm = () => {
-  const { create } = useServices();
+type ServiceFormProps = {
+  onCancel?: () => void
+  onSucess?: () => void
+}
+
+export const ServiceForm = ({ onCancel, onSucess }: ServiceFormProps) => {
+  // const { create } = useServices()
 
   const form = useForm<ServiceCreateFormSchema>({
     resolver: zodResolver(serviceCreateFormSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      content: "",
+      title: '',
+      description: '',
+      content: '',
     },
-  });
+  })
+
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel()
+    }
+  }
 
   const onSubmit = async (data: ServiceCreateFormSchema) => {
-    await create(data);
-  };
+    // await create(data)
+    services.push({
+      ...data,
+      content: <div>{data.content}</div>,
+      id: String(services.length + 1),
+      imageUrl: '',
+      professional: {
+        id: '1',
+        name: 'John Doe',
+        avatar: '',
+        bio: 'Professional bio goes here',
+        description: 'Professional description goes here',
+        role: 'professional',
+      },
+    })
+
+    if (onSucess) {
+      onSucess()
+    }
+  }
 
   return (
     <Form {...form}>
@@ -41,7 +71,7 @@ export const ServiceForm = () => {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Título do serviço</FormLabel>
+                <FormLabel>Título</FormLabel>
                 <Input
                   placeholder="Dê um título para o seu serviço"
                   {...field}
@@ -55,7 +85,7 @@ export const ServiceForm = () => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Descrição do serviço</FormLabel>
+                <FormLabel>Descrição</FormLabel>
                 <Input
                   placeholder="Diga o que o seu serviço soluciona"
                   {...field}
@@ -69,7 +99,7 @@ export const ServiceForm = () => {
             name="content"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Conteúdo do serviço</FormLabel>
+                <FormLabel>Conteúdo</FormLabel>
                 <Textarea
                   placeholder="Descreva em detalhes seu serviço"
                   {...field}
@@ -79,7 +109,12 @@ export const ServiceForm = () => {
           />
 
           <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
-            <Button type="button" className="font-bold" variant="outline">
+            <Button
+              type="button"
+              className="font-bold text-blue-source"
+              variant="outline"
+              onClick={handleCancel}
+            >
               Cancelar
             </Button>
 
@@ -90,5 +125,5 @@ export const ServiceForm = () => {
         </div>
       </form>
     </Form>
-  );
-};
+  )
+}
