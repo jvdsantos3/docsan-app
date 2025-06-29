@@ -22,6 +22,7 @@ import { Google } from "@ridemountainpig/svgl-react";
 import { PasswordInput } from "@/components/ui/password-input";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAuth } from "@/hooks/use-auth";
 
 const signInFormSchema = z.object({
   email: z.string().email("E-mail inválido"),
@@ -32,6 +33,9 @@ type SignInFormSchema = z.infer<typeof signInFormSchema>;
 
 export const SignIn = () => {
   const [open, setOpen] = useState(false);
+
+  const { login } = useAuth()
+
   const form = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -40,17 +44,8 @@ export const SignIn = () => {
     },
   });
 
-  function signIn(data: SignInFormSchema) {
-    console.log(data);
-    // Here you would typically handle the sign-in logic, such as calling an API
-    // For example:
-    // api.post("/auth/signin", data)
-    //   .then(response => {
-    //     console.log("Sign-in successful:", response.data);
-    //   })
-    //   .catch(error => {
-    //     console.error("Sign-in error:", error);
-    //   });
+  async function signIn(data: SignInFormSchema) {
+    await login(data)
   }
 
   return (
@@ -105,7 +100,9 @@ export const SignIn = () => {
                 </Link>
               </div>
 
-              <Button className="w-full rounded-xl">Entrar</Button>
+              <Button type="submit" className="w-full rounded-xl">
+                Entrar
+              </Button>
             </form>
           </Form>
 
@@ -134,9 +131,13 @@ export const SignIn = () => {
       </div>
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="bg-white sm:max-w-md md:max-w-lg lg:max-w-xl ">
+        <DialogContent className="bg-white sm:max-w-md md:max-w-lg lg:max-w-xl">
           <DialogHeader>
-            <img className="w-[8.6875rem] mx-auto mb-4" src="/logo-02.svg" alt="Docsan logo" />
+            <img
+              className="w-[8.6875rem] mx-auto mb-4"
+              src="/logo-02.svg"
+              alt="Docsan logo"
+            />
             <DialogTitle className="font-lato font-bold text-xl text-center">
               Como você deseja usar a DocSan?
             </DialogTitle>
@@ -151,11 +152,7 @@ export const SignIn = () => {
                 <p className="font-lato font-medium text-lg text-center">
                   Quero oferecer meus serviços de consultoria regulatória.
                 </p>
-                <Button
-                  variant="outline"
-                  className="w-full font-bold text-blue-source"
-                  asChild
-                >
+                <Button variant="outline" className="w-full font-bold" asChild>
                   <Link to={"/sign-up/professional"}>Sou profissional</Link>
                 </Button>
               </div>
@@ -164,11 +161,7 @@ export const SignIn = () => {
                 <p className="font-lato font-medium text-lg text-center">
                   Quero contratar serviços de consultoria para minha empresa.
                 </p>
-                <Button
-                  variant="outline"
-                  className="w-full font-bold text-blue-source"
-                  asChild
-                >
+                <Button variant="outline" className="w-full font-bold" asChild>
                   <Link to={"/sign-up/enterprise"}>Sou empresa</Link>
                 </Button>
               </div>

@@ -28,7 +28,7 @@ import { Calendar } from '@/components/ui/calendar'
 import { useMask, format as reactInputMaskFormat } from '@react-input/mask'
 
 const personalInfoSchema = professionalSignUpFormSchema.pick({
-  fullName: true,
+  name: true,
   cpf: true,
   birthDate: true,
   email: true,
@@ -56,7 +56,7 @@ export const PersonalInfo = () => {
   const form = useForm<PersonalInfoSchema>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
-      fullName: data?.fullName || '',
+      name: data?.name || '',
       cpf: cpfFormatted,
       birthDate: data?.birthDate,
       email: data?.email || '',
@@ -85,7 +85,7 @@ export const PersonalInfo = () => {
           <div className="space-y-6">
             <FormField
               control={form.control}
-              name="fullName"
+              name="name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">

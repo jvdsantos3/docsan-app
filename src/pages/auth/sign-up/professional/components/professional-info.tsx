@@ -25,9 +25,9 @@ import {
 import { states } from '@/data/states'
 
 const professionalInfoSchema = professionalSignUpFormSchema.pick({
-  fieldOfActivity: true,
-  proRegistration: true,
-  proRegistrationState: true,
+  fieldExpertise: true,
+  professionalRegistry: true,
+  registryUf: true,
   cnae: true,
 })
 
@@ -39,9 +39,9 @@ export const ProfessionalInfo = () => {
   const form = useForm<ProfessionalInfoSchema>({
     resolver: zodResolver(professionalInfoSchema),
     defaultValues: {
-      fieldOfActivity: data?.fieldOfActivity || '',
-      proRegistration: data?.proRegistration || '',
-      proRegistrationState: data?.proRegistrationState || '',
+      fieldExpertise: data?.fieldExpertise || '',
+      professionalRegistry: data?.professionalRegistry || '',
+      registryUf: data?.registryUf || '',
       cnae: data?.cnae || '',
     },
   })
@@ -67,7 +67,7 @@ export const ProfessionalInfo = () => {
           <div className="space-y-6">
             <FormField
               control={form.control}
-              name="fieldOfActivity"
+              name="fieldExpertise"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -82,7 +82,7 @@ export const ProfessionalInfo = () => {
             />
             <FormField
               control={form.control}
-              name="proRegistration"
+              name="professionalRegistry"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -97,7 +97,7 @@ export const ProfessionalInfo = () => {
             />
             <FormField
               control={form.control}
-              name="proRegistrationState"
+              name="registryUf"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
