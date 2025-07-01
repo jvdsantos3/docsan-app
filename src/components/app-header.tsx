@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom'
 import { Logo } from './logo'
 
 const navigationLinks = [
+  { href: '/my-documents', label: 'Documentos', active: true },
   { href: '/services', label: 'Serviços', active: true },
   { href: '/courses', label: 'Cursos', active: true },
   { href: '#', label: 'Cadastre-se', active: true },
@@ -28,10 +29,10 @@ export const AppHeader = () => {
               <NavigationMenuItem key={i}>
                 <NavigationMenuLink
                   active={link.active}
-                  href={link.href}
                   className="font-lato font-bold text-base text-blue-900"
+                  asChild
                 >
-                  {link.label}
+                  <Link to={link.href}>{link.label}</Link>
                 </NavigationMenuLink>
               </NavigationMenuItem>
             ))}

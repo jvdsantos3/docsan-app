@@ -1,13 +1,14 @@
-import { Route, Routes } from "react-router-dom";
-import { RootLayout } from "./pages/_layouts/root";
-import { AuthLayout } from "./pages/_layouts/auth";
-import { SignIn } from "./pages/auth/sign-in";
-import { ProfessionalSignUp } from "./pages/auth/sign-up/professional";
-import { EnterpriseSignUp } from "./pages/auth/sign-up/enterprise";
-import { Services } from "./pages/services";
-import { ServiceDetails } from "./pages/services/service-details";
-import { LandingPage } from "./pages/landing-page";
-import { ServicesProvider } from "./contexts/services/services-provider";
+import { Route, Routes } from 'react-router-dom'
+import { RootLayout } from './pages/_layouts/root'
+import { AuthLayout } from './pages/_layouts/auth'
+import { SignIn } from './pages/auth/sign-in'
+import { ProfessionalSignUp } from './pages/auth/sign-up/professional'
+import { EnterpriseSignUp } from './pages/auth/sign-up/enterprise'
+import { Services } from './pages/services'
+import { ServiceDetails } from './pages/services/service-details'
+import { LandingPage } from './pages/landing-page'
+import { ServicesProvider } from './contexts/services/services-provider'
+import { Documents } from './pages/documents'
 
 export function Router() {
   return (
@@ -28,7 +29,8 @@ export function Router() {
 
           <Route path=":serviceId" element={<ServiceDetails />} />
         </Route>
+        <Route path="my-documents" element={<Documents />} />
       </Route>
     </Routes>
-  );
+  )
 }
