@@ -1,19 +1,6 @@
 import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import type { ColumnDef } from '@tanstack/react-table'
-import {
-  Download,
-  Eye,
-  FileText,
-  MoreHorizontal,
-  SquarePen,
-} from 'lucide-react'
+import { DocumentDataTableRowActions } from './actions'
 
 export type Document = {
   id: string
@@ -93,38 +80,9 @@ export const columns: ColumnDef<Document>[] = [
     id: 'actions',
     header: 'Ações',
     cell: ({ row }) => {
-      const document = row.original
-
       return (
         <div className="text-right">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <span className="sr-only">Abrir menu</span>
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem
-                onClick={() => console.log('View details', document)}
-              >
-                <Eye className="text-blue-source" />
-                Ver detalhes
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <FileText className="text-green-source" />
-                Pré-visualização
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Download className="text-gray-600" />
-                Exportar
-              </DropdownMenuItem>
-              <DropdownMenuItem>
-                <SquarePen className="text-blue-600" />
-                Configurar notificação
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <DocumentDataTableRowActions row={row} />
         </div>
       )
     },

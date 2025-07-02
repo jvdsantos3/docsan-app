@@ -25,8 +25,11 @@ import {
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { CircleXIcon, SearchIcon } from 'lucide-react'
+import { DocumentPreviewDialog } from './components/preview-dialog'
+import { useSearchParams } from 'react-router-dom'
 
 export const DocumentsDataTable = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [inputValue, setInputValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
   const table = useReactTable({
@@ -35,11 +38,22 @@ export const DocumentsDataTable = () => {
     getCoreRowModel: getCoreRowModel(),
   })
 
+  const modalType = searchParams.get('modal')
+  const documentId = searchParams.get('documentId')
+
   const handleClearInput = () => {
     setInputValue('')
     if (inputRef.current) {
       inputRef.current.focus()
     }
+  }
+
+  const handleCloseDialog = () => {
+    setSearchParams((prev) => {
+      prev.delete('modal')
+      prev.delete('documentId')
+      return prev
+    })
   }
 
   return (
@@ -168,6 +182,14 @@ export const DocumentsDataTable = () => {
           </TableBody>
         </Table>
       </div>
+
+      {/* Modal for document preview */}
+      {documentId && modalType === 'preview' && (
+        <DocumentPreviewDialog
+          documentId={documentId}
+          onOpenChange={handleCloseDialog}
+        />
+      )}
     </div>
   )
 }

@@ -1,0 +1,65 @@
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import type { Row } from '@tanstack/react-table'
+import {
+  Download,
+  Eye,
+  FileText,
+  MoreHorizontal,
+  SquarePen,
+} from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
+import type { Document } from './columns'
+
+type DocumentDataTableRowActionsProps<TData> = {
+  row: Row<TData>
+}
+
+export function DocumentDataTableRowActions<TData>({
+  row,
+}: DocumentDataTableRowActionsProps<TData>) {
+  const navigate = useNavigate()
+  const document = row.original as Document
+
+  function handleViewDetails() {
+    navigate(`?documentId=${document.id}`)
+  }
+
+  function handlePreview() {
+    navigate(`?documentId=${document.id}&modal=preview`)
+  }
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Abrir menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={handleViewDetails}>
+          <Eye className="text-blue-source" />
+          Ver detalhes
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handlePreview}>
+          <FileText className="text-green-source" />
+          Pré-visualização
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Download className="text-gray-600" />
+          Exportar
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <SquarePen className="text-blue-600" />
+          Configurar notificação
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
