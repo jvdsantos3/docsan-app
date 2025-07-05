@@ -1,4 +1,6 @@
 import { useRef, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
+import { CircleXIcon, SearchIcon } from 'lucide-react'
 import {
   flexRender,
   getCoreRowModel,
@@ -12,8 +14,6 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { columns } from './columns'
-import { documents } from '@/data/mockups/documents'
 import {
   Select,
   SelectContent,
@@ -23,10 +23,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { columns } from './columns'
+import { documents } from '@/data/mockups/documents'
 import { Input } from '@/components/ui/input'
-import { CircleXIcon, SearchIcon } from 'lucide-react'
 import { DocumentPreviewDialog } from './components/preview-dialog'
-import { useSearchParams } from 'react-router-dom'
+import { NotifyDialog } from './components/notify-dialog'
+import { ExportDialog } from './components/export-dialog'
 
 export const DocumentsDataTable = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -186,6 +188,22 @@ export const DocumentsDataTable = () => {
       {/* Modal for document preview */}
       {documentId && modalType === 'preview' && (
         <DocumentPreviewDialog
+          documentId={documentId}
+          onOpenChange={handleCloseDialog}
+        />
+      )}
+
+      {/* Modal for document notification */}
+      {documentId && modalType === 'notify' && (
+        <NotifyDialog
+          documentId={documentId}
+          onOpenChange={handleCloseDialog}
+        />
+      )}
+
+      {/* Modal for document export */}
+      {documentId && modalType === 'export' && (
+        <ExportDialog
           documentId={documentId}
           onOpenChange={handleCloseDialog}
         />

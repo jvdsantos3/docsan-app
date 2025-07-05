@@ -34,6 +34,14 @@ export function DocumentDataTableRowActions<TData>({
     navigate(`?documentId=${document.id}&modal=preview`)
   }
 
+  function handleExport() {
+    navigate(`?documentId=${document.id}&modal=export`)
+  }
+
+  function handleNotify() {
+    navigate(`?documentId=${document.id}&modal=notify`)
+  }
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -51,11 +59,11 @@ export function DocumentDataTableRowActions<TData>({
           <FileText className="text-green-source" />
           Pré-visualização
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleExport}>
           <Download className="text-gray-600" />
           Exportar
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleNotify}>
           <SquarePen className="text-blue-600" />
           Configurar notificação
         </DropdownMenuItem>
