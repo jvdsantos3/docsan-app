@@ -1,6 +1,7 @@
 import { Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { DocumentsDataTable } from './data-table'
+import { Link } from 'react-router-dom'
 
 export const Documents = () => {
   return (
@@ -15,9 +16,11 @@ export const Documents = () => {
         </div>
 
         {
-          <Button className="font-bold text-base" size="lg">
-            <Plus />
-            Adicionar documento
+          <Button className="font-bold text-base" size="lg" asChild>
+            <Link to="/new-document">
+              <Plus />
+              Adicionar documento
+            </Link>
           </Button>
         }
       </div>

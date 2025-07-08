@@ -17,6 +17,8 @@ export type MultiStepFormContextData<T, S> = {
 export type Step<S> = {
   id: S
   title: string
+  description?: string
+  icon?: React.ReactNode
   content: React.ReactNode
 }
 

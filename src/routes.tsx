@@ -9,6 +9,7 @@ import { ServiceDetails } from './pages/services/service-details'
 import { LandingPage } from './pages/landing-page'
 import { ServicesProvider } from './contexts/services/services-provider'
 import { Documents } from './pages/documents'
+import { NewDocument } from './pages/documents/new-document'
 
 export function Router() {
   return (
@@ -26,10 +27,10 @@ export function Router() {
 
         <Route path="services" element={<ServicesProvider />}>
           <Route index element={<Services />} />
-
           <Route path=":serviceId" element={<ServiceDetails />} />
         </Route>
         <Route path="my-documents" element={<Documents />} />
+        <Route path="new-document" element={<NewDocument />} />
       </Route>
     </Routes>
   )
