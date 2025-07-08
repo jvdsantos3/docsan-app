@@ -4,16 +4,17 @@ import { useNavigate } from 'react-router-dom'
 import { NewDocumentStepper } from './components/stepper'
 import { MultiStepFormProvider } from '@/contexts/multi-step-form/provider'
 import { steps } from './steps'
+import { DocumentMultiStepForm } from './components/document-multi-step-form'
 
 export const NewDocument = () => {
   const navigate = useNavigate()
 
   return (
     <MultiStepFormProvider steps={steps} initialData={{}}>
-      <div className="space-y-6 py-6">
+      <div className="space-y-8 py-6">
         <Button
           type="button"
-          variant="ghost"
+          variant="link"
           className="text-blue-source"
           onClick={() => navigate(-1)}
         >
@@ -32,8 +33,7 @@ export const NewDocument = () => {
 
         <div className="bg-white p-8 rounded-2xl space-y-6">
           <NewDocumentStepper />
-
-          <div>form</div>
+          <DocumentMultiStepForm />
         </div>
       </div>
     </MultiStepFormProvider>

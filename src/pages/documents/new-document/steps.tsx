@@ -2,13 +2,14 @@ import type { Step } from '@/contexts/multi-step-form/context'
 import type { StepType } from './use-document-multi-step-form'
 import { IconSettings } from '@tabler/icons-react'
 import { ListCheck, Upload } from 'lucide-react'
+import { FieldConfigInfo } from './components/field-cofig-info'
 
 export const steps: Step<StepType>[] = [
   {
-    id: 'filed-config',
+    id: 'field-config',
     title: 'Configuração dos campos',
     icon: <IconSettings size={24} />,
-    content: <></>,
+    content: <FieldConfigInfo />,
   },
   {
     id: 'upload-documents',
