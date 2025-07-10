@@ -1,4 +1,13 @@
+import { useForm } from 'react-hook-form'
+import { DocumentTypeForm } from '@/components/forms/document-type-form'
 import { Button } from '@/components/ui/button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -15,10 +24,12 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Plus } from 'lucide-react'
-import { useForm } from 'react-hook-form'
+import { useState } from 'react'
 
 export const FieldConfigInfo = () => {
   const form = useForm()
+  const [newDocumentTypeDialogOpen, setNewDocumentTypeDialogOpen] =
+    useState(false)
 
   return (
     <div className="space-y-4">
@@ -82,17 +93,35 @@ export const FieldConfigInfo = () => {
                   type="button"
                   variant="outline"
                   className="font-bold text-blue-1000 lg:min-w-[200px]"
+                  onClick={() => setNewDocumentTypeDialogOpen(true)}
                 >
                   <Plus />
                   Novo tipo
                 </Button>
               </div>
             </div>
-
-            <div className="border border-input rounded-lg p-6">Campo 1</div>
           </div>
         </form>
       </Form>
+
+      <Dialog
+        open={newDocumentTypeDialogOpen}
+        onOpenChange={setNewDocumentTypeDialogOpen}
+      >
+        <DialogContent className="bg-white sm:max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Adicionar novo tipo de documento</DialogTitle>
+            <DialogDescription>
+              Crie um novo tipo de documento para configurar campos de extração
+              específicos.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div>
+            <DocumentTypeForm />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
