@@ -19,27 +19,17 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Plus, Trash2 } from 'lucide-react'
 import { useFieldArray, useForm } from 'react-hook-form'
-import { z } from 'zod'
+import {
+  documentTypeFormSchema,
+  MAX_FIELDS,
+  type DocumentTypeFormSchema,
+} from './schema'
 
-const MAX_FIELDS = 7
+type DocumentTypeFormProps = {
+  onCancel?: () => void
+}
 
-const documentTypeFormSchema = z.object({
-  name: z.string().nonempty('O nome do tipo de documento é obrigatório'),
-  fields: z
-    .array(
-      z.object({
-        name: z.string().nonempty('O nome do campo é obrigatório'),
-        type: z.enum(['text', 'number', 'date']),
-        required: z.boolean(),
-      }),
-    )
-    .min(1)
-    .max(MAX_FIELDS),
-})
-
-type DocumentTypeFormSchema = z.infer<typeof documentTypeFormSchema>
-
-export const DocumentTypeForm = () => {
+export const DocumentTypeForm = ({ onCancel }: DocumentTypeFormProps) => {
   const form = useForm<DocumentTypeFormSchema>({
     resolver: zodResolver(documentTypeFormSchema),
     defaultValues: {
@@ -56,6 +46,12 @@ export const DocumentTypeForm = () => {
   const handleAddField = () => {
     if (fields.length < MAX_FIELDS) {
       append({ name: '', type: 'text', required: false })
+    }
+  }
+
+  const handleCancel = () => {
+    if (onCancel) {
+      onCancel()
     }
   }
 
@@ -182,7 +178,7 @@ export const DocumentTypeForm = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-          <Button type="button" variant="outline">
+          <Button type="button" variant="outline" onClick={handleCancel}>
             Cancelar
           </Button>
           <Button type="submit">Adicionar tipo</Button>

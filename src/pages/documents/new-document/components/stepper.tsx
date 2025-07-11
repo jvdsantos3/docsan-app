@@ -7,6 +7,7 @@ import {
 } from '@/components/ui/stepper'
 import { cn } from '@/lib/utils'
 import { useDocumentMultiStepForm } from '../use-document-multi-step-form'
+import { Check } from 'lucide-react'
 
 export const NewDocumentStepper = () => {
   const { activeStep, steps } = useDocumentMultiStepForm()
@@ -18,8 +19,8 @@ export const NewDocumentStepper = () => {
           <StepperItem key={step.id} step={i + 1} className="flex-1">
             <StepperTrigger className="w-full flex-col gap-2">
               <div className="space-y-0.5 px-2">
-                <div className="border p-2 inline-flex items-center justify-center rounded-full border-gray-500 group-data-[state=active]/step:border-blue-1000 group-data-[state=completed]/step:border-blue-1000 text-gray-500 group-data-[state=active]/step:text-blue-1000 group-data-[state=completed]/step:text-blue-1000">
-                  {step.icon}
+                <div className="border p-2 inline-flex items-center justify-center rounded-full border-gray-500 group-data-[state=active]/step:border-blue-1000 group-data-[state=completed]/step:border-blue-1000 text-gray-500 group-data-[state=active]/step:text-blue-1000 group-data-[state=completed]/step:text-white group-data-[state=completed]/step:bg-blue-1000">
+                  {i < activeStep ? <Check /> : step.icon}
                 </div>
                 <StepperTitle className="font-lato font-bold text-base text-gray-500 group-data-[state=active]/step:text-blue-1000 group-data-[state=completed]/step:text-blue-1000">
                   {step.title}

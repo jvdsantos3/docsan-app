@@ -20,6 +20,7 @@ export type Step<S> = {
   description?: string
   icon?: React.ReactNode
   content: React.ReactNode
+  // state: 'active' | 'completed' | 'inactive'
 }
 
 export const MultiStepFormContext = createContext<

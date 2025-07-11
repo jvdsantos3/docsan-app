@@ -23,13 +23,34 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { Plus } from 'lucide-react'
+import { ChevronRight, Plus } from 'lucide-react'
 import { useState } from 'react'
+import { newDocumentFormSchema } from '../schema'
+import type { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useDocumentMultiStepForm } from '../use-document-multi-step-form'
 
-export const FieldConfigInfo = () => {
-  const form = useForm()
+const fieldConfigFormSchema = newDocumentFormSchema.pick({
+  documentTypeId: true,
+})
+
+type FieldConfigFormSchema = z.infer<typeof fieldConfigFormSchema>
+
+export const FieldConfigForm = () => {
+  const { setData, nextStep } = useDocumentMultiStepForm()
+  const form = useForm<FieldConfigFormSchema>({
+    resolver: zodResolver(fieldConfigFormSchema),
+    defaultValues: {
+      documentTypeId: '',
+    },
+  })
   const [newDocumentTypeDialogOpen, setNewDocumentTypeDialogOpen] =
     useState(false)
+
+  const onSubmit = (data: FieldConfigFormSchema) => {
+    setData(data)
+    nextStep()
+  }
 
   return (
     <div className="space-y-4">
@@ -44,7 +65,7 @@ export const FieldConfigInfo = () => {
       </div>
 
       <Form {...form}>
-        <form>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <div className="border border-input rounded-lg p-6">
               <p className="font-lato font-medium text-lg text-blue-1000">
@@ -55,15 +76,15 @@ export const FieldConfigInfo = () => {
                 extração específicos.
               </p>
 
-              <div className="flex items-end gap-4 mt-4">
-                <FormField
-                  control={form.control}
-                  name="documentType"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel className="font-lato font-normal text-sm text-gray-800">
-                        Tipo de documento
-                      </FormLabel>
+              <FormField
+                control={form.control}
+                name="documentTypeId"
+                render={({ field }) => (
+                  <FormItem className="flex-1 mt-4">
+                    <FormLabel className="font-lato font-normal text-sm text-gray-800">
+                      Tipo de documento
+                    </FormLabel>
+                    <div className="flex gap-4">
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -85,20 +106,26 @@ export const FieldConfigInfo = () => {
                           </SelectItem>
                         </SelectContent>
                       </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <Button
-                  type="button"
-                  variant="outline"
-                  className="font-bold text-blue-1000 lg:min-w-[200px]"
-                  onClick={() => setNewDocumentTypeDialogOpen(true)}
-                >
-                  <Plus />
-                  Novo tipo
-                </Button>
-              </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="font-bold text-blue-1000 lg:min-w-[200px]"
+                        onClick={() => setNewDocumentTypeDialogOpen(true)}
+                      >
+                        <Plus />
+                        Novo tipo
+                      </Button>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex justify-end items-center">
+              <Button type="submit">
+                Próximo <ChevronRight />
+              </Button>
             </div>
           </div>
         </form>
@@ -108,7 +135,10 @@ export const FieldConfigInfo = () => {
         open={newDocumentTypeDialogOpen}
         onOpenChange={setNewDocumentTypeDialogOpen}
       >
-        <DialogContent className="bg-white sm:max-w-2xl">
+        <DialogContent
+          className="bg-white sm:max-w-2xl"
+          onInteractOutside={(e) => e.preventDefault()}
+        >
           <DialogHeader>
             <DialogTitle>Adicionar novo tipo de documento</DialogTitle>
             <DialogDescription>
@@ -118,7 +148,9 @@ export const FieldConfigInfo = () => {
           </DialogHeader>
 
           <div>
-            <DocumentTypeForm />
+            <DocumentTypeForm
+              onCancel={() => setNewDocumentTypeDialogOpen(false)}
+            />
           </div>
         </DialogContent>
       </Dialog>

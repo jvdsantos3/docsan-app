@@ -1,7 +1,7 @@
 import { useMultiStepForm } from '@/hooks/use-multi-step-form'
-// import schema
+import type { NewDocumentFormSchema } from './schema'
 
 export type StepType = 'field-config' | 'upload-documents' | 'data-extraction'
 
 export const useDocumentMultiStepForm = () =>
-  useMultiStepForm<unknown, StepType>()
+  useMultiStepForm<NewDocumentFormSchema, StepType>()
