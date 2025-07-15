@@ -1,23 +1,23 @@
-import axios from "axios";
-import { getToken } from "../utils/sessionMethods";
+import axios from 'axios'
+import { getToken } from '../utils/sessionMethods'
 
-const baseUrl = "http://localhost:3333";
+const baseUrl = 'http://localhost:3333'
 
 export const api = axios.create({
   baseURL: baseUrl,
-});
+})
 
 api.interceptors.request.use(
   (config) => {
-    const token = getToken();
+    const token = getToken()
 
     if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`
     }
 
-    return config;
+    return config
   },
   (err) => {
-    return Promise.reject(err);
-  }
-);
+    return Promise.reject(err)
+  },
+)

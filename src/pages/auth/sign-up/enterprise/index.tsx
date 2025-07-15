@@ -1,32 +1,9 @@
-import type { Step } from '@/contexts/multi-step-form/context'
-import type { EnterpriseSignUpSchema } from './schema'
-import type { StepType } from './use-enterprise-sign-up-multi-step-form'
-
 import { Link } from 'react-router-dom'
+import type { EnterpriseSignUpSchema } from './schema'
 import { EnterpriseSignUpForm } from './components/enterprise-sign-up-form'
 import { MultiStepFormProvider } from '@/contexts/multi-step-form/provider'
-import { BusinessInfo } from './components/business-info'
-import { BusinessAddressInfo } from './components/bussiness-address-info'
-import { ResponsibleInfo } from './components/responsible-info'
 import { SignUpStepper } from './components/sign-up-stepper'
-
-const steps: Step<StepType>[] = [
-  {
-    id: 'business-data',
-    title: 'Dados da empresa',
-    content: <BusinessInfo />,
-  },
-  {
-    id: 'bussiness-address-data',
-    title: 'Endereço comercial',
-    content: <BusinessAddressInfo />,
-  },
-  {
-    id: 'responsible-data',
-    title: 'Responsável',
-    content: <ResponsibleInfo />,
-  },
-]
+import { steps } from './steps'
 
 export const EnterpriseSignUp = () => {
   return (

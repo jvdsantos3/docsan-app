@@ -26,27 +26,27 @@ import {
 } from '@/components/ui/select'
 import { states } from '@/data/states'
 
-const businessAddressInfoSchema = enterpriseSignUpSchema.pick({
+const companyAddressInfoSchema = enterpriseSignUpSchema.pick({
   address: true,
 })
 
-type BusinessAddressInfoSchema = z.infer<typeof businessAddressInfoSchema>
+type CompanyAddressInfoSchema = z.infer<typeof companyAddressInfoSchema>
 
 const cepInputOptions = {
   mask: '#####-###',
   replacement: { '#': /\d/ },
 }
 
-export const BusinessAddressInfo = () => {
+export const CompanyAddressInfo = () => {
   const { data, nextStep, previousStep, setData } =
     useEnterpriseSignUpMultiStepForm()
   const cepInputRef = useMask(cepInputOptions)
-  const form = useForm<BusinessAddressInfoSchema>({
-    resolver: zodResolver(businessAddressInfoSchema),
+  const form = useForm<CompanyAddressInfoSchema>({
+    resolver: zodResolver(companyAddressInfoSchema),
     defaultValues: {
       address: {
         zipCode: format(data?.address?.zipCode || '', cepInputOptions),
-        state: data?.address?.state || '',
+        uf: data?.address?.uf || '',
         city: data?.address?.city || '',
         street: data?.address?.street || '',
         number: data?.address?.number || '',
@@ -56,7 +56,7 @@ export const BusinessAddressInfo = () => {
     },
   })
 
-  function onSubmit(data: BusinessAddressInfoSchema) {
+  function onSubmit(data: CompanyAddressInfoSchema) {
     setData(data)
     nextStep()
   }
@@ -92,7 +92,7 @@ export const BusinessAddressInfo = () => {
               />
               <FormField
                 control={form.control}
-                name="address.state"
+                name="address.uf"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-lato text-gray-300">

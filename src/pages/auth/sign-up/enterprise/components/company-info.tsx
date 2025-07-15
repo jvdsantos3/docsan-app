@@ -7,7 +7,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { PasswordInput } from '@/components/ui/password-input'
 import { useForm } from 'react-hook-form'
 import { enterpriseSignUpSchema } from '../schema'
 import type { z } from 'zod'
@@ -18,42 +17,33 @@ import { CornerUpLeft } from 'lucide-react'
 import { useEnterpriseSignUpMultiStepForm } from '../use-enterprise-sign-up-multi-step-form'
 import { format, useMask } from '@react-input/mask'
 
-const enterpriseInfoSchema = enterpriseSignUpSchema.pick({
-  business: true,
+const companyInfoSchema = enterpriseSignUpSchema.pick({
+  company: true,
 })
 
-type EnterpriseInfoSchema = z.infer<typeof enterpriseInfoSchema>
+type CompanyInfoSchema = z.infer<typeof companyInfoSchema>
 
 const cnpjInputOptions = {
   mask: '##.###.###/####-##',
   replacement: { '#': /\d/ },
 }
 
-const phoneInputOptions = {
-  mask: '####-####',
-  replacement: { '#': /\d/ },
-}
-
-export const BusinessInfo = () => {
+export const CompanyInfo = () => {
   const { data, nextStep, setData } = useEnterpriseSignUpMultiStepForm()
-  const phoneInputRef = useMask(phoneInputOptions)
   const cnpjInputRef = useMask(cnpjInputOptions)
-  const form = useForm<EnterpriseInfoSchema>({
-    resolver: zodResolver(enterpriseInfoSchema),
+  const form = useForm<CompanyInfoSchema>({
+    resolver: zodResolver(companyInfoSchema),
     defaultValues: {
-      business: {
-        companyName: data?.business?.companyName || '',
-        tradeName: data?.business?.tradeName || '',
-        cnpj: format(data?.business?.cnpj || '', cnpjInputOptions),
-        email: data?.business?.email || '',
-        password: data?.business?.password || '',
-        cnae: data?.business?.cnae || '',
-        phone: format(data?.business?.phone || '', phoneInputOptions),
+      company: {
+        name: data?.company?.name || '',
+        tradeName: data?.company?.tradeName || '',
+        cnpj: format(data?.company?.cnpj || '', cnpjInputOptions),
+        cnae: data?.company?.cnae || '',
       }
     }
   })
 
-  function onSubmit(data: EnterpriseInfoSchema) {
+  function onSubmit(data: CompanyInfoSchema) {
     setData(data)
     nextStep()
   }
@@ -72,7 +62,7 @@ export const BusinessInfo = () => {
           <div className="space-y-6">
             <FormField
               control={form.control}
-              name="business.companyName"
+              name="company.name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -87,7 +77,7 @@ export const BusinessInfo = () => {
             />
             <FormField
               control={form.control}
-              name="business.tradeName"
+              name="company.tradeName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -102,7 +92,7 @@ export const BusinessInfo = () => {
             />
             <FormField
               control={form.control}
-              name="business.cnpj"
+              name="company.cnpj"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -117,37 +107,7 @@ export const BusinessInfo = () => {
             />
             <FormField
               control={form.control}
-              name="business.email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    E-mail comercial
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="business.password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    Senha
-                  </FormLabel>
-                  <FormControl>
-                    <PasswordInput {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="business.cnae"
+              name="company.cnae"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -155,21 +115,6 @@ export const BusinessInfo = () => {
                   </FormLabel>
                   <FormControl>
                     <Input type="number" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="business.phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    Telefone comercial
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} ref={phoneInputRef} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

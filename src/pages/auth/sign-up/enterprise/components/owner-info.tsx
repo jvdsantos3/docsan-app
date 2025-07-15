@@ -11,47 +11,82 @@ import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { CornerUpLeft } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { enterpriseSignUpSchema } from '../schema'
-import type { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useEnterpriseSignUpMultiStepForm } from '../use-enterprise-sign-up-multi-step-form'
 import { format, useMask } from '@react-input/mask'
+import { PasswordInput } from '@/components/ui/password-input'
+import { z } from 'zod'
+import { api } from '@/lib/axios'
 
-const responsibleInfoSchema = enterpriseSignUpSchema.pick({
-  responsible: true,
+const ownerInfoSchema = enterpriseSignUpSchema.pick({
+  owner: true,
   terms: true,
 })
 
-type ResponsibleInfoSchema = z.infer<typeof responsibleInfoSchema>
+type OwnerInfoSchema = z.infer<typeof ownerInfoSchema>
 
 const cpfInputOptions = {
   mask: '###.###.###-##',
   replacement: { '#': /\d/ },
 }
 
+const phoneInputOptions = {
+  mask: '####-####',
+  replacement: { '#': /\d/ },
+}
+
 export const ResponsibleInfo = () => {
+  const navigate = useNavigate()
   const {
     data: contextData,
     previousStep,
     setData,
   } = useEnterpriseSignUpMultiStepForm()
   const cpfInputRef = useMask(cpfInputOptions)
-  const form = useForm<ResponsibleInfoSchema>({
-    resolver: zodResolver(responsibleInfoSchema),
+  const phoneInputRef = useMask(phoneInputOptions)
+  const form = useForm<OwnerInfoSchema>({
+    resolver: zodResolver(ownerInfoSchema),
     defaultValues: {
-      responsible: {
-        fullName: contextData?.responsible?.fullName || '',
-        cpf: format(contextData?.responsible?.cpf || '', cpfInputOptions),
+      owner: {
+        name: contextData?.owner?.name || '',
+        cpf: format(contextData?.owner?.cpf || '', cpfInputOptions),
+        phone: format(contextData?.owner?.phone || '', phoneInputOptions),
+        email: contextData?.owner?.email || '',
+        password: contextData?.owner?.password || '',
       },
       terms: contextData?.terms || false,
     },
   })
 
-  function onSubmit(data: ResponsibleInfoSchema) {
+  async function onSubmit(data: OwnerInfoSchema) {
     setData(data)
-    console.log('Form data:', contextData)
+
+    const { company, address } = contextData
+
+    const payload = {
+      name: company.name,
+      tradeName: company.tradeName,
+      cnpj: company.cnpj,
+      cnae: company.cnae,
+      ownerName: data.owner.name,
+      ownerCpf: data.owner.cpf,
+      phone: data.owner.phone,
+      ownerEmail: data.owner.email,
+      password: data.owner.password,
+      zipCode: address.zipCode,
+      uf: address.uf,
+      city: address.city,
+      street: address.street,
+      number: address.number,
+      neighborhood: address.neighborhood,
+      complement: address.complement,
+    }
+
+    await api.post('/companies', payload)
+    navigate('/sign-in')
   }
 
   return (
@@ -69,7 +104,7 @@ export const ResponsibleInfo = () => {
           <div className="space-y-6">
             <FormField
               control={form.control}
-              name="responsible.fullName"
+              name="owner.name"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -84,7 +119,7 @@ export const ResponsibleInfo = () => {
             />
             <FormField
               control={form.control}
-              name="responsible.cpf"
+              name="owner.cpf"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -92,6 +127,51 @@ export const ResponsibleInfo = () => {
                   </FormLabel>
                   <FormControl>
                     <Input {...field} ref={cpfInputRef} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="owner.phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-lato text-gray-300">
+                    Telefone comercial
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} ref={phoneInputRef} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="owner.email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-lato text-gray-300">
+                    E-mail comercial
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="owner.password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-lato text-gray-300">
+                    Senha
+                  </FormLabel>
+                  <FormControl>
+                    <PasswordInput {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
