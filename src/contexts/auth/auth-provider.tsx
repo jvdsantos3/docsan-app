@@ -1,63 +1,64 @@
-import { useState } from "react";
-import { AuthContext } from "./auth-context";
-import type { ProfessionalSignUpFormSchema } from "@/pages/auth/sign-up/professional/schema";
-import { api } from "@/lib/axios";
-import { useNavigate } from "react-router-dom";
-import { getToken, storeTokens } from "@/utils/sessionMethods";
-import { jwtDecode } from "jwt-decode";
+import { useState } from 'react'
+import { AuthContext } from './auth-context'
+import type { ProfessionalSignUpFormSchema } from '@/pages/auth/sign-up/professional/schema'
+import { api } from '@/lib/axios'
+import { useNavigate } from 'react-router-dom'
+import { getToken, storeTokens } from '@/utils/sessionMethods'
+import { jwtDecode } from 'jwt-decode'
 
 export type AuthProviderProps = {
-  children: React.ReactNode;
-};
+  children: React.ReactNode
+}
 
 export interface User {
-  id: string;
-  role: "professional" | "company";
+  id: string
+  role: 'professional' | 'company'
 }
 
 export interface LoginInput {
-  email: string;
-  password: string;
+  email: string
+  password: string
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!getToken());
-  const [authUser, setAuthUser] = useState<User | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!getToken())
+  const [authUser, setAuthUser] = useState<User | null>(null)
 
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   async function registerProfessional(data: ProfessionalSignUpFormSchema) {
     await api
-      .post("/professionals", data)
+      .post('/professionals', data)
       .then(() => {
-        navigate("/sign-in");
+        navigate('/sign-in')
       })
       .catch((err) => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   }
 
   async function login(data: LoginInput) {
     await api
-      .post("/sessions", data)
+      .post('/sessions', data)
       .then((res) => {
         const accessToken = res.data.access_token
 
-        storeTokens(res.data.access_token);
+        storeTokens(res.data.access_token)
 
-        const user: {sub: string, role: "professional" | "company"} = jwtDecode(accessToken);
+        const user: { sub: string; role: 'professional' | 'company' } =
+          jwtDecode(accessToken)
 
         setAuthUser({
           id: user.sub,
-          role: user.role
-        });
+          role: user.role,
+        })
 
-        setIsAuthenticated(true);
-        navigate("/services");
+        setIsAuthenticated(true)
+        navigate(user.role === 'professional' ? '/services' : '/my-documents')
       })
       .catch((err) => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   }
 
   return (
@@ -69,14 +70,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         user: authUser,
 
         signIn: (credencials) => {
-          console.log(credencials);
+          console.log(credencials)
         },
         signOut: () => {
-          setAuthUser(null);
+          setAuthUser(null)
         },
       }}
     >
       {children}
     </AuthContext.Provider>
-  );
-};
+  )
+}
