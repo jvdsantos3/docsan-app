@@ -4,6 +4,6 @@ export type DocumentType = {
   isActive: boolean
   createdAt: Date
   updatedAt: Date
-  compoanyId: string
+  companyId: string
   professionalId: string | null
 }

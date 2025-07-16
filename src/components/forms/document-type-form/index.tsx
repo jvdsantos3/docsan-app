@@ -24,6 +24,7 @@ import {
   MAX_FIELDS,
   type DocumentTypeFormSchema,
 } from './schema'
+import { cn } from '@/lib/utils'
 
 type DocumentTypeFormProps = {
   onCancel?: () => void
@@ -169,15 +170,27 @@ export const DocumentTypeForm = ({
             ))}
 
             {fields.length < MAX_FIELDS && (
-              <Button
-                type="button"
-                variant="ghost"
-                className="w-full border border-gray-300 border-dashed text-gray-500 h-20"
-                onClick={handleAddField}
-              >
-                <Plus />
-                Adicionar campo {fields.length + 1}/{MAX_FIELDS}
-              </Button>
+              <div className="space-y-2">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className={cn(
+                    'w-full border border-gray-300 border-dashed text-gray-500 h-20',
+                    form.formState.errors.fields &&
+                      !fields.length &&
+                      'border-red-500 text-destructive',
+                  )}
+                  onClick={handleAddField}
+                >
+                  <Plus />
+                  Adicionar campo {fields.length + 1}/{MAX_FIELDS}
+                </Button>
+                {form.formState.errors.fields && (
+                  <FormMessage>
+                    {form.formState.errors.fields.message}
+                  </FormMessage>
+                )}
+              </div>
             )}
           </div>
         </div>

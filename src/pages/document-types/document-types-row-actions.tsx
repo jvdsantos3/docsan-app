@@ -6,7 +6,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Eye, MoreHorizontal, Settings2, Trash2 } from 'lucide-react'
+import {
+  CircleCheckBig,
+  CircleOff,
+  Eye,
+  MoreHorizontal,
+  Trash2,
+} from 'lucide-react'
+import { useToggleDocumentTypeStatus } from '@/http/use-toggle-document-type-status'
+import type { GetDocumentTypesResponse } from '@/http/types/get-document-types-response'
+import { useDeleteDocumentType } from '@/http/use-delete-document-type'
 
 interface DocumentTypesRowActionsProps<TData> {
   row: Row<TData>
@@ -15,7 +24,17 @@ interface DocumentTypesRowActionsProps<TData> {
 export function DocumentTypesRowActions<TData>({
   row,
 }: DocumentTypesRowActionsProps<TData>) {
-  const documentType = row.original
+  const { mutateAsync: toggleStatus } = useToggleDocumentTypeStatus()
+  const { mutateAsync: deleteDocumentType } = useDeleteDocumentType()
+  const documentType = row.original as GetDocumentTypesResponse['data'][number]
+
+  async function handleToggleStatus() {
+    await toggleStatus(documentType.id)
+  }
+
+  async function handleDelete() {
+    await deleteDocumentType(documentType.id)
+  }
 
   return (
     <DropdownMenu>
@@ -32,11 +51,20 @@ export function DocumentTypesRowActions<TData>({
           <Eye className="text-blue-source" />
           Ver detalhes
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Settings2 />
-          Ativar/Inativar
+        <DropdownMenuItem onClick={handleToggleStatus}>
+          {documentType.isActive ? (
+            <>
+              <CircleOff className="text-gray-700" />
+              Inativar
+            </>
+          ) : (
+            <>
+              <CircleCheckBig className="text-green-600" />
+              Ativar
+            </>
+          )}
         </DropdownMenuItem>
-        <DropdownMenuItem>
+        <DropdownMenuItem onClick={handleDelete}>
           <Trash2 className="text-[#d82020]" />
           Excluir
         </DropdownMenuItem>

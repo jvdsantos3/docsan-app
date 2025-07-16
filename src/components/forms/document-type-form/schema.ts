@@ -12,7 +12,7 @@ export const documentTypeFormSchema = z.object({
         required: z.boolean(),
       }),
     )
-    .min(1)
+    .min(1, 'Pelo menos um campo é obrigatório.')
     .max(MAX_FIELDS),
 })
 

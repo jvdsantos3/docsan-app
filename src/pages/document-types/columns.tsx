@@ -1,31 +1,11 @@
 import { Badge } from '@/components/ui/badge'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DocumentTypesRowActions } from './document-types-row-actions'
-import type { DocumentType } from '@/types/document-type'
 import { OrderButton } from './order-button'
 import { ArrowUpDown } from 'lucide-react'
+import type { GetDocumentTypesResponse } from '@/http/types/get-document-types-response'
 
-export const columns: ColumnDef<
-  DocumentType & {
-    _count: {
-      documents: number
-    }
-  }
->[] = [
-  {
-    accessorKey: 'name',
-    header: () => (
-      <OrderButton>
-        Nome
-        <ArrowUpDown />
-      </OrderButton>
-    ),
-    cell: ({ row }) => {
-      return (
-        <span className="font-bold text-gray-900">{row.getValue('name')}</span>
-      )
-    },
-  },
+export const columns: ColumnDef<GetDocumentTypesResponse['data'][number]>[] = [
   {
     accessorKey: 'isActive',
     header: 'Status',
@@ -42,19 +22,26 @@ export const columns: ColumnDef<
     },
   },
   {
+    accessorKey: 'name',
+    header: () => (
+      <OrderButton>
+        Nome
+        <ArrowUpDown />
+      </OrderButton>
+    ),
+    cell: ({ row }) => {
+      return (
+        <span className="font-bold text-gray-900">{row.getValue('name')}</span>
+      )
+    },
+  },
+  {
     accessorKey: '_count.documents',
     header: 'Documentos',
   },
   {
     accessorKey: 'createdAt',
     header: 'Criado em',
-    // cell: ({ row }) => {
-    //   return new Intl.DateTimeFormat('pt-BR', {
-    //     year: 'numeric',
-    //     month: '2-digit',
-    //     day: '2-digit',
-    //   }).format(new Date(row.getValue('receivedDate')))
-    // },
     cell: ({ row }) => {
       return (
         <span className="text-gray-500">
