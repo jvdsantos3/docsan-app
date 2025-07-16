@@ -7,11 +7,6 @@ export type GetDocumentTypesResponse = PaginationResponse<
       _count: {
         documents: number
       }
-      metadata: {
-        name: string
-        type: string
-        required: boolean
-      }[]
     }
   >
 >

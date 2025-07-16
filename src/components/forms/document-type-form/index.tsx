@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Plus, Trash2 } from 'lucide-react'
+import { Loader2, Plus, Trash2 } from 'lucide-react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import {
   documentTypeFormSchema,
@@ -25,13 +25,19 @@ import {
   type DocumentTypeFormSchema,
 } from './schema'
 import { cn } from '@/lib/utils'
+import type { DocumentType } from '@/types/document-type'
+import { useEffect } from 'react'
 
 type DocumentTypeFormProps = {
+  documentType?: DocumentType
+  isEdit?: boolean
   onCancel?: () => void
   onSubmit: (data: DocumentTypeFormSchema) => void
 }
 
 export const DocumentTypeForm = ({
+  documentType,
+  isEdit = false,
   onCancel,
   onSubmit,
 }: DocumentTypeFormProps) => {
@@ -42,6 +48,7 @@ export const DocumentTypeForm = ({
       fields: [{ name: 'Data de vencimento', type: 'date', required: true }],
     },
   })
+
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: 'fields',
@@ -60,9 +67,22 @@ export const DocumentTypeForm = ({
     }
   }
 
-  const handleSubmit = (data: DocumentTypeFormSchema) => {
+  const handleSubmit = async (data: DocumentTypeFormSchema) => {
     onSubmit(data)
   }
+
+  useEffect(() => {
+    if (documentType) {
+      form.reset({
+        name: documentType.name,
+        fields: documentType.metadata.map((md) => ({
+          name: md.name,
+          type: md.type.toLowerCase() as 'text' | 'number' | 'date',
+          required: md.required,
+        })),
+      })
+    }
+  }, [documentType, form])
 
   return (
     <Form {...form}>
@@ -199,7 +219,12 @@ export const DocumentTypeForm = ({
           <Button type="button" variant="outline" onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button type="submit">Adicionar tipo</Button>
+          <Button type="submit" disabled={form.formState.isSubmitting}>
+            {form.formState.isSubmitting && (
+              <Loader2 className="animate-spin" />
+            )}
+            {isEdit ? 'Salvar alterações' : 'Adicionar tipo'}
+          </Button>
         </div>
       </form>
     </Form>

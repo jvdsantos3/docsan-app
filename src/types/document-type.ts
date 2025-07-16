@@ -6,4 +6,9 @@ export type DocumentType = {
   updatedAt: Date
   companyId: string
   professionalId: string | null
+  metadata: {
+    name: string
+    type: string
+    required: boolean
+  }[]
 }

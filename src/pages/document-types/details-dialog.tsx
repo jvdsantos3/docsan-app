@@ -39,6 +39,10 @@ export const DocumentTypeDetailsDialog = ({
     return <div>Carregando...</div>
   }
 
+  if (!documentType) {
+    return null
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-white">
@@ -52,20 +56,20 @@ export const DocumentTypeDetailsDialog = ({
             <div className="grid grid-cols-2 gap-3 mt-2">
               <div className="flex flex-col gap-1">
                 <Label>Nome</Label>
-                <p className="text-sm font-medium">{documentType?.name}</p>
+                <p className="text-sm font-medium">{documentType.name}</p>
               </div>
               <div className="flex flex-col gap-1">
                 <Label>Status</Label>
                 <div className="flex items-center">
                   <CircleSmall
                     className={
-                      documentType?.isActive
+                      documentType.isActive
                         ? 'text-green-600'
                         : 'text-[#d82020]'
                     }
                   />
                   <p className="text-sm font-medium">
-                    {documentType?.isActive ? 'Ativo' : 'Inativo'}
+                    {documentType.isActive ? 'Ativo' : 'Inativo'}
                   </p>
                 </div>
               </div>
@@ -73,7 +77,7 @@ export const DocumentTypeDetailsDialog = ({
                 <Label>Data de criação</Label>
                 <p className="text-sm font-medium text-gray-800">
                   {format(
-                    documentType?.createdAt.toString() as string,
+                    documentType.createdAt.toString() as string,
                     'PPP HH:mm:ss',
                     {
                       locale: ptBR,
@@ -85,7 +89,7 @@ export const DocumentTypeDetailsDialog = ({
                 <Label>Última atualização</Label>
                 <p className="text-sm font-medium text-gray-800">
                   {format(
-                    documentType?.updatedAt.toString() as string,
+                    documentType.updatedAt.toString() as string,
                     'PPP HH:mm:ss',
                     {
                       locale: ptBR,
@@ -101,7 +105,7 @@ export const DocumentTypeDetailsDialog = ({
           <div>
             <p className="font-bold text-sm">Campos configurados</p>
             <div>
-              {documentType?.metadata.length ? (
+              {documentType.metadata.length ? (
                 <ul className="mt-2 space-y-2">
                   {documentType.metadata.map((field, index) => (
                     <li key={index} className="text-sm">

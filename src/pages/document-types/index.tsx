@@ -5,6 +5,7 @@ import { CreateDocumentTypeDialog } from '@/components/dialogs/create-document-t
 import { useState } from 'react'
 import { DocumentTypeDetailsDialog } from './details-dialog'
 import { useSearchParams } from 'react-router-dom'
+import { UpdateDocumentTypeDialog } from './update-document-type-dialog'
 
 export const DocumentTypes = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -53,6 +54,11 @@ export const DocumentTypes = () => {
 
       <DocumentTypeDetailsDialog
         open={modalType === 'details' && !!documentTypeId}
+        onOpenChange={handleCloseDialog}
+      />
+
+      <UpdateDocumentTypeDialog
+        open={modalType === 'edit' && !!documentTypeId}
         onOpenChange={handleCloseDialog}
       />
     </div>

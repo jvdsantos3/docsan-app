@@ -1,4 +1,4 @@
-export type CreateDocumentTypeRequest = {
+export type UpdateDocumentTypeRequest = {
   name: string
   fields: {
     name: string

@@ -5,12 +5,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from '@/components/ui/dropdown-menu'
 import {
   CircleCheckBig,
   CircleOff,
   Eye,
   MoreHorizontal,
+  Pencil,
   Trash2,
 } from 'lucide-react'
 import { useToggleDocumentTypeStatus } from '@/http/use-toggle-document-type-status'
@@ -40,6 +42,14 @@ export function DocumentTypesRowActions<TData>({
 
   async function handleToggleStatus() {
     await toggleStatus(documentType.id)
+  }
+
+  async function handleEdit() {
+    setSearchParams((prev) => {
+      prev.set('modal', 'edit')
+      prev.set('documentTypeId', documentType.id)
+      return prev
+    })
   }
 
   async function handleDelete() {
@@ -72,11 +82,18 @@ export function DocumentTypesRowActions<TData>({
             </>
           )}
         </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleEdit}>
+          <Pencil />
+          Editar
+        </DropdownMenuItem>
         {documentType._count?.documents === 0 && (
-          <DropdownMenuItem onClick={handleDelete}>
-            <Trash2 className="text-[#d82020]" />
-            Excluir
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleDelete}>
+              <Trash2 className="text-[#d82020]" />
+              Excluir
+            </DropdownMenuItem>
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
