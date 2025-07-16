@@ -16,6 +16,7 @@ import {
 import { useToggleDocumentTypeStatus } from '@/http/use-toggle-document-type-status'
 import type { GetDocumentTypesResponse } from '@/http/types/get-document-types-response'
 import { useDeleteDocumentType } from '@/http/use-delete-document-type'
+import { useSearchParams } from 'react-router-dom'
 
 interface DocumentTypesRowActionsProps<TData> {
   row: Row<TData>
@@ -24,9 +25,18 @@ interface DocumentTypesRowActionsProps<TData> {
 export function DocumentTypesRowActions<TData>({
   row,
 }: DocumentTypesRowActionsProps<TData>) {
+  const [, setSearchParams] = useSearchParams()
   const { mutateAsync: toggleStatus } = useToggleDocumentTypeStatus()
   const { mutateAsync: deleteDocumentType } = useDeleteDocumentType()
   const documentType = row.original as GetDocumentTypesResponse['data'][number]
+
+  function handleViewDetails() {
+    setSearchParams((prev) => {
+      prev.set('modal', 'details')
+      prev.set('documentTypeId', documentType.id)
+      return prev
+    })
+  }
 
   async function handleToggleStatus() {
     await toggleStatus(documentType.id)
@@ -45,9 +55,7 @@ export function DocumentTypesRowActions<TData>({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          onClick={() => console.log('View details', documentType)}
-        >
+        <DropdownMenuItem onClick={handleViewDetails}>
           <Eye className="text-blue-source" />
           Ver detalhes
         </DropdownMenuItem>
@@ -64,10 +72,12 @@ export function DocumentTypesRowActions<TData>({
             </>
           )}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleDelete}>
-          <Trash2 className="text-[#d82020]" />
-          Excluir
-        </DropdownMenuItem>
+        {documentType._count?.documents === 0 && (
+          <DropdownMenuItem onClick={handleDelete}>
+            <Trash2 className="text-[#d82020]" />
+            Excluir
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

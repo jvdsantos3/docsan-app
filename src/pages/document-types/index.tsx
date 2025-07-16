@@ -3,9 +3,23 @@ import { Plus } from 'lucide-react'
 import { DocumentTypesTable } from './document-types-table'
 import { CreateDocumentTypeDialog } from '@/components/dialogs/create-document-type-dialog'
 import { useState } from 'react'
+import { DocumentTypeDetailsDialog } from './details-dialog'
+import { useSearchParams } from 'react-router-dom'
 
 export const DocumentTypes = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [createDocTypeDialog, setCreateDocTypeDialog] = useState(false)
+
+  const modalType = searchParams.get('modal')
+  const documentTypeId = searchParams.get('documentTypeId')
+
+  function handleCloseDialog() {
+    setSearchParams((prev) => {
+      prev.delete('modal')
+      prev.delete('documentTypeId')
+      return prev
+    })
+  }
 
   return (
     <div className="space-y-6 py-6">
@@ -35,6 +49,11 @@ export const DocumentTypes = () => {
       <CreateDocumentTypeDialog
         open={createDocTypeDialog}
         onOpenChange={setCreateDocTypeDialog}
+      />
+
+      <DocumentTypeDetailsDialog
+        open={modalType === 'details' && !!documentTypeId}
+        onOpenChange={handleCloseDialog}
       />
     </div>
   )
