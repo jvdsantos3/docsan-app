@@ -21,7 +21,7 @@ export const AppHeader = () => {
 
   const navigationLinks = [
     {
-      href: '/my-documents',
+      href: '/documents',
       label: 'Documentos',
       active: true,
       hidden: !isAuthenticated,
@@ -85,7 +85,7 @@ export const AppHeader = () => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <DropdownMenuItem asChild>
-                    <Link to="my-document-types">Meus tipos de documentos</Link>
+                    <Link to="/document-types">Meus tipos de documentos</Link>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

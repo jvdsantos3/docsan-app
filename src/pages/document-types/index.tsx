@@ -1,9 +1,12 @@
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
-import { Link } from 'react-router-dom'
 import { DocumentTypesTable } from './document-types-table'
+import { CreateDocumentTypeDialog } from '@/components/dialogs/create-document-type-dialog'
+import { useState } from 'react'
 
 export const DocumentTypes = () => {
+  const [createDocTypeDialog, setCreateDocTypeDialog] = useState(false)
+
   return (
     <div className="space-y-6 py-6">
       <div className="flex justify-between">
@@ -14,11 +17,12 @@ export const DocumentTypes = () => {
           </p>
         </div>
 
-        <Button className="font-bold" asChild>
-          <Link to="new">
-            <Plus />
-            Adicionar tipo de documento
-          </Link>
+        <Button
+          className="font-bold"
+          onClick={() => setCreateDocTypeDialog(true)}
+        >
+          <Plus />
+          Adicionar tipo de documento
         </Button>
       </div>
 
@@ -27,6 +31,11 @@ export const DocumentTypes = () => {
           <DocumentTypesTable />
         </div>
       </div>
+
+      <CreateDocumentTypeDialog
+        open={createDocTypeDialog}
+        onOpenChange={setCreateDocTypeDialog}
+      />
     </div>
   )
 }

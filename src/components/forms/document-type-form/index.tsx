@@ -27,14 +27,18 @@ import {
 
 type DocumentTypeFormProps = {
   onCancel?: () => void
+  onSubmit: (data: DocumentTypeFormSchema) => void
 }
 
-export const DocumentTypeForm = ({ onCancel }: DocumentTypeFormProps) => {
+export const DocumentTypeForm = ({
+  onCancel,
+  onSubmit,
+}: DocumentTypeFormProps) => {
   const form = useForm<DocumentTypeFormSchema>({
     resolver: zodResolver(documentTypeFormSchema),
     defaultValues: {
       name: '',
-      fields: [{ name: '', type: 'text', required: false }],
+      fields: [{ name: 'Data de vencimento', type: 'date', required: true }],
     },
   })
   const { fields, append, remove } = useFieldArray({
@@ -55,13 +59,13 @@ export const DocumentTypeForm = ({ onCancel }: DocumentTypeFormProps) => {
     }
   }
 
-  const onSubmit = (data: DocumentTypeFormSchema) => {
-    console.log(data)
+  const handleSubmit = (data: DocumentTypeFormSchema) => {
+    onSubmit(data)
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="space-y-6">
           <FormField
             control={form.control}
@@ -147,6 +151,7 @@ export const DocumentTypeForm = ({ onCancel }: DocumentTypeFormProps) => {
                         <FormItem className="flex flex-row items-center gap-2">
                           <FormControl>
                             <Checkbox
+                              defaultChecked={field.value}
                               onCheckedChange={(checked) =>
                                 field.onChange(checked)
                               }

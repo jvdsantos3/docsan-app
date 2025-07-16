@@ -30,8 +30,8 @@ export function Router() {
           <Route index element={<Services />} />
           <Route path=":serviceId" element={<ServiceDetails />} />
         </Route>
-        <Route path="my-documents" element={<Documents />} />
-        <Route path="new-document" element={<NewDocument />} />
+        <Route path="documents" element={<Documents />} />
+        <Route path="documents/new" element={<NewDocument />} />
         <Route path="document-types" element={<DocumentTypes />} />
       </Route>
     </Routes>

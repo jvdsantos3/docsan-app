@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         })
 
         setIsAuthenticated(true)
-        navigate(user.role === 'professional' ? '/services' : '/my-documents')
+        navigate(user.role === 'professional' ? '/services' : '/documents')
       })
       .catch((err) => {
         console.log(err)

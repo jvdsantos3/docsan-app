@@ -16,8 +16,8 @@ export const Documents = () => {
         </div>
 
         {
-          <Button className="font-bold text-base" size="lg" asChild>
-            <Link to="/new-document">
+          <Button className="font-bold" asChild>
+            <Link to="new">
               <Plus />
               Adicionar documento
             </Link>

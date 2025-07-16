@@ -1,13 +1,5 @@
 import { useForm } from 'react-hook-form'
-import { DocumentTypeForm } from '@/components/forms/document-type-form'
 import { Button } from '@/components/ui/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import {
   Form,
   FormControl,
@@ -29,6 +21,7 @@ import { newDocumentFormSchema } from '../schema'
 import type { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useDocumentMultiStepForm } from '../use-document-multi-step-form'
+import { CreateDocumentTypeDialog } from '@/components/dialogs/create-document-type-dialog'
 
 const fieldConfigFormSchema = newDocumentFormSchema.pick({
   documentTypeId: true,
@@ -44,8 +37,7 @@ export const FieldConfigForm = () => {
       documentTypeId: '',
     },
   })
-  const [newDocumentTypeDialogOpen, setNewDocumentTypeDialogOpen] =
-    useState(false)
+  const [createDocTypeDialog, setCreateDocTypeDialog] = useState(false)
 
   const onSubmit = (data: FieldConfigFormSchema) => {
     setData(data)
@@ -110,7 +102,7 @@ export const FieldConfigForm = () => {
                         type="button"
                         variant="outline"
                         className="font-bold text-blue-1000 lg:min-w-[200px]"
-                        onClick={() => setNewDocumentTypeDialogOpen(true)}
+                        onClick={() => setCreateDocTypeDialog(true)}
                       >
                         <Plus />
                         Novo tipo
@@ -131,29 +123,10 @@ export const FieldConfigForm = () => {
         </form>
       </Form>
 
-      <Dialog
-        open={newDocumentTypeDialogOpen}
-        onOpenChange={setNewDocumentTypeDialogOpen}
-      >
-        <DialogContent
-          className="bg-white sm:max-w-2xl"
-          onInteractOutside={(e) => e.preventDefault()}
-        >
-          <DialogHeader>
-            <DialogTitle>Adicionar novo tipo de documento</DialogTitle>
-            <DialogDescription>
-              Crie um novo tipo de documento para configurar campos de extração
-              específicos.
-            </DialogDescription>
-          </DialogHeader>
-
-          <div>
-            <DocumentTypeForm
-              onCancel={() => setNewDocumentTypeDialogOpen(false)}
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
+      <CreateDocumentTypeDialog
+        open={createDocTypeDialog}
+        onOpenChange={setCreateDocTypeDialog}
+      />
     </div>
   )
 }
