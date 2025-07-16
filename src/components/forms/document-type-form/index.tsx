@@ -32,7 +32,7 @@ type DocumentTypeFormProps = {
   documentType?: DocumentType
   isEdit?: boolean
   onCancel?: () => void
-  onSubmit: (data: DocumentTypeFormSchema) => void
+  onSubmit: (data: DocumentTypeFormSchema) => Promise<void>
 }
 
 export const DocumentTypeForm = ({
@@ -68,7 +68,7 @@ export const DocumentTypeForm = ({
   }
 
   const handleSubmit = async (data: DocumentTypeFormSchema) => {
-    onSubmit(data)
+    await onSubmit(data)
   }
 
   useEffect(() => {

@@ -16,7 +16,7 @@ export const OrderButton = ({
   }
 
   return (
-    <Button {...props} variant="ghost" onClick={handleOrder}>
+    <Button {...props} variant="ghost" className="px-0!" onClick={handleOrder}>
       {children}
     </Button>
   )
