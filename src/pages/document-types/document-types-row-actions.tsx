@@ -8,25 +8,27 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Eye, MoreHorizontal, Settings2, Trash2 } from 'lucide-react'
 
-interface DataTableRowActionsProps<TData> {
+interface DocumentTypesRowActionsProps<TData> {
   row: Row<TData>
 }
 
-export function DataTableRowActions<TData>({
+export function DocumentTypesRowActions<TData>({
   row,
-}: DataTableRowActionsProps<TData>) {
+}: DocumentTypesRowActionsProps<TData>) {
   const documentType = row.original
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="h-8 w-8 p-0">
+        <Button variant="ghost" size="icon" className="size-8 p-0">
           <span className="sr-only">Abrir menu</span>
           <MoreHorizontal className="text-blue-source size-6" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => console.log('View details', documentType)}
+        >
           <Eye className="text-blue-source" />
           Ver detalhes
         </DropdownMenuItem>

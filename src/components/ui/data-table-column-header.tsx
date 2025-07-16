@@ -52,7 +52,7 @@ export function DataTableColumnHeader<TData, TValue>({
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
             <EyeOff />
-            Esconder
+            Hide
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -1,21 +1,24 @@
 import { Badge } from '@/components/ui/badge'
 import type { ColumnDef } from '@tanstack/react-table'
-import { DataTableRowActions } from './data-table-row-actions'
-import { DataTableColumnHeader } from '@/components/ui/data-table-column-header'
+import { DocumentTypesRowActions } from './document-types-row-actions'
+import type { DocumentType } from '@/types/document-type'
+import { OrderButton } from './order-button'
+import { ArrowUpDown } from 'lucide-react'
 
-export type DocumentType = {
-  id: string
-  name: string
-  isActive: boolean
-  createdAt: Date
-  updatedAt: Date
-}
-
-export const columns: ColumnDef<DocumentType>[] = [
+export const columns: ColumnDef<
+  DocumentType & {
+    _count: {
+      documents: number
+    }
+  }
+>[] = [
   {
     accessorKey: 'name',
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Nome" />
+    header: () => (
+      <OrderButton>
+        Nome
+        <ArrowUpDown />
+      </OrderButton>
     ),
     cell: ({ row }) => {
       return (
@@ -37,6 +40,10 @@ export const columns: ColumnDef<DocumentType>[] = [
         </Badge>
       )
     },
+  },
+  {
+    accessorKey: '_count.documents',
+    header: 'Documentos',
   },
   {
     accessorKey: 'createdAt',
@@ -62,7 +69,7 @@ export const columns: ColumnDef<DocumentType>[] = [
     cell: ({ row }) => {
       return (
         <div className="text-center">
-          <DataTableRowActions row={row} />
+          <DocumentTypesRowActions row={row} />
         </div>
       )
     },
