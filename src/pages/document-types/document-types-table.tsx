@@ -3,6 +3,8 @@ import { useDocumentTypes } from '@/http/use-document-types'
 import { useSearchParams } from 'react-router-dom'
 import { DocumentTypesPagination } from './document-types-pagination'
 import { columns } from './columns'
+import { DocumentTypesTableSkeleton } from './document-types-table-skeleton'
+import { DocumentTypesPaginationSkeleton } from './document-types-pagination-skeleton'
 
 export const DocumentTypesTable = () => {
   const [searchParams] = useSearchParams()
@@ -11,7 +13,12 @@ export const DocumentTypesTable = () => {
   const { data: response, isLoading } = useDocumentTypes({ page, order })
 
   if (isLoading) {
-    return <div>Carregando...</div>
+    return (
+      <div>
+        <DocumentTypesTableSkeleton />
+        <DocumentTypesPaginationSkeleton />
+      </div>
+    )
   }
 
   return (
