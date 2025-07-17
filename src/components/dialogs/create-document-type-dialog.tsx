@@ -8,6 +8,7 @@ import {
 import { DocumentTypeForm } from '@/components/forms/document-type-form'
 import { useCreateDocumentType } from '@/http/use-create-document-type'
 import type { CreateDocumentTypeRequest } from '@/http/types/create-document-type-request'
+import { toast } from 'sonner'
 
 type CreateDocumentTypeDialogProps = {
   open: boolean
@@ -18,7 +19,8 @@ export const CreateDocumentTypeDialog = ({
   open,
   onOpenChange,
 }: CreateDocumentTypeDialogProps) => {
-  const { mutateAsync: createDocumentType } = useCreateDocumentType()
+  const { mutateAsync: createDocumentType, error: createError } =
+    useCreateDocumentType()
 
   const handleCreateDocumentType = async (data: CreateDocumentTypeRequest) => {
     await createDocumentType({
@@ -26,6 +28,19 @@ export const CreateDocumentTypeDialog = ({
       fields: data.fields,
     })
     onOpenChange(false)
+    toast.success('Tipo de documento criado com sucesso!', {
+      dismissible: true,
+      duration: 5000,
+      description: 'Você pode agora adicionar documentos com este tipo.',
+      richColors: true,
+    })
+  }
+
+  if (createError) {
+    toast.error('Erro ao criar tipo de documento. Tente novamente.', {
+      dismissible: true,
+      duration: 5000,
+    })
   }
 
   return (

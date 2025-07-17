@@ -10,6 +10,7 @@ import type { UpdateDocumentTypeRequest } from '@/http/types/update-document-typ
 import { useDocumentType } from '@/http/use-document-type'
 import { useUpdateDocumentType } from '@/http/use-update-document-type'
 import { useSearchParams } from 'react-router-dom'
+import { toast } from 'sonner'
 
 type UpdateDocumentTypeDialog = {
   open: boolean
@@ -23,7 +24,8 @@ export const UpdateDocumentTypeDialog = ({
   const [searchParams] = useSearchParams()
   const documentTypeId = searchParams.get('documentTypeId')
   const { data: documentType, isLoading } = useDocumentType(documentTypeId)
-  const { mutateAsync: updateDocumentType } = useUpdateDocumentType()
+  const { mutateAsync: updateDocumentType, error: updateError } =
+    useUpdateDocumentType()
 
   async function handleUpdateDocumentType(data: UpdateDocumentTypeRequest) {
     if (!documentTypeId) return
@@ -36,6 +38,11 @@ export const UpdateDocumentTypeDialog = ({
       },
     })
     onOpenChange(false)
+    toast.success('Tipo de documento atualizado com sucesso!', {
+      dismissible: true,
+      duration: 5000,
+      richColors: true,
+    })
   }
 
   if (isLoading) {
@@ -44,6 +51,13 @@ export const UpdateDocumentTypeDialog = ({
 
   if (!documentType) {
     return null
+  }
+
+  if (updateError) {
+    toast.error('Erro ao atualizar tipo de documento. Tente novamente.', {
+      dismissible: true,
+      duration: 5000,
+    })
   }
 
   return (
