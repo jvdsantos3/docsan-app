@@ -31,6 +31,7 @@ import { useDeleteDocumentType } from '@/http/use-delete-document-type'
 import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import { toast } from 'sonner'
 
 interface DocumentTypesRowActionsProps<TData> {
   row: Row<TData>
@@ -40,8 +41,10 @@ export function DocumentTypesRowActions<TData>({
   row,
 }: DocumentTypesRowActionsProps<TData>) {
   const [, setSearchParams] = useSearchParams()
-  const { mutateAsync: toggleStatus } = useToggleDocumentTypeStatus()
-  const { mutateAsync: deleteDocumentType } = useDeleteDocumentType()
+  const { mutateAsync: toggleStatus, error: toggleError } =
+    useToggleDocumentTypeStatus()
+  const { mutateAsync: deleteDocumentType, error: deleteError } =
+    useDeleteDocumentType()
   const documentType = row.original as GetDocumentTypesResponse['data'][number]
   const [deleteOpen, setDeleteOpen] = useState(false)
 
@@ -55,6 +58,10 @@ export function DocumentTypesRowActions<TData>({
 
   async function handleToggleStatus() {
     await toggleStatus(documentType.id)
+    toast.success('Status do tipo de documento alterado com sucesso!', {
+      dismissible: true,
+      duration: 5000,
+    })
   }
 
   async function handleEdit() {
@@ -67,6 +74,27 @@ export function DocumentTypesRowActions<TData>({
 
   async function handleDelete() {
     await deleteDocumentType(documentType.id)
+    toast.success('Tipo de documento excluído com sucesso!', {
+      dismissible: true,
+      duration: 5000,
+    })
+  }
+
+  if (toggleError) {
+    toast.error(
+      'Erro ao alterar status do tipo de documento. Tente novamente.',
+      {
+        dismissible: true,
+        duration: 5000,
+      },
+    )
+  }
+
+  if (deleteError) {
+    toast.error('Erro ao excluir tipo de documento. Tente novamente.', {
+      dismissible: true,
+      duration: 5000,
+    })
   }
 
   return (
