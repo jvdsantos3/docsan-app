@@ -34,7 +34,7 @@ const cpfInputOptions = {
 }
 
 const phoneInputOptions = {
-  mask: '####-####',
+  mask: '(##) #####-####',
   replacement: { '#': /\d/ },
 }
 
@@ -138,7 +138,7 @@ export const ResponsibleInfo = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    Telefone comercial
+                    Telefone
                   </FormLabel>
                   <FormControl>
                     <Input {...field} ref={phoneInputRef} />
@@ -153,7 +153,7 @@ export const ResponsibleInfo = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
-                    E-mail comercial
+                    E-mail
                   </FormLabel>
                   <FormControl>
                     <Input {...field} />

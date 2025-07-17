@@ -1,5 +1,5 @@
 import type { Row } from '@tanstack/react-table'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -15,10 +15,22 @@ import {
   Pencil,
   Trash2,
 } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { useToggleDocumentTypeStatus } from '@/http/use-toggle-document-type-status'
 import type { GetDocumentTypesResponse } from '@/http/types/get-document-types-response'
 import { useDeleteDocumentType } from '@/http/use-delete-document-type'
 import { useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
+import { cn } from '@/lib/utils'
 
 interface DocumentTypesRowActionsProps<TData> {
   row: Row<TData>
@@ -31,6 +43,7 @@ export function DocumentTypesRowActions<TData>({
   const { mutateAsync: toggleStatus } = useToggleDocumentTypeStatus()
   const { mutateAsync: deleteDocumentType } = useDeleteDocumentType()
   const documentType = row.original as GetDocumentTypesResponse['data'][number]
+  const [deleteOpen, setDeleteOpen] = useState(false)
 
   function handleViewDetails() {
     setSearchParams((prev) => {
@@ -57,45 +70,70 @@ export function DocumentTypesRowActions<TData>({
   }
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="size-8 p-0">
-          <span className="sr-only">Abrir menu</span>
-          <MoreHorizontal className="text-blue-source size-6" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={handleViewDetails}>
-          <Eye className="text-blue-source" />
-          Ver detalhes
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleToggleStatus}>
-          {documentType.isActive ? (
+    <>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="icon" className="size-8 p-0">
+            <span className="sr-only">Abrir menu</span>
+            <MoreHorizontal className="text-blue-source size-6" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={handleViewDetails}>
+            <Eye className="text-blue-source" />
+            Ver detalhes
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleToggleStatus}>
+            {documentType.isActive ? (
+              <>
+                <CircleOff className="text-gray-700" />
+                Inativar
+              </>
+            ) : (
+              <>
+                <CircleCheckBig className="text-green-600" />
+                Ativar
+              </>
+            )}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleEdit}>
+            <Pencil />
+            Editar
+          </DropdownMenuItem>
+          {documentType._count?.documents === 0 && (
             <>
-              <CircleOff className="text-gray-700" />
-              Inativar
-            </>
-          ) : (
-            <>
-              <CircleCheckBig className="text-green-600" />
-              Ativar
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
+                <Trash2 className="text-[#d82020]" />
+                Excluir
+              </DropdownMenuItem>
             </>
           )}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleEdit}>
-          <Pencil />
-          Editar
-        </DropdownMenuItem>
-        {documentType._count?.documents === 0 && (
-          <>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleDelete}>
-              <Trash2 className="text-[#d82020]" />
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <AlertDialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+        <AlertDialogContent className="bg-white sm:max-w-2xl">
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Tem certeza que deseja excluir do tipo de documento?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              Esta ação não pode ser desfeita. Isso excluirá permanentemente o
+              tipo de documento.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction
+              className={cn(buttonVariants({ variant: 'destructive' }))}
+              onClick={handleDelete}
+            >
               Excluir
-            </DropdownMenuItem>
-          </>
-        )}
-      </DropdownMenuContent>
-    </DropdownMenu>
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }

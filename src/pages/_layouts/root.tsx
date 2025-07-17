@@ -7,8 +7,8 @@ export const RootLayout = () => {
     <div className="flex flex-col w-full min-h-svh">
       <AppHeader />
 
-      <main className="flex flex-1 flex-col min-h-[calc(100vh-64px)]">
-        <div className="container mx-auto px-4 xl:px-0">
+      <main className="flex flex-1 flex-col min-h-[calc(100vh-64px)] px-[7.5rem]">
+        <div className="container mx-auto px-[7.5rem] xl:px-0">
           <Outlet />
         </div>
       </main>
