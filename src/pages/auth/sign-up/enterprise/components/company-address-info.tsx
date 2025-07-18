@@ -206,7 +206,7 @@ export const CompanyAddressInfo = () => {
                     Número
                   </FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
