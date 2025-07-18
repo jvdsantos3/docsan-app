@@ -3,6 +3,15 @@ import { useSearchParams } from 'react-router-dom'
 import { CircleXIcon, SearchIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { useDebounce } from '@/hooks/use-debounce'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export const DocumentTypesFilters = () => {
   const inputRef = useRef<HTMLInputElement>(null)
@@ -16,6 +25,18 @@ export const DocumentTypesFilters = () => {
     if (inputRef.current) {
       inputRef.current.focus()
     }
+  }
+
+  const handleSelectStatus = (value: string) => {
+    setSearchParams((prev) => {
+      if (value === 'all') {
+        prev.delete('status')
+        return prev
+      }
+
+      prev.set('status', value)
+      return prev
+    })
   }
 
   useEffect(() => {
@@ -57,6 +78,21 @@ export const DocumentTypesFilters = () => {
             </button>
           )}
         </div>
+      </div>
+      <div>
+        <Select defaultValue="all" onValueChange={handleSelectStatus}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Selecione um status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Status</SelectLabel>
+              <SelectItem value="all">Todos os status</SelectItem>
+              <SelectItem value="active">Ativo</SelectItem>
+              <SelectItem value="inactive">Inativo</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
     </div>
   )

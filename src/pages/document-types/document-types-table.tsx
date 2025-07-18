@@ -12,7 +12,14 @@ export const DocumentTypesTable = () => {
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1
   const order = (searchParams.get('order') as 'asc' | 'desc' | null) ?? 'asc'
   const filter = searchParams.get('filter') || ''
-  const { data: response, isLoading } = useDocumentTypes({ page, order, filter })
+  const status = searchParams.get('status')
+  const { data: response, isLoading } = useDocumentTypes({
+    page,
+    order,
+    filter,
+    active:
+      status === 'active' ? true : status === 'inactive' ? false : undefined,
+  })
 
   if (isLoading) {
     return (
