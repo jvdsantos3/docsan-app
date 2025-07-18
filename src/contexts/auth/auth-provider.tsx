@@ -5,6 +5,7 @@ import { api } from '@/lib/axios'
 import { useNavigate } from 'react-router-dom'
 import { getToken, storeTokens } from '@/utils/sessionMethods'
 import { jwtDecode } from 'jwt-decode'
+import { toast } from 'sonner'
 
 export type AuthProviderProps = {
   children: React.ReactNode
@@ -54,10 +55,48 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         })
 
         setIsAuthenticated(true)
+        toast.dismiss()
         navigate(user.role === 'professional' ? '/services' : '/documents')
       })
       .catch((err) => {
-        console.log(err)
+        console.error(err)
+        if (err.response?.status === 401) {
+          let message = ''
+          let description = ''
+
+          switch (err.response.data.error) {
+            case 'Unauthorized':
+              message = 'E-mail ou senha inválidos.'
+              description = 'Verifique suas credenciais e tente novamente.'
+              break
+          }
+
+          toast.error(message, {
+            position: 'top-center',
+            duration: 3000,
+            description,
+            richColors: true,
+          })
+          return
+        }
+
+        if (err.response?.status >= 500) {
+          toast.error('Erro interno do servidor.', {
+            position: 'top-center',
+            duration: 3000,
+            description: 'Parece que houve um erro ao tentar fazer login.',
+            richColors: true,
+          })
+          return
+        }
+
+        toast.error('Erro desconhecido.', {
+          position: 'top-center',
+          duration: 3000,
+          description: 'Parece que estamos enfrentando um problema.',
+          richColors: true,
+        })
+        return
       })
   }
 
