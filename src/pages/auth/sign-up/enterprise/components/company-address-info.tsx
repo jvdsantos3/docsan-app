@@ -41,6 +41,7 @@ export const CompanyAddressInfo = () => {
   const { data, nextStep, previousStep, setData } =
     useEnterpriseSignUpMultiStepForm()
   const cepInputRef = useMask(cepInputOptions)
+
   const form = useForm<CompanyAddressInfoSchema>({
     resolver: zodResolver(companyAddressInfoSchema),
     defaultValues: {
@@ -55,6 +56,46 @@ export const CompanyAddressInfo = () => {
       },
     },
   })
+
+  async function handleChangeZipCode(
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) {
+    const { value } = event.target
+    const formattedValue = format(value, cepInputOptions)
+    const zipCode = formattedValue.replace(/[^\d]+/g, '')
+
+    if (zipCode.length === 8) {
+      try {
+        const response = await fetch(
+          `https://viacep.com.br/ws/${zipCode}/json/`,
+        )
+        const data = await response.json()
+
+        if (!data.erro) {
+          form.setValue('address.uf', data.uf)
+          form.clearErrors('address.uf')
+          form.setValue('address.city', data.localidade)
+          form.clearErrors('address.city')
+          form.setValue('address.street', data.logradouro)
+          form.clearErrors('address.street')
+          form.setValue('address.neighborhood', data.bairro)
+          form.clearErrors('address.neighborhood')
+        } else {
+          form.setError('address.zipCode', {
+            type: 'manual',
+            message: 'CEP inválido.',
+          })
+          console.error('CEP inválido')
+        }
+      } catch (error) {
+        form.setError('address.zipCode', {
+          type: 'manual',
+          message: 'Erro ao buscar CEP.',
+        })
+        console.error('Erro ao buscar CEP:', error)
+      }
+    }
+  }
 
   function onSubmit(data: CompanyAddressInfoSchema) {
     setData(data)
@@ -74,7 +115,7 @@ export const CompanyAddressInfo = () => {
             <CornerUpLeft /> Voltar
           </Button>
           <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-start gap-6">
               <FormField
                 control={form.control}
                 name="address.zipCode"
@@ -84,7 +125,14 @@ export const CompanyAddressInfo = () => {
                       Cep
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} ref={cepInputRef} />
+                      <Input
+                        {...field}
+                        ref={cepInputRef}
+                        onChange={(e) => {
+                          handleChangeZipCode(e)
+                          field.onChange(e.target.value)
+                        }}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -101,6 +149,7 @@ export const CompanyAddressInfo = () => {
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
