@@ -5,12 +5,14 @@ import { DocumentTypesPagination } from './document-types-pagination'
 import { columns } from './columns'
 import { DocumentTypesTableSkeleton } from './document-types-table-skeleton'
 import { DocumentTypesPaginationSkeleton } from './document-types-pagination-skeleton'
+import { DocumentTypesFilters } from './document-types-filters'
 
 export const DocumentTypesTable = () => {
   const [searchParams] = useSearchParams()
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1
   const order = (searchParams.get('order') as 'asc' | 'desc' | null) ?? 'asc'
-  const { data: response, isLoading } = useDocumentTypes({ page, order })
+  const filter = searchParams.get('filter') || ''
+  const { data: response, isLoading } = useDocumentTypes({ page, order, filter })
 
   if (isLoading) {
     return (
@@ -23,6 +25,15 @@ export const DocumentTypesTable = () => {
 
   return (
     <div>
+      <div>
+        <div className="px-8 py-6 flex justify-between items-center">
+          <h2 className="font-lato font-bold text-[21px] text-blue-1000">
+            Tipos de documentos
+          </h2>
+
+          <DocumentTypesFilters />
+        </div>
+      </div>
       <DataTable columns={columns} data={response?.data || []} />
       <DocumentTypesPagination
         currentPage={page}

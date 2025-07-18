@@ -7,9 +7,9 @@ export function useDocumentTypes(params: GetDocumentTypesSearchParams = {}) {
   return useQuery({
     queryKey: ['get-document-types', params],
     queryFn: async () => {
-      const { page = 1, order = 'asc' } = params
+      const searchParams = new URLSearchParams(params as Record<string, string>)
       const response = await api.get<GetDocumentTypesResponse>(
-        `/document-types?page=${page}&order=${order}`,
+        `/document-types?${searchParams.toString()}`,
       )
       return response.data
     },
