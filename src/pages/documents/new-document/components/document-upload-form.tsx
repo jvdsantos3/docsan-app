@@ -24,6 +24,8 @@ import { formatBytes, useFileUpload } from '@/hooks/use-file-upload'
 import { useDocumentMultiStepForm } from '../use-document-multi-step-form'
 import { acceptedFileTypes, maxSize, newDocumentFormSchema } from '../schema'
 import { cn } from '@/lib/utils'
+import { api } from '@/lib/axios'
+import { ComboBox } from '@/components/ui/combobox'
 
 const uploadFormSchema = newDocumentFormSchema.pick({
   documentTypeId: true,
@@ -61,7 +63,7 @@ export const DocumentUploadForm = () => {
 
   const file = files[0]
 
-  const onSubmit = (data: UploadFormSchema) => {
+  const onSubmit = async (data: UploadFormSchema) => {
     if (!file) {
       form.setError('file', {
         type: 'manual',
@@ -71,6 +73,15 @@ export const DocumentUploadForm = () => {
     }
 
     setData(data)
+
+    const formData = new FormData()
+    formData.append('documentTypeId', data.documentTypeId)
+    formData.append('file', data.file as File)
+
+    const res = await api.post('/documents/extract', formData)
+    console.log(res.data)
+    return
+
     nextStep()
   }
 
@@ -113,7 +124,15 @@ export const DocumentUploadForm = () => {
                       Tipo de documento
                     </FormLabel>
                     <div className="flex gap-4">
-                      <Select
+                        <FormControl>
+                          <ComboBox
+                            items={[]}
+                            isLoading={true}
+                            className="w-full"
+                            placeholder="Selecione um tipo de documento"
+                          />
+                        </FormControl>
+                      {/* <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                       >
@@ -133,7 +152,7 @@ export const DocumentUploadForm = () => {
                             m@support.com
                           </SelectItem>
                         </SelectContent>
-                      </Select>
+                      </Select> */}
                       <Button
                         type="button"
                         variant="outline"
