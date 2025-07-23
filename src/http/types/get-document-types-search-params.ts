@@ -1,7 +1,11 @@
-export type GetDocumentTypesSearchParams = {
-  page?: number
-  limit?: number
-  order?: 'asc' | 'desc'
-  active?: boolean
-  filter?: string
-}
+import { z } from 'zod'
+
+export const schema = z.object({
+  page: z.number().optional(),
+  limit: z.number().optional(),
+  order: z.enum(['asc', 'desc']).optional(),
+  active: z.boolean().optional(),
+  filter: z.string().trim().optional(),
+})
+
+export type GetDocumentTypesSearchParams = z.infer<typeof schema>

@@ -1,14 +1,23 @@
 import { api } from '@/lib/axios'
-import { keepPreviousData, useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery,  } from '@tanstack/react-query'
 import type { GetDocumentTypesResponse } from './types/get-document-types-response'
-import type { GetDocumentTypesSearchParams } from './types/get-document-types-search-params'
+import {
+  schema,
+  type GetDocumentTypesSearchParams,
+} from './types/get-document-types-search-params'
 import { createQueryStringClean } from '@/utils/create-query-string-clean'
 
 export function useDocumentTypes(params: GetDocumentTypesSearchParams = {}) {
+  const parsedParams = schema.safeParse(params)
+
+  if (!parsedParams.success) {
+    throw new Error('Invalid search parameters for document types')
+  }
+
   return useQuery({
-    queryKey: ['get-document-types', params],
+    queryKey: ['get-document-types', parsedParams.data],
     queryFn: async () => {
-      const searchParams = createQueryStringClean(params)
+      const searchParams = createQueryStringClean(parsedParams.data)
       const response = await api.get<GetDocumentTypesResponse>(
         `/document-types?${searchParams}`,
       )

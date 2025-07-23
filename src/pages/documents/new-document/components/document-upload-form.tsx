@@ -11,13 +11,6 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
 import { Button } from '@/components/ui/button'
 import { CreateDocumentTypeDialog } from '@/components/dialogs/create-document-type-dialog'
 import { formatBytes, useFileUpload } from '@/hooks/use-file-upload'
@@ -26,6 +19,7 @@ import { acceptedFileTypes, maxSize, newDocumentFormSchema } from '../schema'
 import { cn } from '@/lib/utils'
 import { api } from '@/lib/axios'
 import { ComboBox } from '@/components/ui/combobox'
+import { useDocumentTypes } from '@/http/use-document-types'
 
 const uploadFormSchema = newDocumentFormSchema.pick({
   documentTypeId: true,
@@ -35,6 +29,8 @@ const uploadFormSchema = newDocumentFormSchema.pick({
 type UploadFormSchema = z.infer<typeof uploadFormSchema>
 
 export const DocumentUploadForm = () => {
+  const [filter, setFilter] = useState('')
+  const { data: items, isLoading } = useDocumentTypes({ filter })
   const { nextStep, setData } = useDocumentMultiStepForm()
   const [createDocTypeDialog, setCreateDocTypeDialog] = useState(false)
   const form = useForm<UploadFormSchema>({
@@ -124,35 +120,27 @@ export const DocumentUploadForm = () => {
                       Tipo de documento
                     </FormLabel>
                     <div className="flex gap-4">
-                        <FormControl>
-                          <ComboBox
-                            items={[]}
-                            isLoading={true}
-                            className="w-full"
-                            placeholder="Selecione um tipo de documento"
-                          />
-                        </FormControl>
-                      {/* <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Selecione um tipo de documento" />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="m@example.com">
-                            m@example.com
-                          </SelectItem>
-                          <SelectItem value="m@google.com">
-                            m@google.com
-                          </SelectItem>
-                          <SelectItem value="m@support.com">
-                            m@support.com
-                          </SelectItem>
-                        </SelectContent>
-                      </Select> */}
+                      <FormControl>
+                        <ComboBox
+                          items={
+                            items?.data.map((item) => ({
+                              value: item.id,
+                              label: item.name,
+                            })) || []
+                          }
+                          onChange={field.onChange}
+                          onSearch={(value) => setFilter(value)}
+                          value={field.value}
+                          isLoading={isLoading}
+                          className="w-full"
+                          contentClassName="md:w-[320px] lg:w-[560px]"
+                          placeholder="Selecione um tipo de documento"
+                          emptyMessage="Nenhum tipo de documento encontrado."
+                          align="start"
+                          delay={300}
+                          shouldFilter={false}
+                        />
+                      </FormControl>
                       <Button
                         type="button"
                         variant="outline"

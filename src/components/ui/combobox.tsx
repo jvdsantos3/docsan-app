@@ -1,4 +1,4 @@
-import { forwardRef, useEffect, useId, useState } from 'react'
+import { forwardRef, useEffect, useState } from 'react'
 import { Button } from './button'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import {
@@ -17,6 +17,7 @@ import {
 import { useDebounce } from '@/hooks/use-debounce'
 import { Skeleton } from './skeleton'
 import { cn } from '@/lib/utils'
+import type { PopoverContentProps } from '@radix-ui/react-popover'
 
 export interface ComboBoxItem {
   value: string
@@ -24,9 +25,9 @@ export interface ComboBoxItem {
 }
 
 export interface ComboBoxProps
-  extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange'> {
+  extends Omit<React.HTMLAttributes<HTMLButtonElement>, 'onChange'> {
   items: ComboBoxItem[]
-  // value?: string
+  value?: string
   onChange?: (value: string) => void
   onSearch?: (query: string) => void
   isLoading?: boolean
@@ -36,8 +37,12 @@ export interface ComboBoxProps
   selectedItem?: ComboBoxItem
   emptyMessage?: string
   commandInputPlaceholder?: string
+  contentClassName?: string
   delay?: number
   className?: string
+  disabled?: boolean
+  align?: PopoverContentProps['align']
+  shouldFilter?: boolean
 }
 
 export const ComboBox = forwardRef<HTMLButtonElement, ComboBoxProps>(
@@ -45,25 +50,36 @@ export const ComboBox = forwardRef<HTMLButtonElement, ComboBoxProps>(
     {
       items,
       placeholder,
-      // value,
+      value,
       selectedItem,
       onChange,
       onSearch,
-      isLoading = false,
       className,
       emptyMessage,
       commandInputPlaceholder,
+      contentClassName,
       delay = 0,
+      disabled = false,
+      isLoading = false,
+      align = 'center',
+      shouldFilter = true,
+      ...props
     },
     ref,
   ) => {
-    const id = useId()
     const [open, setOpen] = useState(false)
+    const [selected, setSelected] = useState(selectedItem)
     const [searchQuery, setSearchQuery] = useState('')
     const debouncedSearchQuery = useDebounce(searchQuery, delay)
 
-    const selectedLabel = selectedItem?.label || placeholder
+    const label = selected
+      ? selected.label
+      : value
+        ? items.find((item) => item.value === value)?.label
+        : placeholder
+
     const handleSelect = (value: string) => {
+      setSelected(items.find((item) => item.value === value))
       if (onChange) {
         onChange(value)
       }
@@ -81,23 +97,32 @@ export const ComboBox = forwardRef<HTMLButtonElement, ComboBoxProps>(
         <PopoverTrigger asChild>
           <Button
             ref={ref}
-            id={id}
             variant="outline"
             role="combobox"
             aria-expanded={open}
+            disabled={disabled}
             className={cn(
-              'border-input w-[200px] justify-between text-muted-foreground flex shrink',
+              'border-input w-[200px] justify-between flex shrink',
               className,
             )}
+            {...props}
           >
-            <span className="line-clamp-1 flex items-center gap-2">
-              {selectedLabel ?? 'Select...'}
+            <span
+              className={cn(
+                'line-clamp-1 flex items-center gap-2',
+                !label && 'text-muted-foreground',
+              )}
+            >
+              {label ?? 'Select...'}
             </span>
             <ChevronsUpDown className="opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0">
-          <Command>
+        <PopoverContent
+          className={cn('w-[200px] p-0', contentClassName)}
+          align={align}
+        >
+          <Command shouldFilter={shouldFilter}>
             <CommandInput
               placeholder={commandInputPlaceholder ?? 'Search...'}
               className="h-9"
@@ -127,7 +152,7 @@ export const ComboBox = forwardRef<HTMLButtonElement, ComboBoxProps>(
                       <Check
                         className={cn(
                           'ml-auto h-4 w-4',
-                          // value === item.value ? 'opacity-100' : 'opacity-0',
+                          value === item.value ? 'opacity-100' : 'opacity-0',
                         )}
                       />
                     </CommandItem>
