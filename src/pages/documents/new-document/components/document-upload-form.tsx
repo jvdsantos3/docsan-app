@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -20,6 +20,7 @@ import { cn } from '@/lib/utils'
 import { api } from '@/lib/axios'
 import { ComboBox } from '@/components/ui/combobox'
 import { useDocumentTypes } from '@/http/use-document-types'
+import { useDocumentType } from '@/http/use-document-type'
 
 const uploadFormSchema = newDocumentFormSchema.pick({
   documentTypeId: true,
@@ -29,17 +30,35 @@ const uploadFormSchema = newDocumentFormSchema.pick({
 type UploadFormSchema = z.infer<typeof uploadFormSchema>
 
 export const DocumentUploadForm = () => {
+  const fileId = useId()
   const [filter, setFilter] = useState('')
-  const { data: items, isLoading } = useDocumentTypes({ filter })
-  const { nextStep, setData } = useDocumentMultiStepForm()
   const [createDocTypeDialog, setCreateDocTypeDialog] = useState(false)
+  const { data: items, isLoading } = useDocumentTypes({ active: true, filter })
+  const { data: contextData, nextStep, setData } = useDocumentMultiStepForm()
+  const { data: documentType } = useDocumentType(contextData.documentTypeId)
+
   const form = useForm<UploadFormSchema>({
     resolver: zodResolver(uploadFormSchema),
     defaultValues: {
-      documentTypeId: '',
-      file: undefined,
+      documentTypeId: contextData?.documentTypeId,
+      file: contextData?.file,
     },
   })
+
+  const selected = documentType
+    ? { label: documentType.name, value: documentType.id }
+    : undefined
+  const initialFiles = contextData.file
+    ? [
+        {
+          id: fileId,
+          name: contextData.file?.name,
+          size: contextData.file?.size,
+          type: contextData.file?.type,
+          url: URL.createObjectURL(contextData.file),
+        },
+      ]
+    : undefined
 
   const [
     { files, isDragging },
@@ -54,10 +73,16 @@ export const DocumentUploadForm = () => {
     },
   ] = useFileUpload({
     maxSize,
+    initialFiles,
     accept: acceptedFileTypes.join(','),
   })
 
   const file = files[0]
+
+  const handleRemoveFile = (id: string) => {
+    removeFile(id)
+    form.setValue('file', undefined)
+  }
 
   const onSubmit = async (data: UploadFormSchema) => {
     if (!file) {
@@ -68,24 +93,22 @@ export const DocumentUploadForm = () => {
       return
     }
 
-    setData(data)
-
     const formData = new FormData()
     formData.append('documentTypeId', data.documentTypeId)
     formData.append('file', data.file as File)
 
     const res = await api.post('/documents/extract', formData)
-    console.log(res.data)
-    return
+    setData({ ...data, fields: res.data })
+    console.log({ ...data, fields: res.data })
 
     nextStep()
   }
 
   useEffect(() => {
-    form.setValue('file', file?.file instanceof File ? file.file : undefined, {
-      shouldValidate: true,
-    })
-  }, [file, form])
+    if (file && file.file instanceof File) {
+      form.setValue('file', file.file, { shouldValidate: true })
+    }
+  }, [contextData, file, form])
 
   return (
     <div className="space-y-4">
@@ -131,6 +154,7 @@ export const DocumentUploadForm = () => {
                           onChange={field.onChange}
                           onSearch={(value) => setFilter(value)}
                           value={field.value}
+                          selectedItem={selected}
                           isLoading={isLoading}
                           className="w-full"
                           contentClassName="md:w-[320px] lg:w-[560px]"
@@ -217,7 +241,7 @@ export const DocumentUploadForm = () => {
                             size="icon"
                             variant="ghost"
                             className="text-muted-foreground/80 hover:text-foreground -me-2 size-8 hover:bg-transparent"
-                            onClick={() => removeFile(files[0]?.id)}
+                            onClick={() => handleRemoveFile(files[0]?.id)}
                             aria-label="Remove file"
                           >
                             <XIcon className="size-4" aria-hidden="true" />

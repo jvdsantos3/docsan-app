@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/button'
-import { Form } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormLabel } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
   Table,
@@ -10,12 +10,61 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { ChevronLeft, ChevronRight, Download, Eye } from 'lucide-react'
-import { useForm } from 'react-hook-form'
+import { useFieldArray, useForm } from 'react-hook-form'
 import { useDocumentMultiStepForm } from '../use-document-multi-step-form'
+import { newDocumentFormSchema } from '../schema'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useCreateDocument } from '@/http/use-create-document'
+import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
+
+const dataExtractionFormSchema = newDocumentFormSchema.pick({
+  fields: true,
+})
+
+type DataExtractionFormSchema = z.infer<typeof dataExtractionFormSchema>
 
 export const DocumentDataExtractionForm = () => {
-  const { previousStep } = useDocumentMultiStepForm()
-  const form = useForm()
+  const navigate = useNavigate()
+  const { mutateAsync: createDocument, error, isError } = useCreateDocument()
+  const { data: contextData, previousStep } = useDocumentMultiStepForm()
+  const form = useForm<DataExtractionFormSchema>({
+    resolver: zodResolver(dataExtractionFormSchema),
+    defaultValues: {
+      fields: contextData.fields.map((field) => ({
+        name: field.name,
+        value: field.value ?? undefined,
+      })),
+    },
+  })
+
+  const { fields } = useFieldArray({
+    control: form.control,
+    name: 'fields',
+  })
+
+  async function onSubmit(data: DataExtractionFormSchema) {
+    await createDocument({
+      file: contextData!.file as File,
+      ...contextData,
+      ...data,
+    })
+
+    navigate('/documents')
+    toast.success('Documento criado com sucesso!', {
+      dismissible: true,
+      duration: 5000,
+      richColors: true,
+    })
+  }
+
+  if (isError) {
+    toast.error('Erro ao criar documento. Tente novamente.', {
+      dismissible: true,
+      duration: 5000,
+    })
+  }
 
   return (
     <div className="space-y-4">
@@ -47,7 +96,7 @@ export const DocumentDataExtractionForm = () => {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(() => {})}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="space-y-4">
             <div>
               <div className="overflow-hidden rounded-md border">
@@ -59,16 +108,28 @@ export const DocumentDataExtractionForm = () => {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    <TableRow>
-                      <TableCell className="md:px-8">Nome do cliente</TableCell>
-                      <TableCell className="md:px-8">
-                        <Input
-                          type="text"
-                          className="w-full border-0 focus:border focus:border-input px-0 focus:px-3 transition-all"
-                          defaultValue="José Francisco Silva"
-                        />
-                      </TableCell>
-                    </TableRow>
+                    {fields.map((field, index) => (
+                      <FormField
+                        key={field.id}
+                        control={form.control}
+                        name={`fields.${index}.value`}
+                        render={({ field: formField }) => (
+                          <TableRow>
+                            <TableCell className="md:px-8">
+                              <FormLabel>{field.name}</FormLabel>
+                            </TableCell>
+                            <TableCell className="md:px-8">
+                              <FormControl>
+                                <Input
+                                  className="w-full border-0 focus:border focus:border-input px-0 focus:px-3 transition-all shadow-none focus:shadow-sm"
+                                  {...formField}
+                                />
+                              </FormControl>
+                            </TableCell>
+                          </TableRow>
+                        )}
+                      />
+                    ))}
                   </TableBody>
                 </Table>
               </div>

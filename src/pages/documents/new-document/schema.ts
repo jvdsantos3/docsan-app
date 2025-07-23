@@ -11,16 +11,25 @@ export const acceptedFileTypes = [
 ]
 
 export const newDocumentFormSchema = z.object({
-  documentTypeId: z.string().nonempty('Tipo de documento é obrigatório.'),
+  documentTypeId: z.string().uuid().nonempty('Tipo de documento é obrigatório.'),
   file: z
     .instanceof(File, { message: 'Selecione um arquivo.' })
     .optional()
     .refine((file) => file === undefined || file.size <= maxSize, {
       message: 'Arquivo deve ter até 10 MB.',
     })
-    .refine((file) => file === undefined || acceptedFileTypes.includes(file.type), {
-      message: 'Apenas arquivos PDF, JPG, PNG, DOC ou DOCX são permitidos.',
+    .refine(
+      (file) => file === undefined || acceptedFileTypes.includes(file.type),
+      {
+        message: 'Apenas arquivos PDF, JPG, PNG, DOC ou DOCX são permitidos.',
+      },
+    ),
+  fields: z.array(
+    z.object({
+      name: z.string().trim().min(1, 'O nome do campo é obrigatório.'),
+      value: z.string().optional(),
     }),
+  ),
 })
 // .superRefine((data, ctx) => {
 //   if (data.file === undefined) {
