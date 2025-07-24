@@ -80,7 +80,7 @@ export const DocumentDetailsDialog = ({
                     <p className="text-sm font-medium">
                       {format(
                         document.duedate.toString() as string,
-                        'PPP HH:mm:ss',
+                        'PPP',
                         {
                           locale: ptBR,
                         },
