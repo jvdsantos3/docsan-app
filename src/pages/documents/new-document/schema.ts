@@ -11,7 +11,7 @@ export const acceptedFileTypes = [
 ]
 
 export const newDocumentFormSchema = z.object({
-  documentTypeId: z.string().uuid().nonempty('Tipo de documento é obrigatório.'),
+  documentTypeId: z.string().uuid('Tipo de documento é obrigatório.'),
   file: z
     .instanceof(File, { message: 'Selecione um arquivo.' })
     .optional()

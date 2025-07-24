@@ -40,7 +40,7 @@ export const DocumentUploadForm = () => {
   const form = useForm<UploadFormSchema>({
     resolver: zodResolver(uploadFormSchema),
     defaultValues: {
-      documentTypeId: contextData?.documentTypeId,
+      documentTypeId: contextData?.documentTypeId ?? '',
       file: contextData?.file,
     },
   })
@@ -85,7 +85,7 @@ export const DocumentUploadForm = () => {
   }
 
   const onSubmit = async (data: UploadFormSchema) => {
-    if (!file) {
+    if (!file || !data.file) {
       form.setError('file', {
         type: 'manual',
         message: 'Selecione um arquivo.',
@@ -95,11 +95,10 @@ export const DocumentUploadForm = () => {
 
     const formData = new FormData()
     formData.append('documentTypeId', data.documentTypeId)
-    formData.append('file', data.file as File)
+    formData.append('file', data.file)
 
     const res = await api.post('/documents/extract', formData)
     setData({ ...data, fields: res.data })
-    console.log({ ...data, fields: res.data })
 
     nextStep()
   }
@@ -108,7 +107,7 @@ export const DocumentUploadForm = () => {
     if (file && file.file instanceof File) {
       form.setValue('file', file.file, { shouldValidate: true })
     }
-  }, [contextData, file, form])
+  }, [file, form])
 
   return (
     <div className="space-y-4">
@@ -181,103 +180,96 @@ export const DocumentUploadForm = () => {
               />
             </div>
 
-            <FormField
-              control={form.control}
-              name="file"
-              render={() => (
-                <FormItem>
-                  <div className="flex flex-col gap-2">
-                    {/* Drop area */}
-                    <div
-                      role="button"
-                      onDragEnter={handleDragEnter}
-                      onDragLeave={handleDragLeave}
-                      onDragOver={handleDragOver}
-                      onDrop={handleDrop}
-                      data-dragging={isDragging || undefined}
-                      className={cn(
-                        'border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-[input:focus]:ring-[3px]',
-                        form.formState.errors.file && 'border-red-500',
-                      )}
-                    >
-                      <FormControl>
-                        <input
-                          {...getInputProps()}
-                          className="sr-only"
-                          aria-label="Upload file"
-                          disabled={Boolean(file)}
-                        />
-                      </FormControl>
+            <div className="flex flex-col gap-2">
+              {/* Drop area */}
+              <div
+                role="button"
+                onDragEnter={handleDragEnter}
+                onDragLeave={handleDragLeave}
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+                data-dragging={isDragging || undefined}
+                className={cn(
+                  'border-input data-[dragging=true]:bg-accent/50 has-[input:focus]:border-ring has-[input:focus]:ring-ring/50 relative flex min-h-52 flex-col items-center justify-center overflow-hidden rounded-xl border border-dashed p-4 transition-colors has-[input:focus]:ring-[3px]',
+                  form.formState.errors.file && 'border-red-500',
+                )}
+              >
+                <input
+                  {...getInputProps()}
+                  className="sr-only"
+                  aria-label="Upload file"
+                  disabled={Boolean(file)}
+                />
 
-                      <span id="upload-instructions" className="sr-only">
-                        {isDragging
-                          ? 'Solte os arquivos aqui para fazer upload'
-                          : `Clique ou arraste e solte arquivos para fazer upload. Formatos permitidos: PDF, DOC, DOCX, JPG, PNG. Tamanho máximo: ${file ? formatBytes(file.file.size) : '10 MB'}.`}
-                      </span>
+                <span id="upload-instructions" className="sr-only">
+                  {isDragging
+                    ? 'Solte os arquivos aqui para fazer upload'
+                    : `Clique ou arraste e solte arquivos para fazer upload. Formatos permitidos: PDF, DOC, DOCX, JPG, PNG. Tamanho máximo: ${file ? formatBytes(file.file.size) : '10 MB'}.`}
+                </span>
 
-                      {file ? (
-                        <div
-                          key={file.id}
-                          className="flex items-center justify-between gap-2 rounded-xl border px-4 py-2 md:w-lg"
-                        >
-                          <div className="flex items-center gap-3 overflow-hidden">
-                            <FileText
-                              className="size-5 shrink-0"
-                              aria-hidden="true"
-                            />
-                            <div className="min-w-0">
-                              <p className="truncate text-[13px] font-medium">
-                                {file.file.name}
-                              </p>
-                              <p className="text-muted-foreground text-xs">
-                                {formatBytes(file.file.size)} /{' '}
-                                {file.file.type.split('/')[1]?.toUpperCase() ||
-                                  'UNKNOWN'}
-                              </p>
-                            </div>
-                          </div>
-
-                          <Button
-                            size="icon"
-                            variant="ghost"
-                            className="text-muted-foreground/80 hover:text-foreground -me-2 size-8 hover:bg-transparent"
-                            onClick={() => handleRemoveFile(files[0]?.id)}
-                            aria-label="Remove file"
-                          >
-                            <XIcon className="size-4" aria-hidden="true" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
-                          <div
-                            className="mb-2 flex shrink-0 items-center justify-center"
-                            aria-hidden="true"
-                          >
-                            <UploadIcon className="size-9" />
-                          </div>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            className="mb-4 mt-2"
-                            onClick={openFileDialog}
-                          >
-                            Selecionar arquivo
-                          </Button>
-                          <p className="mb-1.5 text-sm font-medium">
-                            Clique para fazer upload ou arraste e solte
-                          </p>
-                          <p className="text-muted-foreground text-xs">
-                            PDF, DOC, DOCX, JPG, PNG (máx.{' '}
-                            {formatBytes(maxSize)})
-                          </p>
-                        </div>
-                      )}
+                {file ? (
+                  <div
+                    key={file.id}
+                    className="flex items-center justify-between gap-2 rounded-xl border px-4 py-2 md:w-lg"
+                  >
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <FileText
+                        className="size-5 shrink-0"
+                        aria-hidden="true"
+                      />
+                      <div className="min-w-0">
+                        <p className="truncate text-[13px] font-medium">
+                          {file.file.name}
+                        </p>
+                        <p className="text-muted-foreground text-xs">
+                          {formatBytes(file.file.size)} /{' '}
+                          {file.file.type.split('/')[1]?.toUpperCase() ||
+                            'UNKNOWN'}
+                        </p>
+                      </div>
                     </div>
-                    <FormMessage />
+
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="text-muted-foreground/80 hover:text-foreground -me-2 size-8 hover:bg-transparent"
+                      onClick={() => handleRemoveFile(files[0]?.id)}
+                      aria-label="Remove file"
+                    >
+                      <XIcon className="size-4" aria-hidden="true" />
+                    </Button>
                   </div>
-                </FormItem>
+                ) : (
+                  <div className="flex flex-col items-center justify-center px-4 py-3 text-center">
+                    <div
+                      className="mb-2 flex shrink-0 items-center justify-center"
+                      aria-hidden="true"
+                    >
+                      <UploadIcon className="size-9" />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="mb-4 mt-2"
+                      onClick={openFileDialog}
+                    >
+                      Selecionar arquivo
+                    </Button>
+                    <p className="mb-1.5 text-sm font-medium">
+                      Clique para fazer upload ou arraste e solte
+                    </p>
+                    <p className="text-muted-foreground text-xs">
+                      PDF, DOC, DOCX, JPG, PNG (máx. {formatBytes(maxSize)})
+                    </p>
+                  </div>
+                )}
+              </div>
+              {form.formState.errors.file && (
+                <p className="text-destructive text-sm">
+                  {form.formState.errors.file.message}
+                </p>
               )}
-            />
+            </div>
 
             <div className="flex justify-end items-center">
               <Button type="submit">

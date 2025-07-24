@@ -72,11 +72,12 @@ export const ComboBox = forwardRef<HTMLButtonElement, ComboBoxProps>(
     const [searchQuery, setSearchQuery] = useState('')
     const debouncedSearchQuery = useDebounce(searchQuery, delay)
 
-    const label = selected
-      ? selected.label
-      : value
-        ? items.find((item) => item.value === value)?.label
-        : placeholder
+    const label =
+      selected && value === selected.value
+        ? selected.label
+        : value
+          ? items.find((item) => item.value === value)?.label
+          : placeholder
 
     const handleSelect = (value: string) => {
       setSelected(items.find((item) => item.value === value))
@@ -110,7 +111,7 @@ export const ComboBox = forwardRef<HTMLButtonElement, ComboBoxProps>(
             <span
               className={cn(
                 'line-clamp-1 flex items-center gap-2',
-                !label && 'text-muted-foreground',
+                !selected && 'text-muted-foreground',
               )}
             >
               {label ?? 'Select...'}
