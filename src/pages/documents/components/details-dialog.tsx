@@ -66,25 +66,19 @@ export const DocumentDetailsDialog = ({
                   <div className="flex flex-col gap-2">
                     <Label>Data de criação</Label>
                     <p className="text-sm font-medium">
-                      {format(
-                        document.createdAt.toString() as string,
-                        'PPP HH:mm:ss',
-                        {
+                      {document.createdAt &&
+                        format(document.createdAt, 'PPP HH:mm:ss', {
                           locale: ptBR,
-                        },
-                      )}
+                        })}
                     </p>
                   </div>
                   <div className="flex flex-col gap-2">
                     <Label>Data de vencimento</Label>
                     <p className="text-sm font-medium">
-                      {format(
-                        document.duedate.toString() as string,
-                        'PPP',
-                        {
+                      {document.duedate &&
+                        format(document.duedate, 'PPP', {
                           locale: ptBR,
-                        },
-                      )}
+                        })}
                     </p>
                   </div>
                   <div className="flex flex-col gap-2">
@@ -113,7 +107,7 @@ export const DocumentDetailsDialog = ({
 
               <div>
                 <p className="font-bold text-sm">Metadados</p>
-                {document?.indexation?.values?.length ? (
+                {document?.indexation?.values.length > 0 ? (
                   <ul className="mt-2 space-y-2">
                     {document?.indexation?.values.map((value, index) => (
                       <li key={index} className="text-sm">
