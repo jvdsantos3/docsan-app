@@ -9,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { ChevronLeft, ChevronRight, Download, Eye } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Download, Eye, Loader2 } from 'lucide-react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useDocumentMultiStepForm } from '../use-document-multi-step-form'
 import { newDocumentFormSchema } from '../schema'
@@ -27,7 +27,7 @@ type DataExtractionFormSchema = z.infer<typeof dataExtractionFormSchema>
 
 export const DocumentDataExtractionForm = () => {
   const navigate = useNavigate()
-  const { mutateAsync: createDocument, error, isError } = useCreateDocument()
+  const { mutateAsync: createDocument, isError } = useCreateDocument()
   const { data: contextData, previousStep } = useDocumentMultiStepForm()
   const form = useForm<DataExtractionFormSchema>({
     resolver: zodResolver(dataExtractionFormSchema),
@@ -46,7 +46,7 @@ export const DocumentDataExtractionForm = () => {
 
   async function onSubmit(data: DataExtractionFormSchema) {
     await createDocument({
-      file: contextData!.file as File,
+      file: contextData.file!,
       ...contextData,
       ...data,
     })
@@ -141,7 +141,10 @@ export const DocumentDataExtractionForm = () => {
                 <ChevronLeft />
                 Upload de documento
               </Button>
-              <Button type="submit">
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && (
+                  <Loader2 className="animate-spin" />
+                )}
                 Finalizar processo
                 <ChevronRight />
               </Button>

@@ -2,7 +2,7 @@ import { useEffect, useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ChevronRight, FileText, Plus, UploadIcon, XIcon } from 'lucide-react'
+import { ChevronRight, FileText, Loader2, Plus, UploadIcon, XIcon } from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -272,7 +272,10 @@ export const DocumentUploadForm = () => {
             </div>
 
             <div className="flex justify-end items-center">
-              <Button type="submit">
+              <Button type="submit" disabled={form.formState.isSubmitting}>
+                {form.formState.isSubmitting && (
+                  <Loader2 className="animate-spin" />
+                )}
                 Próximo <ChevronRight />
               </Button>
             </div>
