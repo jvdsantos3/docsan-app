@@ -1,17 +1,9 @@
 import { Badge } from '@/components/ui/badge'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DocumentDataTableRowActions } from './actions'
+import type { GetDocumentsResponse } from '@/http/types/get-documents-response'
 
-export type Document = {
-  id: string
-  name: string
-  type: string
-  status: 'overdue' | 'due_soon' | 'up_to_date'
-  dueDate: Date
-  receivedDate: Date
-}
-
-export const columns: ColumnDef<Document>[] = [
+export const columns: ColumnDef<GetDocumentsResponse['data'][number]>[] = [
   {
     accessorKey: 'name',
     header: 'Nome',
@@ -23,12 +15,12 @@ export const columns: ColumnDef<Document>[] = [
       )
     },
   },
-  { accessorKey: 'type', header: 'Tipo' },
+  { accessorKey: 'documentType.name', header: 'Tipo' },
   {
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      if (row.getValue('status') === 'overdue') {
+      if (row.getValue('status') === 'won') {
         return (
           <Badge
             variant="destructive"
@@ -39,7 +31,7 @@ export const columns: ColumnDef<Document>[] = [
         )
       }
 
-      if (row.getValue('status') === 'due_soon') {
+      if (row.getValue('status') === 'near') {
         return (
           <Badge className="bg-[#F58F00] font-lato font-bold text-white">
             <span>Próximo</span>
@@ -62,26 +54,26 @@ export const columns: ColumnDef<Document>[] = [
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
-      }).format(new Date(row.getValue('receivedDate')))
+      }).format(new Date(row.getValue('dueDate')))
     },
   },
   {
-    accessorKey: 'receivedDate',
+    accessorKey: 'createdAt',
     header: 'Recebido em',
     cell: ({ row }) => {
       return new Intl.DateTimeFormat('pt-BR', {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit',
-      }).format(new Date(row.getValue('receivedDate')))
+      }).format(new Date(row.getValue('createdAt')))
     },
   },
   {
     id: 'actions',
-    header: 'Ações',
+    header: () => <div className="text-center">Ações</div>,
     cell: ({ row }) => {
       return (
-        <div className="text-right">
+        <div className="text-center">
           <DocumentDataTableRowActions row={row} />
         </div>
       )

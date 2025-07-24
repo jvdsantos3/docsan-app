@@ -14,7 +14,7 @@ import {
   SquarePen,
 } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
-import type { Document } from './columns'
+import type { GetDocumentsResponse } from '@/http/types/get-documents-response'
 
 type DocumentDataTableRowActionsProps<TData> = {
   row: Row<TData>
@@ -24,7 +24,7 @@ export function DocumentDataTableRowActions<TData>({
   row,
 }: DocumentDataTableRowActionsProps<TData>) {
   const navigate = useNavigate()
-  const document = row.original as Document
+  const document = row.original as GetDocumentsResponse['data'][number]
 
   function handleViewDetails() {
     navigate(`?documentId=${document.id}`)
@@ -47,7 +47,7 @@ export function DocumentDataTableRowActions<TData>({
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
           <span className="sr-only">Abrir menu</span>
-          <MoreHorizontal className="h-4 w-4" />
+          <MoreHorizontal className="text-blue-source size-6" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">

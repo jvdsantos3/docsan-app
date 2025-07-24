@@ -5,5 +5,5 @@ export type PaginationResponse<TData> = {
   next: number | null
   prev: number | null
   total: number
-  data: TData
+  data: TData[]
 }

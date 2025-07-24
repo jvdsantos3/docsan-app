@@ -41,7 +41,11 @@ export const Documents = () => {
           </div>
         </div>
 
-        <DocumentsDataTable />
+        <div className="space-y-8">
+          <div className="bg-white rounded-lg border border-gray-100">
+            <DocumentsDataTable />
+          </div>
+        </div>
       </div>
     </div>
   )
