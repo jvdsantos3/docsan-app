@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState, type PropsWithChildren } from 'react'
 import { AuthContext } from './auth-context'
 import type { ProfessionalSignUpFormSchema } from '@/pages/auth/sign-up/professional/schema'
 import { api } from '@/lib/axios'
@@ -6,14 +6,16 @@ import { useNavigate } from 'react-router-dom'
 import { getToken, storeTokens } from '@/utils/sessionMethods'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'sonner'
+import type { Role, User } from '@/types/user'
+import { useProfile } from '@/http/use-profile'
 
-export type AuthProviderProps = {
-  children: React.ReactNode
-}
+export type AuthProviderProps = PropsWithChildren
 
-export interface User {
-  id: string
-  role: 'professional' | 'company'
+type AccessTokenPayload = {
+  sub: string
+  role: Role
+  iat: number
+  exp: number
 }
 
 export interface LoginInput {
@@ -22,8 +24,10 @@ export interface LoginInput {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!getToken())
-  const [authUser, setAuthUser] = useState<User | null>(null)
+  const [authUser, setAuthUser] = useState<User | null>()
+  const [token, setToken] = useState<string | null>(getToken())
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const { data: profileData } = useProfile({ enabled: isAuthenticated })
 
   const navigate = useNavigate()
 
@@ -38,25 +42,33 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       })
   }
 
+  function isTokenExpired(token: string): boolean {
+    const payload: AccessTokenPayload = jwtDecode(token)
+    const currentTime = Math.floor(Date.now() / 1000)
+    return payload.exp < currentTime
+  }
+
   async function login(data: LoginInput) {
     await api
       .post('/sessions', data)
       .then((res) => {
         const accessToken = res.data.access_token
 
-        storeTokens(res.data.access_token)
+        storeTokens(accessToken)
+        setToken(accessToken)
 
-        const user: { sub: string; role: 'professional' | 'company' } =
+        const payload: Pick<AccessTokenPayload, 'sub' | 'role'> =
           jwtDecode(accessToken)
 
+        setIsAuthenticated(true)
         setAuthUser({
-          id: user.sub,
-          role: user.role,
+          id: payload.sub,
+          role: payload.role,
+          profile: profileData?.profile,
         })
 
-        setIsAuthenticated(true)
         toast.dismiss()
-        navigate(user.role === 'professional' ? '/services' : '/documents')
+        navigate(payload.role === 'PROFESSIONAL' ? '/services' : '/documents')
       })
       .catch((err) => {
         console.error(err)
@@ -100,6 +112,34 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       })
   }
 
+  useEffect(() => {
+    const token = getToken()
+
+    if (!token) {
+      setIsAuthenticated(false)
+      setAuthUser(null)
+      return
+      // redirect
+    }
+
+    if (token && isTokenExpired(token)) {
+      setIsAuthenticated(false)
+      setAuthUser(null)
+      return
+      // redirect
+    }
+
+    setIsAuthenticated(true)
+    setToken(token)
+
+    const payload: Pick<AccessTokenPayload, 'sub' | 'role'> = jwtDecode(token)
+    setAuthUser({
+      id: payload.sub,
+      role: payload.role,
+      profile: profileData?.profile,
+    })
+  }, [profileData])
+
   return (
     <AuthContext.Provider
       value={{
@@ -107,6 +147,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         login,
         isAuthenticated,
         user: authUser,
+        authToken: token,
 
         signIn: (credencials) => {
           console.log(credencials)
