@@ -23,6 +23,7 @@ export const useCreateDocument = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-documents'] })
+      queryClient.invalidateQueries({ queryKey: ['get-documents-summary'] })
     },
   })
 }

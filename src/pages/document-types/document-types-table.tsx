@@ -21,32 +21,31 @@ export const DocumentTypesTable = () => {
       status === 'active' ? true : status === 'inactive' ? false : undefined,
   })
 
-  if (isLoading) {
-    return (
-      <div>
-        <DocumentTypesTableSkeleton />
-        <DocumentTypesPaginationSkeleton />
-      </div>
-    )
-  }
-
   return (
     <div>
-      <div>
-        <div className="px-8 py-6 flex justify-between items-center">
-          <h2 className="font-lato font-bold text-[21px] text-blue-1000">
-            Tipos de documentos
-          </h2>
+      <div className="px-8 py-6 flex justify-between items-center">
+        <h2 className="font-lato font-bold text-[21px] text-blue-1000">
+          Tipos de documentos
+        </h2>
 
-          <DocumentTypesFilters />
-        </div>
+        <DocumentTypesFilters />
       </div>
-      <DataTable columns={columns} data={response?.data || []} />
-      <DocumentTypesPagination
-        currentPage={page}
-        totalPages={response?.last || 1}
-        paginationItemsToDisplay={5}
-      />
+
+      {isLoading ? (
+        <div>
+          <DocumentTypesTableSkeleton />
+          <DocumentTypesPaginationSkeleton />
+        </div>
+      ) : (
+        <div>
+          <DataTable columns={columns} data={response?.data || []} />
+          <DocumentTypesPagination
+            currentPage={page}
+            totalPages={response?.last || 1}
+            paginationItemsToDisplay={5}
+          />
+        </div>
+      )}
     </div>
   )
 }

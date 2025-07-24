@@ -27,7 +27,7 @@ export function DocumentDataTableRowActions<TData>({
   const document = row.original as GetDocumentsResponse['data'][number]
 
   function handleViewDetails() {
-    navigate(`?documentId=${document.id}`)
+    navigate(`?documentId=${document.id}&modal=details`)
   }
 
   function handlePreview() {

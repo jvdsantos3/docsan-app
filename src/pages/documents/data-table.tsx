@@ -8,6 +8,7 @@ import { useDocuments } from '@/http/use-documents'
 import { DocumentsFilters } from './filters'
 import { DataTable } from '@/components/ui/data-table'
 import { DocumentsPagination } from './pagination'
+import { DocumentDetailsDialog } from './components/details-dialog'
 
 export const DocumentsDataTable = () => {
   const { user } = useAuth()
@@ -31,7 +32,7 @@ export const DocumentsDataTable = () => {
   }
 
   return (
-    <div className="bg-white rounded-lg border border-gray-100">
+    <div>
       <div className="px-8 py-6 flex justify-between items-center">
         <h2 className="font-lato font-bold text-[21px] text-blue-1000">
           Documentos
@@ -40,12 +41,18 @@ export const DocumentsDataTable = () => {
         <DocumentsFilters />
       </div>
 
-      {/* Data table */}
-      <DataTable columns={columns} data={response?.data || []} />
-      <DocumentsPagination
-        currentPage={page}
-        totalPages={response?.last || 1}
-        paginationItemsToDisplay={5}
+      <div>
+        <DataTable columns={columns} data={response?.data || []} />
+        <DocumentsPagination
+          currentPage={page}
+          totalPages={response?.last || 1}
+          paginationItemsToDisplay={5}
+        />
+      </div>
+
+      <DocumentDetailsDialog
+        open={modalType === 'details' && !!documentId}
+        onOpenChange={handleCloseDialog}
       />
 
       {/* Modal for document preview */}

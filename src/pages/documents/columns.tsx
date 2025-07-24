@@ -50,11 +50,12 @@ export const columns: ColumnDef<GetDocumentsResponse['data'][number]>[] = [
     accessorKey: 'dueDate',
     header: 'Vencimento',
     cell: ({ row }) => {
-      return new Intl.DateTimeFormat('pt-BR', {
-        year: 'numeric',
-        month: '2-digit',
-        day: '2-digit',
-      }).format(new Date(row.getValue('dueDate')))
+      // return new Intl.DateTimeFormat('pt-BR', {
+      //   year: 'numeric',
+      //   month: '2-digit',
+      //   day: '2-digit',
+      // }).format(new Date(row.getValue('dueDate')))
+      return row.getValue('dueDate')
     },
   },
   {
