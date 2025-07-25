@@ -8,7 +8,7 @@ COPY pnpm-lock.yaml package.json ./
 RUN pnpm install
 
 COPY . .
-RUN pnpm build
+RUN NODE_OPTIONS=--max_old_space_size=6144 pnpm run build
 
 FROM nginx:1.28-alpine
 
