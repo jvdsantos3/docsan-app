@@ -1,0 +1,13 @@
+services:
+  react-dev:
+    build:
+      context: ..
+      dockerfile: ./ci/dev/Dockerfile
+    volumes:
+      - ../:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    container_name: docsan-app
+    working_dir: /app
+    command: pnpm dev

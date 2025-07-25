@@ -1,0 +1,9 @@
+services:
+  react-prod:
+    build:
+      context: ..
+      dockerfile: ./ci/prod/Dockerfile
+    ports:
+      - "3000:80"
+    container_name: docsan-app
+    restart: unless-stopped
