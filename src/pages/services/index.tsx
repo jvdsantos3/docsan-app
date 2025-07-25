@@ -43,7 +43,7 @@ export const Services = () => {
             </p>
           </div>
 
-          {isAuthenticated && user?.role === 'professional' && (
+          {isAuthenticated && user?.role === 'PROFESSIONAL' && (
             <Button
               className="font-bold text-base"
               size="lg"
