@@ -1,7 +1,7 @@
 services:
   react-prod:
     build:
-      context: ../..
+      context: ..
       dockerfile: ./ci/prod/Dockerfile
     ports:
       - "3000:80"
