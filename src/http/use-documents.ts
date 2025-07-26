@@ -6,12 +6,12 @@ import type { GetDocumentsResponse } from './types/get-documents-response'
 
 export const useDocuments = (
   companyId: string,
-  params?: GetDocumentsSearchParams,
+  params: GetDocumentsSearchParams = {},
 ) => {
   return useQuery({
     queryKey: ['documents', companyId, params],
     queryFn: async () => {
-      const searchParams = createQueryStringClean(params ?? {})
+      const searchParams = createQueryStringClean(params)
       const response = await api.get<GetDocumentsResponse>(
         `/documents/${companyId}?${searchParams}`,
       )

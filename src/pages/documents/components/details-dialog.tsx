@@ -30,7 +30,7 @@ export const DocumentDetailsDialog = ({
   const { user } = useAuth()
   const [searchParams] = useSearchParams()
   const documentId = searchParams.get('documentId') ?? ''
-  const companyId = user?.profile?.companyId || ''
+  const companyId = user?.profile?.companyId ?? ''
   const { data: document, isLoading } = useDocument(documentId, companyId)
 
   if (!document) {
