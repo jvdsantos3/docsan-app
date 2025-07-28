@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -15,12 +16,16 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { useAuth } from '@/hooks/use-auth'
+import { api } from '@/lib/axios'
+import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
+import { useSearchParams } from 'react-router-dom'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 type ExportDialogProps = {
-  documentId: string
   open?: boolean
   onOpenChange?: (open: boolean) => void
 }
@@ -33,14 +38,69 @@ const schema = z.object({
 
 type ExportFormValues = z.infer<typeof schema>
 
-export const ExportDialog = ({
-  documentId,
-  onOpenChange,
-}: ExportDialogProps) => {
-  const form = useForm<ExportFormValues>({ resolver: zodResolver(schema) })
+const options = [
+  {
+    value: 'xlsx',
+    label: 'XLSX (Excel)',
+    description: 'Planilha do Microsoft Excel',
+    disabled: true,
+  },
+  {
+    value: 'csv',
+    label: 'CSV',
+    description: 'Valores separados por vírgula',
+    disabled: true,
+  },
+  {
+    value: 'pdf',
+    label: 'PDF',
+    description: 'Documento portátil',
+    disabled: false,
+  },
+] as const
 
-  const onSubmit = (data: ExportFormValues) => {
-    console.log(data)
+export const ExportDialog = ({ onOpenChange }: ExportDialogProps) => {
+  const [searchParams] = useSearchParams()
+  const { user } = useAuth()
+  const form = useForm<ExportFormValues>({
+    resolver: zodResolver(schema),
+    defaultValues: { type: 'pdf' },
+  })
+
+  const documentId = searchParams.get('documentId')
+
+  const downloadFile = async (type: 'xlsx' | 'csv' | 'pdf') => {
+    const companyId = user?.profile?.companyId
+
+    if (!companyId || !documentId) return
+
+    try {
+      const res = await api.get(
+        `/company/${companyId}/documents/${documentId}/export`,
+        {
+          responseType: 'blob',
+        },
+      )
+
+      const fileName = `documento-${documentId}.${type}`
+      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const link = document.createElement('a')
+      link.href = url
+      link.setAttribute('download', fileName)
+      document.body.appendChild(link)
+      link.click()
+
+      link.remove()
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      console.error(error)
+
+      toast.error('Falha ao baixar o documento. Por favor, tente novamente.')
+    }
+  }
+
+  const onSubmit = async (data: ExportFormValues) => {
+    await downloadFile(data.type)
   }
 
   return (
@@ -75,51 +135,28 @@ export const ExportDialog = ({
                         defaultValue={field.value}
                         className="flex flex-col"
                       >
-                        <FormItem>
-                          <FormLabel className="has-data-[state=checked]:border-primary/50 flex items-center gap-3 border border-input rounded-xl p-3">
-                            <FormControl>
-                              <RadioGroupItem value="xlsx" />
-                            </FormControl>
-                            <div>
-                              <p className="font-lato font-medium text-lg text-blue-1000">
-                                XLSX (Excel)
-                              </p>
-                              <p className="font-lato font-normal text-sm text-gray-600">
-                                Planilha do Microsoft Excel
-                              </p>
-                            </div>
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem>
-                          <FormLabel className="has-data-[state=checked]:border-primary/50 flex items-center gap-3 border border-input rounded-xl p-3">
-                            <FormControl>
-                              <RadioGroupItem value="csv" />
-                            </FormControl>
-                            <div>
-                              <p className="font-lato font-medium text-lg text-blue-1000">
-                                CSV
-                              </p>
-                              <p className="font-lato font-normal text-sm text-gray-600">
-                                Valores separados por vírgula
-                              </p>
-                            </div>
-                          </FormLabel>
-                        </FormItem>
-                        <FormItem>
-                          <FormLabel className="has-data-[state=checked]:border-primary/50 flex items-center gap-3 border border-input rounded-xl p-3">
-                            <FormControl>
-                              <RadioGroupItem value="pdf" />
-                            </FormControl>
-                            <div>
-                              <p className="font-lato font-medium text-lg text-blue-1000">
-                                PDF
-                              </p>
-                              <p className="font-lato font-normal text-sm text-gray-600">
-                                Documento portátil
-                              </p>
-                            </div>
-                          </FormLabel>
-                        </FormItem>
+                        {options.map((option) => (
+                          <FormItem key={option.value}>
+                            <FormLabel
+                              className={cn(
+                                'has-data-[state=checked]:border-primary/50 flex items-center gap-3 border border-input rounded-xl p-3',
+                                option.disabled && 'opacity-50',
+                              )}
+                            >
+                              <FormControl>
+                                <RadioGroupItem value={option.value} disabled />
+                              </FormControl>
+                              <div>
+                                <p className="font-medium text-lg text-blue-1000">
+                                  {option.label}
+                                </p>
+                                <p className="font-normal text-sm text-gray-600">
+                                  {option.description}
+                                </p>
+                              </div>
+                            </FormLabel>
+                          </FormItem>
+                        ))}
                       </RadioGroup>
                     </FormControl>
                     <FormMessage />
@@ -128,9 +165,11 @@ export const ExportDialog = ({
               />
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                <Button type="button" variant="outline">
-                  Cancelar
-                </Button>
+                <DialogClose asChild>
+                  <Button type="button" variant="outline">
+                    Cancelar
+                  </Button>
+                </DialogClose>
                 <Button type="submit">Gerar e baixar</Button>
               </div>
             </form>

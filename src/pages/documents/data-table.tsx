@@ -87,12 +87,10 @@ export const DocumentsDataTable = () => {
       )}
 
       {/* Modal for document export */}
-      {documentId && modalType === 'export' && (
-        <ExportDialog
-          documentId={documentId}
-          onOpenChange={handleCloseDialog}
-        />
-      )}
+      <ExportDialog
+        open={modalType === 'export' && !!documentId}
+        onOpenChange={handleCloseDialog}
+      />
     </div>
   )
 }
