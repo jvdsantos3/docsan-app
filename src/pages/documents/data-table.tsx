@@ -9,16 +9,31 @@ import { DocumentsFilters } from './filters'
 import { DataTable } from '@/components/ui/data-table'
 import { DocumentsPagination } from './pagination'
 import { DocumentDetailsDialog } from './components/details-dialog'
+import { schema } from '@/http/types/get-documents-search-params'
 
 export const DocumentsDataTable = () => {
   const { user } = useAuth()
   const [searchParams, setSearchParams] = useSearchParams()
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1
-  // const order = (searchParams.get('order') as 'asc' | 'desc' | null) ?? 'asc'
-  // const sort = searchParams.get('sort') || 'createdAt'
-  // const filter = searchParams.get('filter') || ''
-  // const status = searchParams.get('status')
-  const { data: response } = useDocuments(user?.profile?.companyId || '')
+  const sort = searchParams.get('sort') ?? ''
+  const direction = searchParams.get('direction') ?? 'asc'
+  const filter = searchParams.get('filter') ?? ''
+  const status = searchParams.get('status') ?? ''
+  const type = searchParams.get('type') ?? ''
+
+  const parsedParams = schema.safeParse({
+    page,
+    order: direction,
+    orderBy: sort,
+    type,
+    status,
+    filter,
+  })
+
+  const { data: response } = useDocuments(
+    user?.profile?.companyId || '',
+    parsedParams.data,
+  )
 
   const modalType = searchParams.get('modal')
   const documentId = searchParams.get('documentId')
@@ -72,12 +87,10 @@ export const DocumentsDataTable = () => {
       )}
 
       {/* Modal for document export */}
-      {documentId && modalType === 'export' && (
-        <ExportDialog
-          documentId={documentId}
-          onOpenChange={handleCloseDialog}
-        />
-      )}
+      <ExportDialog
+        open={modalType === 'export' && !!documentId}
+        onOpenChange={handleCloseDialog}
+      />
     </div>
   )
 }

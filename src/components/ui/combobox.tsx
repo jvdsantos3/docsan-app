@@ -111,7 +111,7 @@ export const ComboBox = forwardRef<HTMLButtonElement, ComboBoxProps>(
             <span
               className={cn(
                 'line-clamp-1 flex items-center gap-2',
-                !selected && 'text-muted-foreground',
+                !selected && !value && 'text-muted-foreground',
               )}
             >
               {label ?? 'Select...'}

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { CircleXIcon, SearchIcon } from 'lucide-react'
 import {
   Select,
@@ -10,10 +10,28 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
+import { useSearchParams } from 'react-router-dom'
+import { useDebounce } from '@/hooks/use-debounce'
+import { useDocumentTypes } from '@/http/use-document-types'
+import { ComboBox } from '@/components/ui/combobox'
+import { useDocumentType } from '@/http/use-document-type'
 
 export const DocumentsFilters = () => {
-  const [inputValue, setInputValue] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const initialType = searchParams.get('type') || ''
+  const [type, setType] = useState(initialType)
+  const initialFilter = searchParams.get('filter') || ''
+  const [inputValue, setInputValue] = useState(initialFilter)
+  const debouncedFilter = useDebounce(inputValue, 300)
+
+  const [filter, setFilter] = useState('')
+  const { data: documentType } = useDocumentType(type)
+  const { data: items, isLoading } = useDocumentTypes({ active: true, filter })
+
+  const selected = documentType
+    ? { value: documentType.id, label: documentType.name }
+    : undefined
 
   const handleClearInput = () => {
     setInputValue('')
@@ -22,10 +40,60 @@ export const DocumentsFilters = () => {
     }
   }
 
+  const handleSelectType = (value: string) => {
+    setType(value === type ? '' : value)
+    setSearchParams((prev) => {
+      if (value === type) {
+        prev.delete('type')
+      } else {
+        prev.set('type', value)
+      }
+      return prev
+    })
+  }
+
+  const handleSelectStatus = (value: string) => {
+    setSearchParams((prev) => {
+      let status: string = ''
+
+      switch (value) {
+        case 'all':
+          prev.delete('status')
+          return prev
+        case 'up_to_date':
+          status = 'inDay'
+          break
+        case 'due_soon':
+          status = 'near'
+          break
+        case 'overdue':
+          status = 'won'
+          break
+      }
+
+      prev.set('status', status)
+      return prev
+    })
+  }
+
+  useEffect(() => {
+    if (debouncedFilter.trim()) {
+      setSearchParams((prev) => {
+        prev.set('filter', debouncedFilter)
+        return prev
+      })
+    } else {
+      setSearchParams((prev) => {
+        prev.delete('filter')
+        return prev
+      })
+    }
+  }, [debouncedFilter, setSearchParams])
+
   return (
     <div className="flex gap-6">
       <div>
-        <Select defaultValue="all">
+        <Select defaultValue="all" onValueChange={handleSelectStatus}>
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Selecione um status" />
           </SelectTrigger>
@@ -40,24 +108,29 @@ export const DocumentsFilters = () => {
           </SelectContent>
         </Select>
       </div>
+
       <div>
-        <Select defaultValue="all">
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Selecione um tipo" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Tipo</SelectLabel>
-              <SelectItem value="all">Todos os tipos</SelectItem>
-              <SelectItem value="alvara">Alvará de funcionamento</SelectItem>
-              <SelectItem value="licenca">Licença ambiental</SelectItem>
-              <SelectItem value="certificado">
-                Certificado de Regularidade
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <ComboBox
+          items={
+            items?.data.map((item) => ({
+              value: item.id,
+              label: item.name,
+            })) || []
+          }
+          onChange={handleSelectType}
+          onSearch={(value) => setFilter(value)}
+          value={type}
+          selectedItem={selected}
+          isLoading={isLoading}
+          className="w-[180px]"
+          contentClassName="w-[180px]"
+          placeholder="Todos os tipos"
+          emptyMessage="Nenhum tipo de documento encontrado."
+          delay={300}
+          shouldFilter={false}
+        />
       </div>
+
       <div>
         <div className="relative">
           <Input

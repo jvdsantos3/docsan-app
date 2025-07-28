@@ -87,7 +87,7 @@ export const DocumentTypeForm = ({
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
-        <div className="space-y-6">
+        <div className="space-y-6 py-2">
           <FormField
             control={form.control}
             name="name"
@@ -111,15 +111,17 @@ export const DocumentTypeForm = ({
                 className="border border-input rounded-lg p-4 relative space-y-4"
                 key={field.id}
               >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="absolute top-2 right-2"
-                  onClick={() => remove(index)}
-                  title="remover campo"
-                >
-                  <Trash2 className="text-[#DA1717]" />
-                </Button>
+                {index !== 0 && (
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    className="absolute top-2 right-2"
+                    onClick={() => remove(index)}
+                    title="remover campo"
+                  >
+                    <Trash2 className="text-[#DA1717]" />
+                  </Button>
+                )}
 
                 <div className="font-medium text-lg">Campo {index + 1}</div>
                 <div className="grid grid-cols-1 sm:grid-cols-3 items-start gap-4">
@@ -148,6 +150,7 @@ export const DocumentTypeForm = ({
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
+                          disabled={index === 0}
                         >
                           <FormControl>
                             <SelectTrigger className="w-full">
@@ -176,6 +179,7 @@ export const DocumentTypeForm = ({
                               onCheckedChange={(checked) =>
                                 field.onChange(checked)
                               }
+                              disabled={index === 0}
                             />
                           </FormControl>
                           <FormLabel className="text-sm font-normal">

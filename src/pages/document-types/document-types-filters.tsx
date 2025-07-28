@@ -40,7 +40,7 @@ export const DocumentTypesFilters = () => {
   }
 
   useEffect(() => {
-    if (debouncedFilter) {
+    if (debouncedFilter.trim()) {
       setSearchParams((prev) => {
         prev.set('filter', debouncedFilter)
         return prev
@@ -55,6 +55,21 @@ export const DocumentTypesFilters = () => {
 
   return (
     <div className="flex gap-6">
+      <div>
+        <Select defaultValue="all" onValueChange={handleSelectStatus}>
+          <SelectTrigger className="w-[180px]">
+            <SelectValue placeholder="Selecione um status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Status</SelectLabel>
+              <SelectItem value="all">Todos os status</SelectItem>
+              <SelectItem value="active">Ativo</SelectItem>
+              <SelectItem value="inactive">Inativo</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
       <div>
         <div className="relative">
           <Input
@@ -78,21 +93,6 @@ export const DocumentTypesFilters = () => {
             </button>
           )}
         </div>
-      </div>
-      <div>
-        <Select defaultValue="all" onValueChange={handleSelectStatus}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Selecione um status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectGroup>
-              <SelectLabel>Status</SelectLabel>
-              <SelectItem value="all">Todos os status</SelectItem>
-              <SelectItem value="active">Ativo</SelectItem>
-              <SelectItem value="inactive">Inativo</SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
       </div>
     </div>
   )
