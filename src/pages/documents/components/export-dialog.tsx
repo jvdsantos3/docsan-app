@@ -26,8 +26,8 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 type ExportDialogProps = {
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 const schema = z.object({
@@ -59,7 +59,7 @@ const options = [
   },
 ] as const
 
-export const ExportDialog = ({ onOpenChange }: ExportDialogProps) => {
+export const ExportDialog = ({ open, onOpenChange }: ExportDialogProps) => {
   const [searchParams] = useSearchParams()
   const { user } = useAuth()
   const form = useForm<ExportFormValues>({
@@ -77,13 +77,10 @@ export const ExportDialog = ({ onOpenChange }: ExportDialogProps) => {
     try {
       const res = await api.get(
         `/company/${companyId}/documents/${documentId}/export`,
-        {
-          responseType: 'blob',
-        },
       )
 
       const fileName = `documento-${documentId}.${type}`
-      const url = window.URL.createObjectURL(new Blob([res.data]))
+      const url = window.URL.createObjectURL(new Blob([...res.data.file.data]))
       const link = document.createElement('a')
       link.href = url
       link.setAttribute('download', fileName)
@@ -104,7 +101,7 @@ export const ExportDialog = ({ onOpenChange }: ExportDialogProps) => {
   }
 
   return (
-    <Dialog open={!!documentId} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-white lg:min-w-[700px]">
         <DialogHeader>
           <DialogTitle>Exportar documento</DialogTitle>

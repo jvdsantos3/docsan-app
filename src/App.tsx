@@ -4,18 +4,21 @@ import { Router } from './routes'
 import { AuthProvider } from './contexts/auth/auth-provider'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from '@/components/ui/sonner'
+import { Worker } from '@react-pdf-viewer/core'
 
 const queryClient = new QueryClient()
 
 export function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AuthProvider>
-          <Router />
-          <Toaster />
-        </AuthProvider>
-      </BrowserRouter>
+      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+        <BrowserRouter>
+          <AuthProvider>
+            <Router />
+            <Toaster />
+          </AuthProvider>
+        </BrowserRouter>
+      </Worker>
     </QueryClientProvider>
   )
 }

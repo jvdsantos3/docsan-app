@@ -13,7 +13,7 @@ import {
   MoreHorizontal,
   SquarePen,
 } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import type { GetDocumentsResponse } from '@/http/types/get-documents-response'
 
 type DocumentDataTableRowActionsProps<TData> = {
@@ -23,23 +23,39 @@ type DocumentDataTableRowActionsProps<TData> = {
 export function DocumentDataTableRowActions<TData>({
   row,
 }: DocumentDataTableRowActionsProps<TData>) {
-  const navigate = useNavigate()
+  const [, setSearchParams] = useSearchParams()
   const document = row.original as GetDocumentsResponse['data'][number]
 
   function handleViewDetails() {
-    navigate(`?documentId=${document.id}&modal=details`)
+    setSearchParams((prev) => {
+      prev.set('modal', 'details')
+      prev.set('documentId', document.id)
+      return prev
+    })
   }
 
   function handlePreview() {
-    navigate(`?documentId=${document.id}&modal=preview`)
+    setSearchParams((prev) => {
+      prev.set('modal', 'preview')
+      prev.set('documentId', document.id)
+      return prev
+    })
   }
 
   function handleExport() {
-    navigate(`?documentId=${document.id}&modal=export`)
+    setSearchParams((prev) => {
+      prev.set('modal', 'export')
+      prev.set('documentId', document.id)
+      return prev
+    })
   }
 
   function handleNotify() {
-    navigate(`?documentId=${document.id}&modal=notify`)
+    setSearchParams((prev) => {
+      prev.set('modal', 'notify')
+      prev.set('documentId', document.id)
+      return prev
+    })
   }
 
   return (

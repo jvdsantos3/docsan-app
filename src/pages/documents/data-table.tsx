@@ -66,17 +66,15 @@ export const DocumentsDataTable = () => {
       </div>
 
       <DocumentDetailsDialog
-        open={modalType === 'details' && !!documentId}
+        open={modalType === 'details'}
         onOpenChange={handleCloseDialog}
       />
 
       {/* Modal for document preview */}
-      {documentId && modalType === 'preview' && (
-        <DocumentPreviewDialog
-          documentId={documentId}
-          onOpenChange={handleCloseDialog}
-        />
-      )}
+      <DocumentPreviewDialog
+        open={modalType === 'preview' && !!documentId}
+        onOpenChange={handleCloseDialog}
+      />
 
       {/* Modal for document notification */}
       {documentId && modalType === 'notify' && (
