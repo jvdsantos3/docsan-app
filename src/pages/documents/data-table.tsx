@@ -3,16 +3,16 @@ import { columns } from './columns'
 import { DocumentPreviewDialog } from './components/preview-dialog'
 import { NotifyDialog } from './components/notify-dialog'
 import { ExportDialog } from './components/export-dialog'
-import { useAuth } from '@/hooks/use-auth'
 import { useDocuments } from '@/http/use-documents'
 import { DocumentsFilters } from './filters'
 import { DataTable } from '@/components/ui/data-table'
 import { DocumentsPagination } from './pagination'
 import { DocumentDetailsDialog } from './components/details-dialog'
 import { schema } from '@/http/types/get-documents-search-params'
+import { useProfile } from '@/http/use-profile'
 
 export const DocumentsDataTable = () => {
-  const { user } = useAuth()
+  const { data: profile } = useProfile()
   const [searchParams, setSearchParams] = useSearchParams()
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1
   const sort = searchParams.get('sort') ?? ''
@@ -30,10 +30,8 @@ export const DocumentsDataTable = () => {
     filter,
   })
 
-  const { data: response } = useDocuments(
-    user?.profile?.companyId || '',
-    parsedParams.data,
-  )
+  const companyId = profile?.user.owner?.companyId || ''
+  const { data: response } = useDocuments(companyId, parsedParams.data)
 
   const modalType = searchParams.get('modal')
   const documentId = searchParams.get('documentId')
@@ -57,10 +55,10 @@ export const DocumentsDataTable = () => {
       </div>
 
       <div>
-        <DataTable columns={columns} data={response?.data || []} />
+        <DataTable columns={columns} data={response?.documents.data || []} />
         <DocumentsPagination
           currentPage={page}
-          totalPages={response?.last || 1}
+          totalPages={response?.documents.last || 1}
           paginationItemsToDisplay={5}
         />
       </div>

@@ -13,7 +13,7 @@ export const useDocuments = (
     queryFn: async () => {
       const searchParams = createQueryStringClean(params)
       const response = await api.get<GetDocumentsResponse>(
-        `/documents/${companyId}?${searchParams}`,
+        `/company/${companyId}/documents?${searchParams}`,
       )
       return response.data
     },

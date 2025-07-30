@@ -2,7 +2,14 @@ import { useEffect, useId, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { ChevronRight, FileText, Loader2, Plus, UploadIcon, XIcon } from 'lucide-react'
+import {
+  ChevronRight,
+  FileText,
+  Loader2,
+  Plus,
+  UploadIcon,
+  XIcon,
+} from 'lucide-react'
 import {
   Form,
   FormControl,
@@ -21,6 +28,7 @@ import { api } from '@/lib/axios'
 import { ComboBox } from '@/components/ui/combobox'
 import { useDocumentTypes } from '@/http/use-document-types'
 import { useDocumentType } from '@/http/use-document-type'
+import { useProfile } from '@/http/use-profile'
 
 const uploadFormSchema = newDocumentFormSchema.pick({
   documentTypeId: true,
@@ -33,9 +41,17 @@ export const DocumentUploadForm = () => {
   const fileId = useId()
   const [filter, setFilter] = useState('')
   const [createDocTypeDialog, setCreateDocTypeDialog] = useState(false)
-  const { data: items, isLoading } = useDocumentTypes({ active: true, filter })
+  const { data: profile } = useProfile()
+  const companyId = profile?.user.owner?.companyId || ''
+  const { data: response, isLoading } = useDocumentTypes(companyId, {
+    active: true,
+    filter,
+  })
   const { data: contextData, nextStep, setData } = useDocumentMultiStepForm()
-  const { data: documentType } = useDocumentType(contextData.documentTypeId)
+  const { data: documentType } = useDocumentType(
+    contextData.documentTypeId,
+    companyId,
+  )
 
   const form = useForm<UploadFormSchema>({
     resolver: zodResolver(uploadFormSchema),
@@ -85,6 +101,8 @@ export const DocumentUploadForm = () => {
   }
 
   const onSubmit = async (data: UploadFormSchema) => {
+    if (!companyId) return
+
     if (!file || !data.file) {
       form.setError('file', {
         type: 'manual',
@@ -97,7 +115,10 @@ export const DocumentUploadForm = () => {
     formData.append('documentTypeId', data.documentTypeId)
     formData.append('file', data.file)
 
-    const res = await api.post('/documents/extract', formData)
+    const res = await api.post(
+      `/company/${companyId}/documents/extract`,
+      formData,
+    )
     setData({ ...data, fields: res.data })
 
     nextStep()
@@ -145,7 +166,7 @@ export const DocumentUploadForm = () => {
                       <FormControl>
                         <ComboBox
                           items={
-                            items?.data.map((item) => ({
+                            response?.documentTypes.data.map((item) => ({
                               value: item.id,
                               label: item.name,
                             })) || []

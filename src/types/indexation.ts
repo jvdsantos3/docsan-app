@@ -4,7 +4,7 @@ export type Indexation = {
   id: string
   values: {
     name: string
-    value: string
+    value: string | number | Date
     type: string
     required: boolean
   }[]

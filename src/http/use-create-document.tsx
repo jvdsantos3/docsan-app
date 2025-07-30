@@ -19,7 +19,7 @@ export const useCreateDocument = () => {
       formData.append('file', data.file)
       formData.append('fields', JSON.stringify(data.fields))
 
-      await api.post(`/documents/${companyId}`, formData)
+      await api.post(`/company/${companyId}/documents`, formData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-documents'] })

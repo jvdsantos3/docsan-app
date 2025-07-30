@@ -3,7 +3,9 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { DocumentDataTableRowActions } from './actions'
 import type { GetDocumentsResponse } from '@/http/types/get-documents-response'
 
-export const columns: ColumnDef<GetDocumentsResponse['data'][number]>[] = [
+export const columns: ColumnDef<
+  GetDocumentsResponse['documents']['data'][number]
+>[] = [
   {
     accessorKey: 'name',
     header: 'Nome',
@@ -47,15 +49,14 @@ export const columns: ColumnDef<GetDocumentsResponse['data'][number]>[] = [
     },
   },
   {
-    accessorKey: 'dueDate',
+    accessorKey: 'duedate',
     header: 'Vencimento',
     cell: ({ row }) => {
-      // return new Intl.DateTimeFormat('pt-BR', {
-      //   year: 'numeric',
-      //   month: '2-digit',
-      //   day: '2-digit',
-      // }).format(new Date(row.getValue('dueDate')))
-      return row.getValue('dueDate')
+      return new Intl.DateTimeFormat('pt-BR', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+      }).format(new Date(row.getValue('duedate')))
     },
   },
   {

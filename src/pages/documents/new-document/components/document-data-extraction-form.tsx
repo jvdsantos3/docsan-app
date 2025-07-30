@@ -18,7 +18,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useCreateDocument } from '@/http/use-create-document'
 import { toast } from 'sonner'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '@/hooks/use-auth'
+import { useProfile } from '@/http/use-profile'
 
 const dataExtractionFormSchema = newDocumentFormSchema.pick({
   fields: true,
@@ -27,8 +27,8 @@ const dataExtractionFormSchema = newDocumentFormSchema.pick({
 type DataExtractionFormSchema = z.infer<typeof dataExtractionFormSchema>
 
 export const DocumentDataExtractionForm = () => {
-  const { user } = useAuth()
   const navigate = useNavigate()
+  const { data: profile } = useProfile()
   const { mutateAsync: createDocument, isError } = useCreateDocument()
   const { data: contextData, previousStep } = useDocumentMultiStepForm()
   const form = useForm<DataExtractionFormSchema>({
@@ -47,7 +47,7 @@ export const DocumentDataExtractionForm = () => {
   })
 
   async function onSubmit(data: DataExtractionFormSchema) {
-    const companyId = user?.profile?.companyId
+    const companyId = profile?.user.owner?.companyId
 
     if (!companyId) {
       return

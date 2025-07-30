@@ -8,7 +8,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useAuth } from '@/hooks/use-auth'
 import { useDocument } from '@/http/use-document'
 import { useSearchParams } from 'react-router-dom'
 import { DetailsSkeleton } from './details-skeleton'
@@ -17,6 +16,7 @@ import { Label } from '@/components/ui/label'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Badge } from '@/components/ui/badge'
+import { useProfile } from '@/http/use-profile'
 
 type DocumentDetailsDialogProps = {
   open: boolean
@@ -27,10 +27,10 @@ export const DocumentDetailsDialog = ({
   open,
   onOpenChange,
 }: DocumentDetailsDialogProps) => {
-  const { user } = useAuth()
+  const { data: profile } = useProfile()
   const [searchParams] = useSearchParams()
   const documentId = searchParams.get('documentId') ?? ''
-  const companyId = user?.profile?.companyId ?? ''
+  const companyId = profile?.user.owner?.companyId ?? ''
   const { data: document, isLoading } = useDocument(documentId, companyId)
 
   if (!document) {
@@ -113,7 +113,11 @@ export const DocumentDetailsDialog = ({
                       <li key={index} className="text-sm">
                         <div className="grid grid-cols-2">
                           <div>{value.name}</div>
-                          <div>{value.value}</div>
+                          <div>
+                            {value.value instanceof Date
+                              ? format(new Date(value.value), 'PPP', { locale: ptBR })
+                              : value.value}
+                          </div>
                         </div>
                       </li>
                     ))}
