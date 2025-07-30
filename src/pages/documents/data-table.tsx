@@ -29,7 +29,6 @@ export const DocumentsDataTable = () => {
     status,
     filter,
   })
-  console.log('Parsed Params:', parsedParams)
 
   const companyId = profile?.user.owner?.companyId || ''
   const { data: response } = useDocuments(companyId, parsedParams.data)
