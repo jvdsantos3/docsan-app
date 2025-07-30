@@ -38,6 +38,7 @@ export const CreateDocumentTypeDialog = ({
       data: {
         name: data.name,
         validityPeriod: data.validityPeriod,
+        prompt: data.prompt,
         fields: data.fields,
       },
     })

@@ -4,6 +4,7 @@ export type DocumentType = {
   id: string
   name: string
   validityPeriod: number
+  prompt: string
   isActive: boolean
   metadata: {
     name: string

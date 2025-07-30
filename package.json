@@ -34,6 +34,8 @@
     "@radix-ui/react-tooltip": "^1.2.7",
     "@react-input/mask": "^2.0.4",
     "@react-pdf-viewer/core": "^3.12.0",
+    "@react-pdf-viewer/page-navigation": "^3.12.0",
+    "@react-pdf-viewer/zoom": "^3.12.0",
     "@ridemountainpig/svgl-react": "^1.0.8",
     "@tabler/icons-react": "^3.34.0",
     "@tailwindcss/vite": "^4.1.10",
