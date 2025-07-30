@@ -27,6 +27,7 @@ import {
 import { cn } from '@/lib/utils'
 import type { DocumentType } from '@/types/document-type'
 import { useEffect } from 'react'
+import { Textarea } from '@/components/ui/textarea'
 
 type DocumentTypeFormProps = {
   documentType?: DocumentType
@@ -46,6 +47,7 @@ export const DocumentTypeForm = ({
     defaultValues: {
       name: '',
       validityPeriod: 30,
+      prompt: '',
       fields: [{ name: 'Data de vencimento', type: 'date', required: true }],
     },
   })
@@ -125,6 +127,23 @@ export const DocumentTypeForm = ({
               )}
             />
           </div>
+
+          <FormField
+            control={form.control}
+            name="prompt"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Instruções para captura dos campos</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Escreve aqui as instruções para captura dos campos."
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <div className="space-y-4 max-h-96 overflow-y-auto">
             {fields.map((field, index) => (

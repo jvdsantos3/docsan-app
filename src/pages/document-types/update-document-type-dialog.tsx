@@ -42,6 +42,7 @@ export const UpdateDocumentTypeDialog = ({
       data: {
         name: data.name,
         validityPeriod: data.validityPeriod,
+        prompt: data.prompt,
         fields: data.fields,
       },
     })

@@ -8,6 +8,7 @@ export const documentTypeFormSchema = z.object({
     .number()
     .nonnegative('O período de validade deve ser um número positivo.')
     .min(7, 'O período de validade deve ser de pelo menos 7 dias.'),
+  prompt: z.string().trim().min(1, 'O prompt é obrigatório.'),
   fields: z
     .array(
       z.object({
