@@ -47,11 +47,11 @@ export const DocumentPreviewDialog = ({
               <DialogDescription></DialogDescription>
             </div>
 
-            {document.status === 'won' ? (
+            {document.status === 'Overdue' ? (
               <Badge variant="destructive" className="font-bold text-white">
                 <span>Vencido</span>
               </Badge>
-            ) : document.status === 'near' ? (
+            ) : document.status === 'Due_soon' ? (
               <Badge className="bg-[#F58F00] font-lato font-bold text-white">
                 <span>Próximo</span>
               </Badge>

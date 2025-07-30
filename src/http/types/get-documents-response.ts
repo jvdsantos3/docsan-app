@@ -6,7 +6,7 @@ export type GetDocumentsResponse = {
   documents: PaginationResponse<
     Document & {
       documentType: DocumentType
-      status: 'inDay' | 'near' | 'won'
+      status: 'up_to_date' | 'due_soon' | 'overdue'
     }
   >
 }

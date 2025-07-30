@@ -1,4 +1,4 @@
-import {z} from 'zod'
+import { z } from 'zod'
 
 export const schema = z.object({
   page: z.number().nonnegative().optional(),
@@ -6,7 +6,7 @@ export const schema = z.object({
   order: z.enum(['asc', 'desc']).optional(),
   orderBy: z.string().trim().optional(),
   type: z.string().optional(),
-  status: z.enum(['inDay', 'near', 'won']).optional(),
+  status: z.enum(['up_to_date', 'due_soon', 'overdue']).optional(),
   filter: z.string().trim().optional(),
 })
 

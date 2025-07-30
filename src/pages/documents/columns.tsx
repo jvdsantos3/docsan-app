@@ -22,7 +22,7 @@ export const columns: ColumnDef<
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      if (row.getValue('status') === 'won') {
+      if (row.getValue('status') === 'overdue') {
         return (
           <Badge
             variant="destructive"
@@ -33,7 +33,7 @@ export const columns: ColumnDef<
         )
       }
 
-      if (row.getValue('status') === 'near') {
+      if (row.getValue('status') === 'due_soon') {
         return (
           <Badge className="bg-[#F58F00] font-lato font-bold text-white">
             <span>Próximo</span>

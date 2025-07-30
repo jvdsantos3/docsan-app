@@ -61,24 +61,12 @@ export const DocumentsFilters = () => {
 
   const handleSelectStatus = (value: string) => {
     setSearchParams((prev) => {
-      let status: string = ''
-
-      switch (value) {
-        case 'all':
-          prev.delete('status')
-          return prev
-        case 'up_to_date':
-          status = 'inDay'
-          break
-        case 'due_soon':
-          status = 'near'
-          break
-        case 'overdue':
-          status = 'won'
-          break
+      if (value === 'all') {
+        prev.delete('status')
+        return prev
       }
 
-      prev.set('status', status)
+      prev.set('status', value)
       return prev
     })
   }
