@@ -1,11 +1,11 @@
 export function storeTokens(token: string) {
-  sessionStorage.setItem("@docsan_token", token);
+  localStorage.setItem('@docsan_token', token)
 }
 
 export function removeTokens() {
-  sessionStorage.removeItem("@docsan_token");
+  localStorage.removeItem('@docsan_token')
 }
 
 export function getToken() {
-  return sessionStorage.getItem("@docsan_token");
+  return localStorage.getItem('@docsan_token')
 }
