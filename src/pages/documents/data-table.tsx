@@ -18,7 +18,7 @@ export const DocumentsDataTable = () => {
   const sort = searchParams.get('sort') ?? ''
   const direction = searchParams.get('direction') ?? 'asc'
   const filter = searchParams.get('filter') ?? ''
-  const status = searchParams.get('status') ?? ''
+  const status = searchParams.get('status') ?? undefined
   const type = searchParams.get('type') ?? ''
 
   const parsedParams = schema.safeParse({
@@ -29,6 +29,7 @@ export const DocumentsDataTable = () => {
     status,
     filter,
   })
+  console.log('Parsed Params:', parsedParams)
 
   const companyId = profile?.user.owner?.companyId || ''
   const { data: response } = useDocuments(companyId, parsedParams.data)
