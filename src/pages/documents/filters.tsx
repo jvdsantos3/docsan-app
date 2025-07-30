@@ -15,8 +15,10 @@ import { useDebounce } from '@/hooks/use-debounce'
 import { useDocumentTypes } from '@/http/use-document-types'
 import { ComboBox } from '@/components/ui/combobox'
 import { useDocumentType } from '@/http/use-document-type'
+import { useProfile } from '@/http/use-profile'
 
 export const DocumentsFilters = () => {
+  const { data: profile } = useProfile()
   const inputRef = useRef<HTMLInputElement>(null)
   const [searchParams, setSearchParams] = useSearchParams()
   const initialType = searchParams.get('type') || ''
@@ -25,9 +27,14 @@ export const DocumentsFilters = () => {
   const [inputValue, setInputValue] = useState(initialFilter)
   const debouncedFilter = useDebounce(inputValue, 300)
 
+  const companyId = profile?.user.owner?.companyId || ''
+
   const [filter, setFilter] = useState('')
-  const { data: documentType } = useDocumentType(type)
-  const { data: items, isLoading } = useDocumentTypes({ active: true, filter })
+  const { data: documentType } = useDocumentType(type, companyId)
+  const { data: response, isLoading } = useDocumentTypes(companyId, {
+    active: true,
+    filter,
+  })
 
   const selected = documentType
     ? { value: documentType.id, label: documentType.name }
@@ -112,7 +119,7 @@ export const DocumentsFilters = () => {
       <div>
         <ComboBox
           items={
-            items?.data.map((item) => ({
+            response?.documentTypes.data.map((item) => ({
               value: item.id,
               label: item.name,
             })) || []
