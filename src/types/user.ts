@@ -1,22 +1,27 @@
-import type { Company } from './company'
+// export type OwnerProfile = {
+//   id: string
+//   name: string
+//   cpf: string
+//   phone: string
+//   email: string
+//   createdAt: string
+//   updatedAt: string
+//   companyId: string
+//   company: Company
+// }
+
+// export type AuthUser = User & {
+//   profile: OwnerProfile // | ProfessionalProfile
+// }
 
 export type Role = 'OWNER' | 'PROFESSIONAL'
 
-export type OwnerProfile = {
-  id: string
-  name: string
-  cpf: string
-  phone: string
-  email: string
-  password: string
-  createdAt: string
-  updatedAt: string
-  companyId: string
-  company: Company
-}
-
 export type User = {
   id: string
+  email: string
+  // password: string
   role: Role
-  profile?: OwnerProfile // | ProfessionalProfile
+  createdAt: Date
+  updatedAt: Date
+  // profile?: OwnerProfile // | ProfessionalProfile
 }

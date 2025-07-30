@@ -6,14 +6,20 @@ import { columns } from './columns'
 import { DocumentTypesTableSkeleton } from './document-types-table-skeleton'
 import { DocumentTypesPaginationSkeleton } from './document-types-pagination-skeleton'
 import { DocumentTypesFilters } from './document-types-filters'
+import { useAuth } from '@/hooks/use-auth'
+import { useProfile } from '@/http/use-profile'
 
 export const DocumentTypesTable = () => {
+  const { user } = useAuth()
+  const { data: profileData } = useProfile({ enabled: !!user })
   const [searchParams] = useSearchParams()
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1
   const order = (searchParams.get('order') as 'asc' | 'desc' | null) ?? 'asc'
   const filter = searchParams.get('filter') || ''
   const status = searchParams.get('status')
-  const { data: response, isLoading } = useDocumentTypes({
+
+  const companyId = profileData?.user.owner?.companyId || ''
+  const { data: response, isLoading } = useDocumentTypes(companyId, {
     page,
     order,
     filter,

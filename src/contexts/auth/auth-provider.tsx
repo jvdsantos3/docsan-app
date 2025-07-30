@@ -16,6 +16,7 @@ type AccessTokenPayload = {
   role: Role
   iat: number
   exp: number
+  type: 'access'
 }
 
 export interface LoginInput {
@@ -61,11 +62,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
           jwtDecode(accessToken)
 
         setIsAuthenticated(true)
-        setAuthUser({
-          id: payload.sub,
-          role: payload.role,
-          profile: profileData?.profile,
-        })
 
         toast.dismiss()
         navigate(payload.role === 'PROFESSIONAL' ? '/services' : '/documents')
@@ -131,14 +127,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     setIsAuthenticated(true)
     setToken(token)
+  }, [])
 
-    const payload: Pick<AccessTokenPayload, 'sub' | 'role'> = jwtDecode(token)
-    setAuthUser({
-      id: payload.sub,
-      role: payload.role,
-      profile: profileData?.profile,
-    })
-  }, [profileData])
+  useEffect(() => {
+    if (isAuthenticated && profileData) {
+      setAuthUser({
+        ...profileData.user,
+      })
+    } else {
+      setAuthUser(null)
+    }
+  }, [isAuthenticated, profileData])
 
   return (
     <AuthContext.Provider
@@ -147,7 +146,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         login,
         isAuthenticated,
         user: authUser,
-        authToken: token,
+        token: token,
 
         signIn: (credencials) => {
           console.log(credencials)

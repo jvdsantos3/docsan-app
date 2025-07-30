@@ -7,7 +7,7 @@ export type AuthContextData = {
   registerProfessional: (data: ProfessionalSignUpFormSchema) => Promise<void>
   login: (data: LoginInput) => Promise<void>
   isAuthenticated: boolean
-  authToken?: string | null
+  token?: string | null
   user?: User | null
   signIn: (credencials: { email: string; password: string }) => void
   signOut: () => void

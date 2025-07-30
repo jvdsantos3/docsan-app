@@ -1,5 +1,3 @@
-import type { Address } from './address'
-
 export type Company = {
   id: string
   name: string
@@ -9,5 +7,4 @@ export type Company = {
   createdAt: string
   updatedAt: string
   addressId: string
-  address: Address
 }

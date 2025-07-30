@@ -7,7 +7,7 @@ import {
 } from './types/get-document-types-search-params'
 import { createQueryStringClean } from '@/utils/create-query-string-clean'
 
-export function useDocumentTypes(params: GetDocumentTypesSearchParams = {}) {
+export function useDocumentTypes(companyId: string, params: GetDocumentTypesSearchParams = {}) {
   const parsedParams = schema.safeParse(params)
 
   if (!parsedParams.success) {
@@ -19,10 +19,11 @@ export function useDocumentTypes(params: GetDocumentTypesSearchParams = {}) {
     queryFn: async () => {
       const searchParams = createQueryStringClean(parsedParams.data)
       const response = await api.get<GetDocumentTypesResponse>(
-        `/document-types?${searchParams}`,
+        `/company/${companyId}/document-types?${searchParams}`,
       )
       return response.data
     },
+    enabled: !!companyId,
     placeholderData: keepPreviousData,
   })
 }
