@@ -11,22 +11,19 @@ import {
   Eye,
   FileText,
   MoreHorizontal,
-  SquarePen,
-  History
 } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
-import type { GetDocumentsResponse } from '@/http/types/get-documents-response'
-import { Link } from 'react-router-dom'
+import type { GetDocumentTypeVersionsResponse } from '@/http/types/get-document-type-versions-response'
 
-type DocumentDataTableRowActionsProps<TData> = {
+type DocumentTypeVersionsRowActionsProps<TData> = {
   row: Row<TData>
 }
 
-export function DocumentDataTableRowActions<TData>({
+export function DocumentTypeVersionsRowActions<TData>({
   row,
-}: DocumentDataTableRowActionsProps<TData>) {
+}: DocumentTypeVersionsRowActionsProps<TData>) {
   const [, setSearchParams] = useSearchParams()
-  const document = row.original as GetDocumentsResponse['documents']['data'][number]
+  const document = row.original as GetDocumentTypeVersionsResponse['data'][number]
 
   function handleViewDetails() {
     setSearchParams((prev) => {
@@ -47,14 +44,6 @@ export function DocumentDataTableRowActions<TData>({
   function handleExport() {
     setSearchParams((prev) => {
       prev.set('modal', 'export')
-      prev.set('documentId', document.id)
-      return prev
-    })
-  }
-
-  function handleNotify() {
-    setSearchParams((prev) => {
-      prev.set('modal', 'notify')
       prev.set('documentId', document.id)
       return prev
     })
@@ -81,16 +70,6 @@ export function DocumentDataTableRowActions<TData>({
           <Download className="text-gray-600" />
           Exportar
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleNotify}>
-          <SquarePen className="text-blue-600" />
-          Configurar notificação
-        </DropdownMenuItem>
-        <Link to={`/document-types/${document.documentTypeId}/versions`}>
-          <DropdownMenuItem >
-              <History className="text-gray-700" />
-              Visualizar Versões
-          </DropdownMenuItem>
-        </Link>
       </DropdownMenuContent>
     </DropdownMenu>
   )

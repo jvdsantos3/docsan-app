@@ -11,6 +11,7 @@ import { ServicesProvider } from './contexts/services/services-provider'
 import { Documents } from './pages/documents'
 import { NewDocument } from './pages/documents/new-document'
 import { DocumentTypes } from './pages/document-types'
+import { DocumentTypesVersions } from './pages/document-types/versions'
 
 export function Router() {
   return (
@@ -33,6 +34,7 @@ export function Router() {
         <Route path="documents" element={<Documents />} />
         <Route path="documents/new" element={<NewDocument />} />
         <Route path="document-types" element={<DocumentTypes />} />
+        <Route path="document-types/:typeId/versions" element={<DocumentTypesVersions />} />
       </Route>
     </Routes>
   )
