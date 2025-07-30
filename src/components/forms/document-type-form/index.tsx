@@ -45,6 +45,7 @@ export const DocumentTypeForm = ({
     resolver: zodResolver(documentTypeFormSchema),
     defaultValues: {
       name: '',
+      validityPeriod: 30,
       fields: [{ name: 'Data de vencimento', type: 'date', required: true }],
     },
   })
@@ -88,22 +89,41 @@ export const DocumentTypeForm = ({
     <Form {...form}>
       <form onSubmit={form.handleSubmit(handleSubmit)}>
         <div className="space-y-6 py-2">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome do tipo de documento</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Dê um nome ao novo tipo de documento"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nome do tipo de documento</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Dê um nome ao novo tipo de documento"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="validityPeriod"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Período para vencimento (em dias)</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="number"
+                      placeholder="Ex.: 30 (dias)"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <div className="space-y-4 max-h-96 overflow-y-auto">
             {fields.map((field, index) => (

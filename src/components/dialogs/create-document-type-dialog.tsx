@@ -10,6 +10,7 @@ import { useCreateDocumentType } from '@/http/use-create-document-type'
 import type { CreateDocumentTypeRequest } from '@/http/types/create-document-type-request'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/use-auth'
+import { useProfile } from '@/http/use-profile'
 
 type CreateDocumentTypeDialogProps = {
   open: boolean
@@ -21,11 +22,12 @@ export const CreateDocumentTypeDialog = ({
   onOpenChange,
 }: CreateDocumentTypeDialogProps) => {
   const { user } = useAuth()
+  const { data: profile } = useProfile({ enabled: !!user })
   const { mutateAsync: createDocumentType, error: createError } =
     useCreateDocumentType()
 
   const handleCreateDocumentType = async (data: CreateDocumentTypeRequest) => {
-    const companyId = user?.profile?.companyId
+    const companyId = profile?.user?.owner?.companyId
 
     if (!companyId) {
       return
@@ -35,6 +37,7 @@ export const CreateDocumentTypeDialog = ({
       companyId,
       data: {
         name: data.name,
+        validityPeriod: data.validityPeriod,
         fields: data.fields,
       },
     })

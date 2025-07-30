@@ -14,7 +14,7 @@ export function useCreateDocumentType() {
       companyId: Company['id']
       data: CreateDocumentTypeRequest
     }) => {
-      await api.post(`/document-types/${companyId}`, data)
+      await api.post(`/company/${companyId}/document-types`, data)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-document-types'] })
