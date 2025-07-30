@@ -13,9 +13,8 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { env } from '@/config/env'
 import { useAuth } from '@/hooks/use-auth'
 import { useDocument } from '@/http/use-document'
-import { api } from '@/lib/axios'
+import { useProfile } from '@/http/use-profile'
 import { Viewer } from '@react-pdf-viewer/core'
-import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 type DocumentPreviewDialogProps = {
@@ -27,27 +26,13 @@ export const DocumentPreviewDialog = ({
   open,
   onOpenChange,
 }: DocumentPreviewDialogProps) => {
-  const { user, authToken } = useAuth()
+  const { token } = useAuth()
+  const { data: profile } = useProfile()
   const [searchParams] = useSearchParams()
-  const [fileUrl, setFileUrl] = useState('')
   const documentId = searchParams.get('documentId') ?? ''
-  const companyId = user?.profile?.companyId ?? ''
-  const { data: document, isLoading } = useDocument(documentId, companyId)
-
-  useEffect(() => {
-    async function fetchFileUrl() {
-      const res = await api.get(
-        `/company/${companyId}/documents/${documentId}/export`,
-        { responseType: 'blob' },
-      )
-      const url = window.URL.createObjectURL(new Blob([res.data]))
-      setFileUrl(url.replace('blob:', ''))
-    }
-
-    if (document) {
-      fetchFileUrl()
-    }
-  }, [document, companyId, documentId])
+  const modalType = searchParams.get('modal') ?? ''
+  const companyId = profile?.user.owner?.companyId ?? ''
+  const { data: document } = useDocument(documentId, companyId)
 
   if (!document) {
     return null
@@ -109,14 +94,13 @@ export const DocumentPreviewDialog = ({
             </div>
           </div>
 
-          {fileUrl && (
+          {modalType === 'preview' && !!documentId && (
             <ScrollArea className="h-96">
               <Viewer
                 fileUrl={`${env.VITE_API_BASE_URL}/company/${companyId}/documents/${documentId}/export`}
                 httpHeaders={{
-                  Authorization: `Bearer ${authToken}`,
+                  Authorization: `Bearer ${token}`,
                 }}
-                // withCredentials={true}
               />
             </ScrollArea>
           )}

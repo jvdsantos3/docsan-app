@@ -8,7 +8,7 @@ export function useDocumentType(
   companyId: DocumentType['companyId'],
 ) {
   return useQuery({
-    queryKey: ['get-document-type'],
+    queryKey: ['get-document-type', documentTypeId],
     queryFn: async () => {
       const response = await api.get<GetDocumentTypeResponse>(
         `/company/${companyId}/document-types/${documentTypeId}`,
