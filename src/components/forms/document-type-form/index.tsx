@@ -76,6 +76,7 @@ export const DocumentTypeForm = ({
     if (documentType) {
       form.reset({
         name: documentType.name,
+        validityPeriod: documentType.validityPeriod,
         fields: documentType.metadata.map((md) => ({
           name: md.name,
           type: md.type.toLowerCase() as 'text' | 'number' | 'date',

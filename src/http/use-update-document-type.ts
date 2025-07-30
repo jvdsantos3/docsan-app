@@ -9,12 +9,14 @@ export function useUpdateDocumentType() {
   return useMutation({
     mutationFn: async ({
       id,
+      companyId,
       data,
     }: {
       id: DocumentType['id']
+      companyId: DocumentType['companyId']
       data: UpdateDocumentTypeRequest
     }) => {
-      await api.put(`/document-types/${id}`, data)
+      await api.put(`/company/${companyId}/document-types/${id}`, data)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-document-type'] })

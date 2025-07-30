@@ -5,7 +5,9 @@ import { OrderButton } from './order-button'
 import { ArrowUpDown } from 'lucide-react'
 import type { GetDocumentTypesResponse } from '@/http/types/get-document-types-response'
 
-export const columns: ColumnDef<GetDocumentTypesResponse['data'][number]>[] = [
+export const columns: ColumnDef<
+  GetDocumentTypesResponse['documentTypes']['data'][number]
+>[] = [
   {
     accessorKey: 'isActive',
     header: 'Status',

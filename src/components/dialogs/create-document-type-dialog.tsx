@@ -41,13 +41,13 @@ export const CreateDocumentTypeDialog = ({
         fields: data.fields,
       },
     })
-    onOpenChange(false)
     toast.success('Tipo de documento criado com sucesso!', {
       dismissible: true,
       duration: 5000,
       description: 'Você pode agora adicionar documentos com este tipo.',
       richColors: true,
     })
+    onOpenChange(false)
   }
 
   if (createError) {

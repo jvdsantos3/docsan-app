@@ -8,6 +8,7 @@ import {
 } from '@/components/ui/dialog'
 import type { UpdateDocumentTypeRequest } from '@/http/types/update-document-type-request'
 import { useDocumentType } from '@/http/use-document-type'
+import { useProfile } from '@/http/use-profile'
 import { useUpdateDocumentType } from '@/http/use-update-document-type'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -21,28 +22,35 @@ export const UpdateDocumentTypeDialog = ({
   open,
   onOpenChange,
 }: UpdateDocumentTypeDialog) => {
+  const { data: profile } = useProfile()
   const [searchParams] = useSearchParams()
-  const documentTypeId = searchParams.get('documentTypeId')
-  const { data: documentType, isLoading } = useDocumentType(documentTypeId)
+  const documentTypeId = searchParams.get('documentTypeId') || ''
+  const companyId = profile?.user.owner?.companyId || ''
+  const { data: documentType, isLoading } = useDocumentType(
+    documentTypeId,
+    companyId,
+  )
   const { mutateAsync: updateDocumentType, error: updateError } =
     useUpdateDocumentType()
 
   async function handleUpdateDocumentType(data: UpdateDocumentTypeRequest) {
-    if (!documentTypeId) return
+    if (!documentTypeId || !companyId) return
 
     await updateDocumentType({
       id: documentTypeId,
+      companyId,
       data: {
         name: data.name,
+        validityPeriod: data.validityPeriod,
         fields: data.fields,
       },
     })
-    onOpenChange(false)
     toast.success('Tipo de documento atualizado com sucesso!', {
       dismissible: true,
       duration: 5000,
       richColors: true,
     })
+    onOpenChange(false)
   }
 
   if (isLoading) {

@@ -6,8 +6,16 @@ export function useToggleDocumentTypeStatus() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (documentTypeId: DocumentType['id']) => {
-      await api.patch(`/document-types/${documentTypeId}/active`)
+    mutationFn: async ({
+      companyId,
+      documentTypeId,
+    }: {
+      companyId: DocumentType['companyId']
+      documentTypeId: DocumentType['id']
+    }) => {
+      await api.patch(
+        `/company/${companyId}/document-types/${documentTypeId}/active`,
+      )
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-document-types'] })

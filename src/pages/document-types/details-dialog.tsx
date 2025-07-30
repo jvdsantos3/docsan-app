@@ -15,6 +15,7 @@ import { CircleSmall } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
+import { useProfile } from '@/http/use-profile'
 
 type DocumentTypeDetailsDialogProps = {
   open: boolean
@@ -31,9 +32,15 @@ export const DocumentTypeDetailsDialog = ({
   open,
   onOpenChange,
 }: DocumentTypeDetailsDialogProps) => {
+  const { data: profile } = useProfile()
   const [searchParams] = useSearchParams()
-  const documentTypeId = searchParams.get('documentTypeId')
-  const { data: documentType, isLoading } = useDocumentType(documentTypeId)
+  const documentTypeId = searchParams.get('documentTypeId') || ''
+  const companyId = profile?.user.owner?.companyId || ''
+
+  const { data: documentType, isLoading } = useDocumentType(
+    documentTypeId,
+    companyId,
+  )
 
   if (isLoading) {
     return <div>Carregando...</div>

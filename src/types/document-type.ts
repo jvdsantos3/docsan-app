@@ -1,14 +1,16 @@
+import type { Company } from './company'
+
 export type DocumentType = {
   id: string
   name: string
+  validityPeriod: number
   isActive: boolean
-  createdAt: Date
-  updatedAt: Date
-  companyId: string
-  professionalId: string | null
   metadata: {
     name: string
     type: string
     required: boolean
   }[]
+  createdAt: Date
+  updatedAt: Date
+  companyId: Company['id']
 }

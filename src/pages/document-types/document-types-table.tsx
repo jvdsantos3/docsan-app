@@ -8,11 +8,13 @@ import { DocumentTypesPaginationSkeleton } from './document-types-pagination-ske
 import { DocumentTypesFilters } from './document-types-filters'
 import { useAuth } from '@/hooks/use-auth'
 import { useProfile } from '@/http/use-profile'
+import { DocumentTypeDetailsDialog } from './details-dialog'
+import { UpdateDocumentTypeDialog } from './update-document-type-dialog'
 
 export const DocumentTypesTable = () => {
   const { user } = useAuth()
   const { data: profileData } = useProfile({ enabled: !!user })
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1
   const order = (searchParams.get('order') as 'asc' | 'desc' | null) ?? 'asc'
   const filter = searchParams.get('filter') || ''
@@ -26,6 +28,16 @@ export const DocumentTypesTable = () => {
     active:
       status === 'active' ? true : status === 'inactive' ? false : undefined,
   })
+  const modalType = searchParams.get('modal')
+  const documentTypeId = searchParams.get('documentTypeId')
+
+  function handleCloseDialog() {
+    setSearchParams((prev) => {
+      prev.delete('modal')
+      prev.delete('documentTypeId')
+      return prev
+    })
+  }
 
   return (
     <div>
@@ -43,14 +55,29 @@ export const DocumentTypesTable = () => {
           <DocumentTypesPaginationSkeleton />
         </div>
       ) : (
-        <div>
-          <DataTable columns={columns} data={response?.data || []} />
-          <DocumentTypesPagination
-            currentPage={page}
-            totalPages={response?.last || 1}
-            paginationItemsToDisplay={5}
+        <>
+          <div>
+            <DataTable
+              columns={columns}
+              data={response?.documentTypes.data || []}
+            />
+            <DocumentTypesPagination
+              currentPage={page}
+              totalPages={response?.documentTypes.last || 1}
+              paginationItemsToDisplay={5}
+            />
+          </div>
+
+          <DocumentTypeDetailsDialog
+            open={modalType === 'details' && !!documentTypeId}
+            onOpenChange={handleCloseDialog}
           />
-        </div>
+
+          <UpdateDocumentTypeDialog
+            open={modalType === 'edit' && !!documentTypeId}
+            onOpenChange={handleCloseDialog}
+          />
+        </>
       )}
     </div>
   )

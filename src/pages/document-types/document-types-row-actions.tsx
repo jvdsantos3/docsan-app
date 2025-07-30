@@ -45,7 +45,8 @@ export function DocumentTypesRowActions<TData>({
     useToggleDocumentTypeStatus()
   const { mutateAsync: deleteDocumentType, error: deleteError } =
     useDeleteDocumentType()
-  const documentType = row.original as GetDocumentTypesResponse['data'][number]
+  const documentType =
+    row.original as GetDocumentTypesResponse['documentTypes']['data'][number]
   const [deleteOpen, setDeleteOpen] = useState(false)
 
   function handleViewDetails() {
@@ -57,7 +58,10 @@ export function DocumentTypesRowActions<TData>({
   }
 
   async function handleToggleStatus() {
-    await toggleStatus(documentType.id)
+    await toggleStatus({
+      companyId: documentType.companyId,
+      documentTypeId: documentType.id,
+    })
     toast.success('Status do tipo de documento alterado com sucesso!', {
       dismissible: true,
       duration: 5000,
