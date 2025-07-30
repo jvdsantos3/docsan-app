@@ -79,6 +79,7 @@ export const DocumentTypeForm = ({
       form.reset({
         name: documentType.name,
         validityPeriod: documentType.validityPeriod,
+        prompt: documentType.prompt,
         fields: documentType.metadata.map((md) => ({
           name: md.name,
           type: md.type.toLowerCase() as 'text' | 'number' | 'date',
