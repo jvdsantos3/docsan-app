@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { useAuth } from '@/hooks/use-auth'
+import { useProfile } from '@/http/use-profile'
 import { api } from '@/lib/axios'
 import { cn } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -60,8 +60,8 @@ const options = [
 ] as const
 
 export const ExportDialog = ({ open, onOpenChange }: ExportDialogProps) => {
+  const { data: profile } = useProfile()
   const [searchParams] = useSearchParams()
-  const { user } = useAuth()
   const form = useForm<ExportFormValues>({
     resolver: zodResolver(schema),
     defaultValues: { type: 'pdf' },
@@ -70,17 +70,18 @@ export const ExportDialog = ({ open, onOpenChange }: ExportDialogProps) => {
   const documentId = searchParams.get('documentId')
 
   const downloadFile = async (type: 'xlsx' | 'csv' | 'pdf') => {
-    const companyId = user?.profile?.companyId
+    const companyId = profile?.user.owner?.companyId
 
     if (!companyId || !documentId) return
 
     try {
       const res = await api.get(
         `/company/${companyId}/documents/${documentId}/export`,
+        { responseType: 'blob' },
       )
 
       const fileName = `documento-${documentId}.${type}`
-      const url = window.URL.createObjectURL(new Blob([...res.data.file.data]))
+      const url = window.URL.createObjectURL(new Blob([res.data]))
       const link = document.createElement('a')
       link.href = url
       link.setAttribute('download', fileName)

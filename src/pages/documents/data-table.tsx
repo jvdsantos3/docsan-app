@@ -64,7 +64,7 @@ export const DocumentsDataTable = () => {
       </div>
 
       <DocumentDetailsDialog
-        open={modalType === 'details'}
+        open={modalType === 'details' && !!documentId}
         onOpenChange={handleCloseDialog}
       />
 
