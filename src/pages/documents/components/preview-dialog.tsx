@@ -1,3 +1,4 @@
+import { ReactPdfViewer } from '@/components/react-pdf-viewer'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import {
@@ -9,12 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { ScrollArea } from '@/components/ui/scroll-area'
 import { env } from '@/config/env'
 import { useAuth } from '@/hooks/use-auth'
 import { useDocument } from '@/http/use-document'
 import { useProfile } from '@/http/use-profile'
-import { Viewer } from '@react-pdf-viewer/core'
 import { useSearchParams } from 'react-router-dom'
 
 type DocumentPreviewDialogProps = {
@@ -95,14 +94,12 @@ export const DocumentPreviewDialog = ({
           </div>
 
           {modalType === 'preview' && !!documentId && (
-            <ScrollArea className="h-96">
-              <Viewer
-                fileUrl={`${env.VITE_API_BASE_URL}/company/${companyId}/documents/${documentId}/export`}
-                httpHeaders={{
-                  Authorization: `Bearer ${token}`,
-                }}
-              />
-            </ScrollArea>
+            <ReactPdfViewer
+              fileUrl={`${env.VITE_API_BASE_URL}/company/${companyId}/documents/${documentId}/export`}
+              httpHeaders={{
+                Authorization: `Bearer ${token}`,
+              }}
+            />
           )}
         </div>
 
