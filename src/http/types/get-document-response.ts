@@ -7,5 +7,5 @@ export type GetDocumentResponse = Document & {
   documentType: DocumentType
   actionLog: []
   duedate: Date
-  status: 'inDay' | 'near' | 'won'
+  status: 'Up_to_date' | 'Due_soon' | 'Overdue'
 }

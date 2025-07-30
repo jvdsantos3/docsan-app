@@ -11,6 +11,7 @@ import {
   CircleCheckBig,
   CircleOff,
   Eye,
+  History,
   MoreHorizontal,
   Pencil,
   Trash2,
@@ -28,7 +29,7 @@ import {
 import { useToggleDocumentTypeStatus } from '@/http/use-toggle-document-type-status'
 import type { GetDocumentTypesResponse } from '@/http/types/get-document-types-response'
 import { useDeleteDocumentType } from '@/http/use-delete-document-type'
-import { useSearchParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -141,6 +142,12 @@ export function DocumentTypesRowActions<TData>({
               </DropdownMenuItem>
             </>
           )}
+          <Link to={`/document-types/${documentType.id}/versions`}>
+            <DropdownMenuItem >
+                <History className="text-gray-700" />
+                Visualizar Versões
+            </DropdownMenuItem>
+          </Link>
         </DropdownMenuContent>
       </DropdownMenu>
 
