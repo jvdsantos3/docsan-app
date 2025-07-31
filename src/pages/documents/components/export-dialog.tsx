@@ -16,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { useDocument } from '@/http/use-document'
 import { useProfile } from '@/http/use-profile'
 import { api } from '@/lib/axios'
 import { cn } from '@/lib/utils'
@@ -67,7 +68,9 @@ export const ExportDialog = ({ open, onOpenChange }: ExportDialogProps) => {
     defaultValues: { type: 'pdf' },
   })
 
-  const documentId = searchParams.get('documentId')
+  const documentId = searchParams.get('documentId') || ''
+  const companyId = profile?.user.owner?.companyId || ''
+  const { data: documentData } = useDocument(documentId, companyId)
 
   const downloadFile = async (type: 'xlsx' | 'csv' | 'pdf') => {
     const companyId = profile?.user.owner?.companyId
@@ -113,10 +116,16 @@ export const ExportDialog = ({ open, onOpenChange }: ExportDialogProps) => {
         <div className="space-y-4">
           <div className="border border-blue-100 bg-background rounded-xl px-4 py-3">
             <p className="font-lato font-medium text-lg text-blue-1000">
-              alvaráfuncionamento.pdf
+              {documentData?.name}
             </p>
             <p className="font-lato font-normal text-sm text-gray-600">
-              Recebido em 15/05/2025
+              Recebido em{' '}
+              {documentData?.createdAt &&
+                new Intl.DateTimeFormat('pt-BR', {
+                  year: 'numeric',
+                  month: '2-digit',
+                  day: '2-digit',
+                }).format(new Date(documentData.createdAt))}
             </p>
           </div>
 
