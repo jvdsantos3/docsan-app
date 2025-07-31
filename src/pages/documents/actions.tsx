@@ -12,7 +12,7 @@ import {
   FileText,
   MoreHorizontal,
   SquarePen,
-  History
+  History,
 } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import type { GetDocumentsResponse } from '@/http/types/get-documents-response'
@@ -26,7 +26,8 @@ export function DocumentDataTableRowActions<TData>({
   row,
 }: DocumentDataTableRowActionsProps<TData>) {
   const [, setSearchParams] = useSearchParams()
-  const document = row.original as GetDocumentsResponse['documents']['data'][number]
+  const document =
+    row.original as GetDocumentsResponse['documents']['data'][number]
 
   function handleViewDetails() {
     setSearchParams((prev) => {
@@ -81,14 +82,16 @@ export function DocumentDataTableRowActions<TData>({
           <Download className="text-gray-600" />
           Exportar
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleNotify}>
-          <SquarePen className="text-blue-600" />
-          Configurar notificação
-        </DropdownMenuItem>
+        {document.status !== 'overdue' && (
+          <DropdownMenuItem onClick={handleNotify}>
+            <SquarePen className="text-blue-600" />
+            Configurar notificação
+          </DropdownMenuItem>
+        )}
         <Link to={`/document-types/${document.documentTypeId}/versions`}>
-          <DropdownMenuItem >
-              <History className="text-gray-700" />
-              Visualizar Versões
+          <DropdownMenuItem>
+            <History className="text-gray-700" />
+            Visualizar Versões
           </DropdownMenuItem>
         </Link>
       </DropdownMenuContent>

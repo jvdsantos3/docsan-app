@@ -103,10 +103,14 @@ export const DocumentDetailsDialog = ({
                   <div className="flex flex-col gap-2">
                     <Label>Data para notificação</Label>
                     <p className="text-sm font-medium">
-                      {document.duedate &&
-                        format(document.duedate, 'PPP', {
-                          locale: ptBR,
-                        })}
+                      {document.documentNotification &&
+                        format(
+                          document.documentNotification.scheduledAt,
+                          'PPP',
+                          {
+                            locale: ptBR,
+                          },
+                        )}
                     </p>
                   </div>
                 </div>
@@ -123,7 +127,8 @@ export const DocumentDetailsDialog = ({
                         <div className="grid grid-cols-2">
                           <div>{value.name}</div>
                           <div>
-                            {document.documentType.metadata[index].type === 'date'
+                            {document.documentType.metadata[index].type ===
+                            'date'
                               ? format(new Date(value.value), 'PPP', {
                                   locale: ptBR,
                                 })

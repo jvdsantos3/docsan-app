@@ -29,6 +29,7 @@ import { useCreateDocumentNotification } from '@/http/use-create-document-notifi
 import { useProfile } from '@/http/use-profile'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2, Plus } from 'lucide-react'
+import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -77,6 +78,12 @@ const schema = z
 
 type Schema = z.infer<typeof schema>
 
+const defaultValues: Schema = {
+  option: '1w',
+  customTime: undefined,
+  customPeriod: undefined,
+}
+
 export const NotifyDialog = ({ open, onOpenChange }: NotifyDialogProps) => {
   const { data: profile } = useProfile()
   const [searchParams] = useSearchParams()
@@ -86,11 +93,7 @@ export const NotifyDialog = ({ open, onOpenChange }: NotifyDialogProps) => {
     useCreateDocumentNotification()
   const form = useForm<Schema>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      option: '1w',
-      customTime: undefined,
-      customPeriod: undefined,
-    },
+    defaultValues,
   })
 
   const option = form.watch('option')
@@ -151,6 +154,12 @@ export const NotifyDialog = ({ open, onOpenChange }: NotifyDialogProps) => {
       duration: 5000,
     })
   }
+
+  useEffect(() => {
+    if (!open) {
+      form.reset(defaultValues)
+    }
+  }, [open, form])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
