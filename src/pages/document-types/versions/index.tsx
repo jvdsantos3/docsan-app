@@ -24,28 +24,31 @@ export const DocumentTypesVersions = () => {
   return (
     <div className="space-y-6 py-6">
       <Button
-          type="button"
-          variant="link"
-          className="text-blue-source"
-          onClick={() => navigate('/documents')}
-        >
-          <CornerUpLeft /> Voltar
-        </Button>
-      {isLoading ? <DocumentTypeVersionsHeaderSkeleton /> :
+        type="button"
+        variant="link"
+        className="text-blue-source"
+        onClick={() => navigate('/document-types')}
+      >
+        <CornerUpLeft /> Voltar
+      </Button>
+
+      {isLoading ? (
+        <DocumentTypeVersionsHeaderSkeleton />
+      ) : (
         <div className="flex justify-between">
           <div>
             <h1 className="text-3xl">{documentType?.name}</h1>
             <p className="font-medium text-lg mt-4">
-              Verifique todas as versões ja cadastradas para esse tipo de documento.
+              Verifique todas as versões ja cadastradas para esse tipo de
+              documento.
             </p>
           </div>
         </div>
-      }
-      
+      )}
 
       <div className="space-y-8">
         <div className="bg-white rounded-lg border border-gray-100">
-          <DocumentTypeVersionsTable 
+          <DocumentTypeVersionsTable
             companyId={companyId}
             documentTypeId={documentTypeId}
           />

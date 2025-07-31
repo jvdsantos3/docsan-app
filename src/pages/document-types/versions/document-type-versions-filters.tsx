@@ -19,17 +19,14 @@ export const DocumentTypeVersionsFilters = () => {
   }
 
   useEffect(() => {
-    if (debouncedFilter.trim()) {
-      setSearchParams((prev) => {
+    setSearchParams((prev) => {
+      if (debouncedFilter.trim()) {
         prev.set('filter', debouncedFilter)
-        return prev
-      })
-    } else {
-      setSearchParams((prev) => {
+      } else {
         prev.delete('filter')
-        return prev
-      })
-    }
+      }
+      return prev
+    })
   }, [debouncedFilter, setSearchParams])
 
   return (
