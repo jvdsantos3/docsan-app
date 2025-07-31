@@ -75,12 +75,10 @@ export const DocumentsDataTable = () => {
       />
 
       {/* Modal for document notification */}
-      {documentId && modalType === 'notify' && (
-        <NotifyDialog
-          documentId={documentId}
-          onOpenChange={handleCloseDialog}
-        />
-      )}
+      <NotifyDialog
+        open={modalType === 'notify' && !!documentId}
+        onOpenChange={handleCloseDialog}
+      />
 
       {/* Modal for document export */}
       <ExportDialog

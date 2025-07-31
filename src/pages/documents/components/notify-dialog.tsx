@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -24,15 +25,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useCreateDocumentNotification } from '@/http/use-create-document-notification'
+import { useProfile } from '@/http/use-profile'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Plus } from 'lucide-react'
+import { Loader2, Plus } from 'lucide-react'
 import { useForm } from 'react-hook-form'
+import { useSearchParams } from 'react-router-dom'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 type NotifyDialogProps = {
-  documentId: string
-  open?: boolean
-  onOpenChange?: (open: boolean) => void
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 const schema = z
@@ -44,7 +48,7 @@ const schema = z
       .number()
       .min(1, { message: 'Deve ser maior que zero' })
       .optional(),
-    customPeriod: z.enum(['days', 'weeks', 'months']).optional(),
+    customPeriod: z.enum(['weeks', 'months']).optional(),
   })
   .refine(
     (data) => {
@@ -73,10 +77,13 @@ const schema = z
 
 type Schema = z.infer<typeof schema>
 
-export const NotifyDialog = ({
-  documentId,
-  onOpenChange,
-}: NotifyDialogProps) => {
+export const NotifyDialog = ({ open, onOpenChange }: NotifyDialogProps) => {
+  const { data: profile } = useProfile()
+  const [searchParams] = useSearchParams()
+  const documentId = searchParams.get('documentId') ?? ''
+  const companyId = profile?.user.owner?.companyId ?? ''
+  const { mutateAsync: createNotificationFn, error: createNotificationError } =
+    useCreateDocumentNotification()
   const form = useForm<Schema>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -88,12 +95,65 @@ export const NotifyDialog = ({
 
   const option = form.watch('option')
 
-  const onSubmit = (data: Schema) => {
-    console.log('Form submitted with data:', data)
+  const onSubmit = async (data: Schema) => {
+    if (!documentId || !companyId) return
+
+    let time = 1
+    let period: 'week' | 'month' = 'week'
+
+    switch (data.option) {
+      case '1w':
+        time = 1
+        period = 'week'
+        break
+      case '1m':
+        time = 1
+        period = 'month'
+        break
+      case '3m':
+        time = 3
+        period = 'month'
+        break
+      case '6m':
+        time = 6
+        period = 'month'
+        break
+      case 'custom':
+        time = data.customTime || 1
+        period = data.customPeriod === 'weeks' ? 'week' : 'month'
+        break
+    }
+
+    const payload = {
+      time,
+      period,
+    }
+
+    await createNotificationFn({
+      documentId,
+      companyId,
+      data: payload,
+    })
+
+    toast.success('Notificação criada com sucesso!', {
+      dismissible: true,
+      duration: 5000,
+      description: 'Você será notificado conforme configurado.',
+      richColors: true,
+    })
+
+    onOpenChange(false)
+  }
+
+  if (createNotificationError) {
+    toast.error('Erro ao criar notificação. Tente novamente.', {
+      dismissible: true,
+      duration: 5000,
+    })
   }
 
   return (
-    <Dialog open={!!documentId} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-white lg:min-w-[700px]">
         <DialogHeader>
           <DialogTitle>Configurar notificação</DialogTitle>
@@ -217,7 +277,6 @@ export const NotifyDialog = ({
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  <SelectItem value="days">Dias</SelectItem>
                                   <SelectItem value="weeks">Semanas</SelectItem>
                                   <SelectItem value="months">Meses</SelectItem>
                                 </SelectContent>
@@ -237,10 +296,17 @@ export const NotifyDialog = ({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                <Button type="button" variant="outline">
-                  Cancelar
+                <DialogClose asChild>
+                  <Button type="button" variant="outline">
+                    Cancelar
+                  </Button>
+                </DialogClose>
+                <Button type="submit" disabled={form.formState.isSubmitting}>
+                  {form.formState.isSubmitting && (
+                    <Loader2 className="animate-spin" />
+                  )}
+                  Salvar
                 </Button>
-                <Button type="submit">Salvar</Button>
               </div>
             </form>
           </Form>
