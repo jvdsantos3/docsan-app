@@ -1,3 +1,4 @@
+import type { ActionLog } from './action-log'
 import type { Company } from './company'
 
 export type DocumentType = {
@@ -14,4 +15,5 @@ export type DocumentType = {
   createdAt: Date
   updatedAt: Date
   companyId: Company['id']
+  actionLogs: ActionLog[]
 }

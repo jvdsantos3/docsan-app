@@ -21,7 +21,7 @@ export const DocumentTypeVersionsTable = ({
 }: DocumentTypeVersionsTableProps) => {
   const [searchParams, setSearchParams] = useSearchParams()
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1
-  const order = (searchParams.get('order') as 'asc' | 'desc' | null) ?? 'asc'
+  const order = (searchParams.get('order') as 'asc' | 'desc' | null) ?? 'desc'
   const filter = searchParams.get('filter') || ''
 
   const { data: response, isLoading } = useDocumentTypeVersions(

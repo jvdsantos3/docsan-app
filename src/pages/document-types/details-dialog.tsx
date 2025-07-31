@@ -16,6 +16,7 @@ import { useSearchParams } from 'react-router-dom'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { useProfile } from '@/http/use-profile'
+import { Badge } from '@/components/ui/badge'
 
 type DocumentTypeDetailsDialogProps = {
   open: boolean
@@ -129,6 +130,64 @@ export const DocumentTypeDetailsDialog = ({
                 </p>
               )}
             </div>
+          </div>
+
+          <Separator />
+
+          <div>
+            <p className="font-bold text-sm">Histórico de Alterações</p>
+            {documentType?.actionLogs?.length > 0 ? (
+              <ul className="mt-2 space-y-3">
+                {documentType.actionLogs.map((value, index) => (
+                  <li
+                    key={index}
+                    className="flex items-center gap-3 rounded-md bg-gray-50 p-2 text-sm"
+                  >
+                    <Badge
+                      className={`
+                        ${
+                          value.action === 'document-type.created'
+                            ? 'bg-green-900'
+                            : 'bg-blue-900'
+                        } 
+                        h-6 w-6 flex items-center justify-center text-xs font-bold`}
+                    >
+                      {value.action === 'document-type.created' ? 'C' : 'A'}
+                    </Badge>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <span className="text-gray-600">
+                          {format(
+                            new Date(
+                              value.action === 'document-type.created'
+                                ? value.createdAt
+                                : value.updatedAt,
+                            ),
+                            'PPP',
+                            { locale: ptBR },
+                          )}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-gray-700">
+                        {value.action === 'document-type.created'
+                          ? 'Criado'
+                          : 'Atualizado'}{' '}
+                        por{' '}
+                        <span className="font-medium">
+                          {value.user.role === 'OWNER'
+                            ? value.user.owner?.name
+                            : value.user.professional?.name}
+                        </span>
+                      </p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-2 text-sm text-gray-500">
+                Nenhum registro de alterações encontrado.
+              </p>
+            )}
           </div>
         </div>
         <DialogFooter className="sm:justify-start">

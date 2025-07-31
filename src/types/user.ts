@@ -10,6 +10,9 @@
 //   company: Company
 // }
 
+import type { Owner } from "./owner"
+import type { Professional } from "./professional"
+
 // export type AuthUser = User & {
 //   profile: OwnerProfile // | ProfessionalProfile
 // }
@@ -23,5 +26,7 @@ export type User = {
   role: Role
   createdAt: Date
   updatedAt: Date
+  owner?: Owner
+  professional?: Professional
   // profile?: OwnerProfile // | ProfessionalProfile
 }

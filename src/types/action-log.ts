@@ -1,17 +1,16 @@
-import type { ActionLog } from './action-log'
 import type { Company } from './company'
+import type { Document } from './document'
 import type { DocumentType } from './document-type'
+import type { User } from './user'
 
-export type Document = {
+export type ActionLog = {
   id: string
-  name: string
-  duedate: Date
-  url: string
-  version: number
-  isLatest: boolean
+  action: string
   createdAt: Date
   updatedAt: Date
   companyId: Company['id']
   documentTypeId: DocumentType['id']
-  actionLog: ActionLog[]
+  documentId: Document['id']
+  userId: User['id']
+  user: User
 }
