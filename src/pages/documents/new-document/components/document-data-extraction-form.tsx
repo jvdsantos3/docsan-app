@@ -9,7 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-import { ChevronLeft, ChevronRight, Download, Eye, Loader2 } from 'lucide-react'
+import {
+  ChevronLeft,
+  ChevronRight,
+  // Download,
+  // Eye,
+  Loader2,
+} from 'lucide-react'
 import { useFieldArray, useForm } from 'react-hook-form'
 import { useDocumentMultiStepForm } from '../use-document-multi-step-form'
 import { newDocumentFormSchema } from '../schema'
@@ -89,7 +95,7 @@ export const DocumentDataExtractionForm = () => {
             qualquer célula para editar.
           </p>
         </div>
-        <div className="flex gap-4">
+        {/* <div className="flex gap-4">
           <Button
             variant="outline-primary"
             className="font-bold text-blue-1000"
@@ -103,7 +109,7 @@ export const DocumentDataExtractionForm = () => {
             <Eye />
             Visualizar documento
           </Button>
-        </div>
+        </div> */}
       </div>
 
       <Form {...form}>
