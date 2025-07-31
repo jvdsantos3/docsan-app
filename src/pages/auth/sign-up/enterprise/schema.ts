@@ -31,9 +31,10 @@ export const enterpriseSignUpSchema = z.object({
   owner: z.object({
     name: z
       .string()
-      .nonempty('Nome completo é obrigatório.')
+      .trim()
+      .min(1, 'Nome completo é obrigatório.')
       .regex(
-        /^[a-zA-Z'’]+(?: [a-zA-Z'’]+)+$/,
+        /^[\p{L}'’-]+(?: [\p{L}'’-]+)+$/u,
         'Por favor, insira seu nome completo.',
       ),
     cpf: z
