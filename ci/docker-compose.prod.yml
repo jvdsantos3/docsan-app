@@ -1,5 +1,5 @@
 services:
-  react-prod:
+  app:
     build:
       context: ..
       dockerfile: ./ci/prod/Dockerfile
