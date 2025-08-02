@@ -1,4 +1,3 @@
-import type { ActionLog } from './action-log'
 import type { Company } from './company'
 import type { DocumentType } from './document-type'
 
@@ -13,5 +12,4 @@ export type Document = {
   updatedAt: Date
   companyId: Company['id']
   documentTypeId: DocumentType['id']
-  actionLog: ActionLog[]
 }
