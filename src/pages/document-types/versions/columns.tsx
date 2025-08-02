@@ -2,7 +2,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { DocumentTypeVersionsRowActions } from './document-type-versions-row-actions'
 import { OrderButton } from './order-button'
 import { ArrowUpDown } from 'lucide-react'
-import type { GetDocumentTypeVersionsResponse } from '@/http/types/get-document-type-versions-response'
+import type { GetDocumentTypeVersionsResponse } from '@/types/http/get-document-type-versions-response'
 
 export const columns: ColumnDef<
   GetDocumentTypeVersionsResponse['data'][number]

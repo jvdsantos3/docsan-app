@@ -1,7 +1,7 @@
 import { Badge } from '@/components/ui/badge'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DocumentDataTableRowActions } from './actions'
-import type { GetDocumentsResponse } from '@/http/types/get-documents-response'
+import type { GetDocumentsResponse } from '@/types/http/get-documents-response'
 
 export const columns: ColumnDef<
   GetDocumentsResponse['documents']['data'][number]

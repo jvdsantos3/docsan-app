@@ -3,7 +3,7 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { DocumentTypesRowActions } from './document-types-row-actions'
 import { OrderButton } from './order-button'
 import { ArrowUpDown } from 'lucide-react'
-import type { GetDocumentTypesResponse } from '@/http/types/get-document-types-response'
+import type { GetDocumentTypesResponse } from '@/types/http/get-document-types-response'
 
 export const columns: ColumnDef<
   GetDocumentTypesResponse['documentTypes']['data'][number]

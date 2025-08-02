@@ -27,7 +27,7 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
 import { useToggleDocumentTypeStatus } from '@/http/use-toggle-document-type-status'
-import type { GetDocumentTypesResponse } from '@/http/types/get-document-types-response'
+import type { GetDocumentTypesResponse } from '@/types/http/get-document-types-response'
 import { useDeleteDocumentType } from '@/http/use-delete-document-type'
 import { Link, useSearchParams } from 'react-router-dom'
 import { useState } from 'react'

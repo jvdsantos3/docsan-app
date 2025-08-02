@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/dialog'
 import { DocumentTypeForm } from '@/components/forms/document-type-form'
 import { useCreateDocumentType } from '@/http/use-create-document-type'
-import type { CreateDocumentTypeRequest } from '@/http/types/create-document-type-request'
+import type { CreateDocumentTypeRequest } from '@/types/http/create-document-type-request'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/use-auth'
 import { useProfile } from '@/http/use-profile'

@@ -8,7 +8,7 @@ import { DocumentsFilters } from './filters'
 import { DataTable } from '@/components/ui/data-table'
 import { DocumentsPagination } from './pagination'
 import { DocumentDetailsDialog } from './components/details-dialog'
-import { schema } from '@/http/types/get-documents-search-params'
+import { schema } from '@/types/http/get-documents-search-params'
 import { useProfile } from '@/http/use-profile'
 
 export const DocumentsDataTable = () => {

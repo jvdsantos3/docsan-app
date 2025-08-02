@@ -1,6 +1,6 @@
 import { api } from '@/lib/axios'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { CreateDocumentTypeRequest } from './types/create-document-type-request'
+import type { CreateDocumentTypeRequest } from '@/types/http/create-document-type-request'
 import type { Company } from '@/types/company'
 
 export function useCreateDocumentType() {

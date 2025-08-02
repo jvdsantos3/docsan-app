@@ -3,9 +3,9 @@ import { keepPreviousData, useQuery,  } from '@tanstack/react-query'
 import {
   schema,
   type GetDocumentTypesSearchParams,
-} from './types/get-document-types-search-params'
+} from '../types/http/get-document-types-search-params'
 import { createQueryStringClean } from '@/utils/create-query-string-clean'
-import type { GetDocumentTypeVersionsResponse } from './types/get-document-type-versions-response'
+import type { GetDocumentTypeVersionsResponse } from '@/types/http/get-document-type-versions-response'
 
 export function useDocumentTypeVersions(companyId: string, typeId: string, params: GetDocumentTypesSearchParams = {}) {
   const parsedParams = schema.safeParse(params)

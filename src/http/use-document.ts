@@ -1,7 +1,7 @@
 import { api } from '@/lib/axios'
 import type { Document } from '@/types/document'
 import { useQuery } from '@tanstack/react-query'
-import type { GetDocumentResponse } from './types/get-document-response'
+import type { GetDocumentResponse } from '@/types/http/get-document-response'
 
 export function useDocument(
   documentId: Document['id'],

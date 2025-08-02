@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import type { UpdateDocumentTypeRequest } from '@/http/types/update-document-type-request'
+import type { UpdateDocumentTypeRequest } from '@/types/http/update-document-type-request'
 import { useDocumentType } from '@/http/use-document-type'
 import { useProfile } from '@/http/use-profile'
 import { useUpdateDocumentType } from '@/http/use-update-document-type'

@@ -1,6 +1,6 @@
 import { api } from '@/lib/axios'
 import { useQuery } from '@tanstack/react-query'
-import type { GetDocumentsSummaryResponse } from './types/get-documents-summary-response'
+import type { GetDocumentsSummaryResponse } from '@/types/http/get-documents-summary-response'
 
 export const useDocumentsSummary = (companyId: string) => {
   return useQuery({

@@ -15,7 +15,7 @@ import {
   History,
 } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
-import type { GetDocumentsResponse } from '@/http/types/get-documents-response'
+import type { GetDocumentsResponse } from '@/types/http/get-documents-response'
 import { Link } from 'react-router-dom'
 
 type DocumentDataTableRowActionsProps<TData> = {

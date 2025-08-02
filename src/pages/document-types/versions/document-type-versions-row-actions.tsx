@@ -13,7 +13,7 @@ import {
   MoreHorizontal,
 } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
-import type { GetDocumentTypeVersionsResponse } from '@/http/types/get-document-type-versions-response'
+import type { GetDocumentTypeVersionsResponse } from '@/types/http/get-document-type-versions-response'
 
 type DocumentTypeVersionsRowActionsProps<TData> = {
   row: Row<TData>

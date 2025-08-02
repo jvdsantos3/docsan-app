@@ -1,8 +1,8 @@
 import { api } from '@/lib/axios'
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
-import type { GetDocumentsSearchParams } from './types/get-documents-search-params'
+import type { GetDocumentsSearchParams } from '@/types/http/get-documents-search-params'
 import { createQueryStringClean } from '@/utils/create-query-string-clean'
-import type { GetDocumentsResponse } from './types/get-documents-response'
+import type { GetDocumentsResponse } from '@/types/http/get-documents-response'
 
 export const useDocuments = (
   companyId: string,

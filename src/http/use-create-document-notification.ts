@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { CreateDocumentNotificationRequest } from './types/create-document-notification-request'
+import type { CreateDocumentNotificationRequest } from '@/types/http/create-document-notification-request'
 import { api } from '@/lib/axios'
 import type { Document } from '@/types/document'
 import type { Company } from '@/types/company'
