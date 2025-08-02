@@ -1,28 +1,12 @@
-import { Badge } from '@/components/ui/badge'
 import type { ColumnDef } from '@tanstack/react-table'
-import { DocumentTypesRowActions } from './document-types-row-actions'
+import { ServiceAreasRowActions } from './service-areas-row-actions'
 import { OrderButton } from '@/components/tables/order-button'
 import { ArrowUpDown } from 'lucide-react'
-import type { GetDocumentTypesResponse } from '@/types/http/get-document-types-response'
+import type { GetServiceAreasResponse } from '@/types/http/get-service-areas-response'
 
 export const columns: ColumnDef<
-  GetDocumentTypesResponse['documentTypes']['data'][number]
+  GetServiceAreasResponse['data'][number]
 >[] = [
-  {
-    accessorKey: 'isActive',
-    header: 'Status',
-    cell: ({ row }) => {
-      return row.getValue('isActive') ? (
-        <Badge className="bg-green-700 font-bold text-white">
-          <span>Ativo</span>
-        </Badge>
-      ) : (
-        <Badge variant="destructive" className="font-bold">
-          <span>Inativo</span>
-        </Badge>
-      )
-    },
-  },
   {
     accessorKey: 'name',
     header: () => (
@@ -36,10 +20,6 @@ export const columns: ColumnDef<
         <span className="font-bold text-gray-900">{row.getValue('name')}</span>
       )
     },
-  },
-  {
-    accessorKey: '_count.documents',
-    header: 'Documentos',
   },
   {
     accessorKey: 'createdAt',
@@ -58,7 +38,7 @@ export const columns: ColumnDef<
     cell: ({ row }) => {
       return (
         <div className="text-center">
-          <DocumentTypesRowActions row={row} />
+          <ServiceAreasRowActions row={row} />
         </div>
       )
     },
