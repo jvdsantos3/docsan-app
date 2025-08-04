@@ -13,6 +13,7 @@ import { NewDocument } from './pages/documents/new-document'
 import { DocumentTypes } from './pages/document-types'
 import { DocumentTypesVersions } from './pages/document-types/versions'
 import { ServiceAreas } from './pages/admin/service-areas'
+import { CNAEs } from './pages/admin/cnaes'
 
 export function Router() {
   return (
@@ -29,17 +30,21 @@ export function Router() {
         <Route index element={<LandingPage />} />
         <Route path="admin">
           <Route path="service-areas" element={<ServiceAreas />} />
+          <Route path="cnae" element={<CNAEs />} />
         </Route>
 
         <Route path="services" element={<ServicesProvider />}>
           <Route index element={<Services />} />
           <Route path=":serviceId" element={<ServiceDetails />} />
         </Route>
-        
+
         <Route path="documents" element={<Documents />} />
         <Route path="documents/new" element={<NewDocument />} />
         <Route path="document-types" element={<DocumentTypes />} />
-        <Route path="document-types/:typeId/versions" element={<DocumentTypesVersions />} />
+        <Route
+          path="document-types/:typeId/versions"
+          element={<DocumentTypesVersions />}
+        />
       </Route>
     </Routes>
   )
