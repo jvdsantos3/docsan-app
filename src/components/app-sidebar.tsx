@@ -5,19 +5,20 @@ import * as React from "react"
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarHeader,
-  SidebarMenu,
   SidebarMenuButton,
-  SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
+import { Logo } from "./logo"
+import { NavMain } from "./sidebar/nav-main"
+import { CircleIcon } from "lucide-react"
 
 const data = {
   navMain: [
     {
       title: "Admninistração",
+      icon: CircleIcon,
+      isActive: true,
       items: [
         {
           title: "Áreas de atuação",
@@ -29,38 +30,23 @@ const data = {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { toggleSidebar } = useSidebar()
+
   return (
-    <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
+    <Sidebar  collapsible="icon" {...props}>
+      <SidebarHeader className="bg-white">
         <SidebarMenuButton
           size="lg"
-          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+          className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer hover:bg-transparent active:bg-transparent"
+          onClick={toggleSidebar}
         >
-          <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-            <img src="logo-03.svg" className="size-4" />
-          </div>
-          <div className="grid flex-1 text-left text-sm leading-tight">
-            <span className="truncate font-medium">Docsan</span>
+          <div className="flex aspect-square  items-center justify-center rounded-lg">
+            <Logo className="w-25" />
           </div>
         </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent className="bg-white">
-        {data.navMain.map((item) => (
-          <SidebarGroup key={item.title}>
-            <SidebarGroupLabel>{item.title}</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {item.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild>
-                      <a href={item.url}>{item.title}</a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
+        <NavMain items={data.navMain} />
       </SidebarContent>
     </Sidebar>
   )
