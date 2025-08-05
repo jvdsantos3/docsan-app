@@ -42,7 +42,7 @@ export const AppHeader = () => {
   ]
 
   return (
-    <header className="border-b bg-white sticky top-0 z-50 w-full px-[7.5rem]">
+    <header className="border-b bg-white sticky top-0 z-50 w-full">
       <div className="flex h-16 items-center justify-between gap-4 px-4 xl:px-0 container mx-auto">
         <Link to="/">
           <Logo />
