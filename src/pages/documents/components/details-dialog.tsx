@@ -103,14 +103,19 @@ export const DocumentDetailsDialog = ({
                   <div className="flex flex-col gap-2">
                     <Label>Data para notificação</Label>
                     <p className="text-sm font-medium">
-                      {document.documentNotification &&
+                      {document.documentNotification ? (
                         format(
                           document.documentNotification.scheduledAt,
                           'PPP',
                           {
                             locale: ptBR,
                           },
-                        )}
+                        )
+                      ) : (
+                        <span className="text-muted-foreground italic">
+                          Nenhuma notificação agendada
+                        </span>
+                      )}
                     </p>
                   </div>
                 </div>
