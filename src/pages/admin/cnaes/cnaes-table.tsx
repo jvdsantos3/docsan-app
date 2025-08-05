@@ -6,10 +6,8 @@ import { CNAEsPagination } from './cnaes-pagination'
 export const CNAEsTable = () => {
   return (
     <div>
-      <div className="px-8 py-6 flex justify-between items-center">
-        <h2 className="font-lato font-bold text-[21px] text-blue-1000">
-          CNAEs
-        </h2>
+      <div className="px-4 py-3 md:px-8 md:py-6 flex justify-between items-center">
+        <h2 className="font-bold md:text-[21px] text-blue-1000">CNAEs</h2>
       </div>
 
       <div>
