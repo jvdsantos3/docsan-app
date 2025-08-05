@@ -22,7 +22,7 @@ export const ServiceAreasTable = () => {
   const { data: response, isLoading } = useServiceAreas(companyId, {
     page,
     order,
-    filter
+    filter,
   })
   const modalType = searchParams.get('modal')
   const serviceAreaId = searchParams.get('serviceAreaId')
@@ -39,7 +39,7 @@ export const ServiceAreasTable = () => {
     <div>
       <div className="px-8 py-6 flex justify-between items-center">
         <h2 className="font-lato font-bold text-[21px] text-blue-1000">
-          Áreas de serviço
+          Áreas de atuação
         </h2>
 
         <ServiceAreasFilters />
@@ -53,10 +53,7 @@ export const ServiceAreasTable = () => {
       ) : (
         <>
           <div>
-            <DataTable
-              columns={columns}
-              data={response?.data || []}
-            />
+            <DataTable columns={columns} data={response?.data || []} />
             <ServiceAreasPagination
               currentPage={page}
               totalPages={response?.last || 1}

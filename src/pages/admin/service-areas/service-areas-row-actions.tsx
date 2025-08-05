@@ -48,14 +48,14 @@ export function ServiceAreasRowActions<TData>({
 
   async function handleDelete() {
     await deleteServiceArea(serviceArea.id)
-    toast.success('Área de serviço excluída com sucesso!', {
+    toast.success('Área de atuação excluída com sucesso!', {
       dismissible: true,
       duration: 5000,
     })
   }
 
   if (deleteError) {
-    toast.error('Erro ao excluir área de serviço. Tente novamente.', {
+    toast.error('Erro ao excluir área de atuação. Tente novamente.', {
       dismissible: true,
       duration: 5000,
     })
@@ -87,11 +87,11 @@ export function ServiceAreasRowActions<TData>({
         <AlertDialogContent className="bg-white sm:max-w-2xl">
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Tem certeza que deseja excluir essa área de serviço?
+              Tem certeza que deseja excluir essa área de atuação?
             </AlertDialogTitle>
             <AlertDialogDescription>
               Esta ação não pode ser desfeita. Isso excluirá permanentemente a
-              área de serviço.
+              área de atuação.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

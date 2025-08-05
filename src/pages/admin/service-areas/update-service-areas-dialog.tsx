@@ -40,10 +40,10 @@ export const UpdateServiceAreaDialog = ({
       id: serviceAreaId,
       companyId,
       data: {
-        name: data.name
+        name: data.name,
       },
     })
-    toast.success('Área de serviço atualizada com sucesso!', {
+    toast.success('Área de atuação atualizada com sucesso!', {
       dismissible: true,
       duration: 5000,
       richColors: true,
@@ -60,7 +60,7 @@ export const UpdateServiceAreaDialog = ({
   }
 
   if (updateError) {
-    toast.error('Erro ao atualizar área de serviço. Tente novamente.', {
+    toast.error('Erro ao atualizar área de atuação. Tente novamente.', {
       dismissible: true,
       duration: 5000,
     })
@@ -70,7 +70,7 @@ export const UpdateServiceAreaDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-white">
         <DialogHeader>
-          <DialogTitle>Editar área de serviço</DialogTitle>
+          <DialogTitle>Editar área de atuação</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
 

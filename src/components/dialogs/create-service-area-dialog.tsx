@@ -36,10 +36,10 @@ export const CreateServiceAreaDialog = ({
     await createServiceArea({
       companyId,
       data: {
-        name: data.name
+        name: data.name,
       },
     })
-    toast.success('Área de serviço criada com sucesso!', {
+    toast.success('Área de atuação criada com sucesso!', {
       dismissible: true,
       duration: 5000,
       richColors: true,
@@ -48,7 +48,7 @@ export const CreateServiceAreaDialog = ({
   }
 
   if (createError) {
-    toast.error('Erro ao criar área de serviço. Tente novamente.', {
+    toast.error('Erro ao criar área de atuação. Tente novamente.', {
       dismissible: true,
       duration: 5000,
     })
@@ -61,10 +61,8 @@ export const CreateServiceAreaDialog = ({
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Adicionar nova área de serviço</DialogTitle>
-          <DialogDescription>
-            Crie uma nova área de serviço.
-          </DialogDescription>
+          <DialogTitle>Adicionar nova área de atuação</DialogTitle>
+          <DialogDescription>Crie uma nova área de atuação.</DialogDescription>
         </DialogHeader>
 
         <div>

@@ -11,9 +11,9 @@ export const ServiceAreas = () => {
     <div className="space-y-6 py-6">
       <div className="flex justify-between">
         <div>
-          <h1 className="text-3xl">Áreas de serviço</h1>
+          <h1 className="text-3xl">Áreas de atuação</h1>
           <p className="font-medium text-lg mt-4">
-            Crie e gerencie as áreas de serviço.
+            Crie e gerencie as áreas de atuação.
           </p>
         </div>
 
@@ -22,7 +22,7 @@ export const ServiceAreas = () => {
           onClick={() => setCreateServAreaDialog(true)}
         >
           <Plus />
-          Adicionar área de serviço
+          Adicionar área de atuação
         </Button>
       </div>
 

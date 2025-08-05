@@ -13,6 +13,7 @@ import { NewDocument } from './pages/documents/new-document'
 import { DocumentTypes } from './pages/document-types'
 import { DocumentTypesVersions } from './pages/document-types/versions'
 import { ServiceAreas } from './pages/admin/service-areas'
+import { AdminLayout } from './pages/_layouts/admin'
 
 export function Router() {
   return (
@@ -25,12 +26,11 @@ export function Router() {
           <Route path="enterprise" element={<EnterpriseSignUp />} />
         </Route>
       </Route>
+      <Route path="admin" element={<AdminLayout />}>
+        <Route path="service-areas" element={<ServiceAreas />} />
+      </Route>
       <Route path="/" element={<RootLayout />}>
         <Route index element={<LandingPage />} />
-        <Route path="admin">
-          <Route path="service-areas" element={<ServiceAreas />} />
-        </Route>
-
         <Route path="services" element={<ServicesProvider />}>
           <Route index element={<Services />} />
           <Route path=":serviceId" element={<ServiceDetails />} />

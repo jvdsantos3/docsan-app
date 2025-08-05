@@ -11,10 +11,7 @@ import { Input } from '@/components/ui/input'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import {
-  serviceAreaFormSchema,
-  type ServiceAreaFormSchema,
-} from './schema'
+import { serviceAreaFormSchema, type ServiceAreaFormSchema } from './schema'
 import type { ServiceArea } from '@/types/service-area'
 import { useEffect } from 'react'
 
@@ -34,10 +31,9 @@ export const ServiceAreaForm = ({
   const form = useForm<ServiceAreaFormSchema>({
     resolver: zodResolver(serviceAreaFormSchema),
     defaultValues: {
-      name: ''
+      name: '',
     },
   })
-
 
   const handleCancel = () => {
     if (onCancel) {
@@ -67,10 +63,10 @@ export const ServiceAreaForm = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome da área de serviço</FormLabel>
+                  <FormLabel>Nome da área de atuação</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Dê um nome para nova área de serviço"
+                      placeholder="Dê um nome para nova área de atuação"
                       {...field}
                     />
                   </FormControl>
