@@ -19,8 +19,8 @@ export const AppHeaderAdmin = () => {
   const { isAuthenticated } = useAuth()
 
   return (
-    <header className="border-b bg-white flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-      <div className="flex h-16 items-center justify-end gap-4 container mx-auto">
+    <header className="border-b w-auto bg-white flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+      <div className="flex h-16 items-center justify-end container mx-auto">
         <NavigationMenu>
           <NavigationMenuList className="gap-2">
             {!isAuthenticated && (

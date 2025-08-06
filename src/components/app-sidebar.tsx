@@ -25,6 +25,10 @@ const data = {
           title: 'Ramos de atuação',
           url: '/admin/branches-activity',
         },
+        {
+          title: 'CNAEs',
+          url: '/admin/cnae',
+        },
       ],
     },
   ],
