@@ -13,12 +13,16 @@ export const SortByButton = ({
   ...props
 }: SortByButtonProps) => {
   const [searchParams, setSearchParams] = useSearchParams()
+  const sort = searchParams.get('sort') ?? ''
   const direction = searchParams.get('direction') ?? 'asc'
 
   const handleSort = () => {
     setSearchParams((prev) => {
       prev.set('sort', sortBy)
-      prev.set('direction', direction === 'asc' ? 'desc' : 'asc')
+      prev.set(
+        'direction',
+        sort === sortBy && direction === 'asc' ? 'desc' : 'asc',
+      )
       return prev
     })
   }
