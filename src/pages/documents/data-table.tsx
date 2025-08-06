@@ -13,6 +13,7 @@ import { useProfile } from '@/http/use-profile'
 
 export const DocumentsDataTable = () => {
   const { data: profile } = useProfile()
+  
   const [searchParams, setSearchParams] = useSearchParams()
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1
   const sort = searchParams.get('sort') ?? ''
@@ -20,6 +21,8 @@ export const DocumentsDataTable = () => {
   const filter = searchParams.get('filter') ?? ''
   const status = searchParams.get('status') ?? undefined
   const type = searchParams.get('type') ?? ''
+  const modalType = searchParams.get('modal')
+  const documentId = searchParams.get('documentId')
 
   const parsedParams = schema.safeParse({
     page,
@@ -32,9 +35,6 @@ export const DocumentsDataTable = () => {
 
   const companyId = profile?.user.owner?.companyId || ''
   const { data: response } = useDocuments(companyId, parsedParams.data)
-
-  const modalType = searchParams.get('modal')
-  const documentId = searchParams.get('documentId')
 
   const handleCloseDialog = () => {
     setSearchParams((prev) => {
