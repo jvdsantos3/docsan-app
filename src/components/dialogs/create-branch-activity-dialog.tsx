@@ -5,41 +5,43 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useCreateServiceArea } from '@/http/use-create-service-area'
-import type { CreateServiceAreaRequest } from '@/types/http/create-service-area-request'
+import { useCreateBranchActivity } from '@/http/use-create-branch-activity'
+import type { CreateBranchActivityRequest } from '@/types/http/create-branch-activity-request'
 import { toast } from 'sonner'
 import { useAuth } from '@/hooks/use-auth'
 import { useProfile } from '@/http/use-profile'
-import { ServiceAreaForm } from '../forms/service-area-form'
+import { BranchActivityForm } from '../forms/branch-activity-form'
 
-type CreateServiceAreaDialogProps = {
+type CreateBranchActivityDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export const CreateServiceAreaDialog = ({
+export const CreateBranchActivityDialog = ({
   open,
   onOpenChange,
-}: CreateServiceAreaDialogProps) => {
+}: CreateBranchActivityDialogProps) => {
   const { user } = useAuth()
   const { data: profile } = useProfile({ enabled: !!user })
-  const { mutateAsync: createServiceArea, error: createError } =
-    useCreateServiceArea()
+  const { mutateAsync: createBranchActivity, error: createError } =
+    useCreateBranchActivity()
 
-  const handleCreateServiceArea = async (data: CreateServiceAreaRequest) => {
+  const handleCreateBranchActivity = async (
+    data: CreateBranchActivityRequest,
+  ) => {
     const companyId = profile?.user?.owner?.companyId
 
     if (!companyId) {
       return
     }
 
-    await createServiceArea({
+    await createBranchActivity({
       companyId,
       data: {
-        name: data.name
+        name: data.name,
       },
     })
-    toast.success('Área de serviço criada com sucesso!', {
+    toast.success('Área de atuação criada com sucesso!', {
       dismissible: true,
       duration: 5000,
       richColors: true,
@@ -48,7 +50,7 @@ export const CreateServiceAreaDialog = ({
   }
 
   if (createError) {
-    toast.error('Erro ao criar área de serviço. Tente novamente.', {
+    toast.error('Erro ao criar área de atuação. Tente novamente.', {
       dismissible: true,
       duration: 5000,
     })
@@ -61,16 +63,14 @@ export const CreateServiceAreaDialog = ({
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>Adicionar nova área de serviço</DialogTitle>
-          <DialogDescription>
-            Crie uma nova área de serviço.
-          </DialogDescription>
+          <DialogTitle>Adicionar nova área de atuação</DialogTitle>
+          <DialogDescription>Crie uma nova área de atuação.</DialogDescription>
         </DialogHeader>
 
         <div>
-          <ServiceAreaForm
+          <BranchActivityForm
             onCancel={() => onOpenChange(false)}
-            onSubmit={handleCreateServiceArea}
+            onSubmit={handleCreateBranchActivity}
           />
         </div>
       </DialogContent>

@@ -4,7 +4,7 @@ import { CircleXIcon, SearchIcon } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import { useDebounce } from '@/hooks/use-debounce'
 
-export const ServiceAreasFilters = () => {
+export const BranchesActivityFilters = () => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [searchParams, setSearchParams] = useSearchParams()
   const initialFilter = searchParams.get('filter') || ''

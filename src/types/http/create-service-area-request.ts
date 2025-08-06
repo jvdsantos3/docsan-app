@@ -1,3 +1,3 @@
-export type CreateServiceAreaRequest = {
+export type CreateBranchActivityRequest = {
   name: string
 }

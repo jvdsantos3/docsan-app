@@ -12,32 +12,31 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import {
-  serviceAreaFormSchema,
-  type ServiceAreaFormSchema,
+  branchActivityFormSchema,
+  type BranchActivityFormSchema,
 } from './schema'
-import type { ServiceArea } from '@/types/service-area'
+import type { BranchActivity } from '@/types/branch-activity'
 import { useEffect } from 'react'
 
-type ServiceAreaFormProps = {
-  serviceArea?: ServiceArea
+type BranchActivityFormProps = {
+  branchActivity?: BranchActivity
   isEdit?: boolean
   onCancel?: () => void
-  onSubmit: (data: ServiceAreaFormSchema) => Promise<void>
+  onSubmit: (data: BranchActivityFormSchema) => Promise<void>
 }
 
-export const ServiceAreaForm = ({
-  serviceArea,
+export const BranchActivityForm = ({
+  branchActivity,
   isEdit = false,
   onCancel,
   onSubmit,
-}: ServiceAreaFormProps) => {
-  const form = useForm<ServiceAreaFormSchema>({
-    resolver: zodResolver(serviceAreaFormSchema),
+}: BranchActivityFormProps) => {
+  const form = useForm<BranchActivityFormSchema>({
+    resolver: zodResolver(branchActivityFormSchema),
     defaultValues: {
-      name: ''
+      name: '',
     },
   })
-
 
   const handleCancel = () => {
     if (onCancel) {
@@ -45,17 +44,17 @@ export const ServiceAreaForm = ({
     }
   }
 
-  const handleSubmit = async (data: ServiceAreaFormSchema) => {
+  const handleSubmit = async (data: BranchActivityFormSchema) => {
     await onSubmit(data)
   }
 
   useEffect(() => {
-    if (serviceArea) {
+    if (branchActivity) {
       form.reset({
-        name: serviceArea.name,
+        name: branchActivity.name,
       })
     }
-  }, [serviceArea, form])
+  }, [branchActivity, form])
 
   return (
     <Form {...form}>
@@ -67,10 +66,10 @@ export const ServiceAreaForm = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome da área de serviço</FormLabel>
+                  <FormLabel>Nome da área de atuação</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Dê um nome para nova área de serviço"
+                      placeholder="Dê um nome para nova área de atuação"
                       {...field}
                     />
                   </FormControl>

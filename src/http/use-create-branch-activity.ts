@@ -1,9 +1,9 @@
 // import { api } from '@/lib/axios'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { CreateServiceAreaRequest } from '@/types/http/create-service-area-request'
+import type { CreateBranchActivityRequest } from '@/types/http/create-branch-activity-request'
 import type { Company } from '@/types/company'
 
-export function useCreateServiceArea() {
+export function useCreateBranchActivity() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -12,14 +12,14 @@ export function useCreateServiceArea() {
       data,
     }: {
       companyId: Company['id']
-      data: CreateServiceAreaRequest
+      data: CreateBranchActivityRequest
     }) => {
       console.log(companyId, data)
       return true
       // await api.post(`/company/${companyId}/document-types`, data)
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['get-service-areas'] })
+      queryClient.invalidateQueries({ queryKey: ['get-branches-activity'] })
     },
   })
 }

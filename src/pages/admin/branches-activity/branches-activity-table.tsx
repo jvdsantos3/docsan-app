@@ -1,16 +1,16 @@
 import { DataTable } from '@/components/ui/data-table'
-import { useServiceAreas } from '@/http/use-service-areas'
+import { useBranchesActivity } from '@/http/use-branches-activity'
 import { useSearchParams } from 'react-router-dom'
-import { ServiceAreasPagination } from './service-areas-pagination'
+import { BranchesActivityPagination } from './branches-activity-pagination'
 import { columns } from './columns'
-import { ServiceAreasTableSkeleton } from './service-areas-table-skeleton'
-import { ServiceAreasPaginationSkeleton } from './service-areas-pagination-skeleton'
-import { ServiceAreasFilters } from './service-areas-filters'
+import { BranchesActivityTableSkeleton } from './branches-activity-table-skeleton'
+import { BranchesActivityPaginationSkeleton } from './branches-activity-pagination-skeleton'
+import { BranchesActivityFilters } from './branches-activity-filters'
 import { useAuth } from '@/hooks/use-auth'
 import { useProfile } from '@/http/use-profile'
-import { UpdateServiceAreaDialog } from './update-service-areas-dialog'
+import { UpdateBranchActivityDialog } from './update-branches-activity-dialog'
 
-export const ServiceAreasTable = () => {
+export const BranchesActivityTable = () => {
   const { user } = useAuth()
   const { data: profileData } = useProfile({ enabled: !!user })
   const [searchParams, setSearchParams] = useSearchParams()
@@ -19,18 +19,18 @@ export const ServiceAreasTable = () => {
   const filter = searchParams.get('filter') || ''
 
   const companyId = profileData?.user.owner?.companyId || ''
-  const { data: response, isLoading } = useServiceAreas(companyId, {
+  const { data: response, isLoading } = useBranchesActivity(companyId, {
     page,
     order,
-    filter
+    filter,
   })
   const modalType = searchParams.get('modal')
-  const serviceAreaId = searchParams.get('serviceAreaId')
-
+  const branchActivitId = searchParams.get('branchActivitId')
+  
   function handleCloseDialog() {
     setSearchParams((prev) => {
       prev.delete('modal')
-      prev.delete('serviceAreaId')
+      prev.delete('branchActivitId')
       return prev
     })
   }
@@ -39,33 +39,30 @@ export const ServiceAreasTable = () => {
     <div>
       <div className="px-8 py-6 flex justify-between items-center">
         <h2 className="font-lato font-bold text-[21px] text-blue-1000">
-          Áreas de serviço
+          Ramos de atuação
         </h2>
 
-        <ServiceAreasFilters />
+        <BranchesActivityFilters />
       </div>
 
       {isLoading ? (
         <div>
-          <ServiceAreasTableSkeleton />
-          <ServiceAreasPaginationSkeleton />
+          <BranchesActivityTableSkeleton />
+          <BranchesActivityPaginationSkeleton />
         </div>
       ) : (
         <>
           <div>
-            <DataTable
-              columns={columns}
-              data={response?.data || []}
-            />
-            <ServiceAreasPagination
+            <DataTable columns={columns} data={response?.data || []} />
+            <BranchesActivityPagination
               currentPage={page}
               totalPages={response?.last || 1}
               paginationItemsToDisplay={5}
             />
           </div>
 
-          <UpdateServiceAreaDialog
-            open={modalType === 'edit' && !!serviceAreaId}
+          <UpdateBranchActivityDialog
+            open={modalType === 'edit' && !!branchActivitId}
             onOpenChange={handleCloseDialog}
           />
         </>

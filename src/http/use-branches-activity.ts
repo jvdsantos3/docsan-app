@@ -3,11 +3,11 @@ import { keepPreviousData, useQuery,  } from '@tanstack/react-query'
 // import type { GetDocumentTypesResponse } from '@/types/http/get-document-types-response'
 import {
   schema,
-  type GetServiceAreasSearchParams,
-} from '../types/http/get-service-areas-search-params'
+  type GetBranchesActivitySearchParams,
+} from '../types/http/get-branches-activity-search-params'
 // import { createQueryStringClean } from '@/utils/create-query-string-clean'
 
-export function useServiceAreas(companyId: string, params: GetServiceAreasSearchParams = {}) {
+export function useBranchesActivity(companyId: string, params: GetBranchesActivitySearchParams = {}) {
   const parsedParams = schema.safeParse(params)
 
   if (!parsedParams.success) {
@@ -15,7 +15,7 @@ export function useServiceAreas(companyId: string, params: GetServiceAreasSearch
   }
 
   return useQuery({
-    queryKey: ['get-service-areas', parsedParams.data],
+    queryKey: ['get-branches-activity', parsedParams.data],
     queryFn: async () => {
       // const searchParams = createQueryStringClean(parsedParams.data)
       // const response = await api.get<GetDocumentTypesResponse>(
