@@ -8,7 +8,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-export const ServiceAreasTableSkeleton = () => {
+export const BranchesActivityTableSkeleton = () => {
   return (
     <div>
       <Table>

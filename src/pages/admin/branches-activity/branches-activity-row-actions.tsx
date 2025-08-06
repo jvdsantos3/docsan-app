@@ -18,36 +18,37 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import type { GetServiceAreasResponse } from '@/types/http/get-service-areas-response'
-import { useDeleteServiceArea } from '@/http/use-delete-service-area'
+import type { GetBranchesActivityResponse } from '@/types/http/get-branches-activity-response'
+import { useDeleteBranchActivity } from '@/http/use-delete-branch-activity'
 import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 
-interface ServiceAreasRowActionsProps<TData> {
+interface BranchesActivityRowActionsProps<TData> {
   row: Row<TData>
 }
 
-export function ServiceAreasRowActions<TData>({
+export function BranchesActivityRowActions<TData>({
   row,
-}: ServiceAreasRowActionsProps<TData>) {
+}: BranchesActivityRowActionsProps<TData>) {
   const [, setSearchParams] = useSearchParams()
-  const { mutateAsync: deleteServiceArea, error: deleteError } =
-    useDeleteServiceArea()
-  const serviceArea = row.original as GetServiceAreasResponse['data'][number]
+  const { mutateAsync: deleteBranchActivity, error: deleteError } =
+    useDeleteBranchActivity()
+  const branchActivity =
+    row.original as GetBranchesActivityResponse['data'][number]
   const [deleteOpen, setDeleteOpen] = useState(false)
 
   async function handleEdit() {
     setSearchParams((prev) => {
       prev.set('modal', 'edit')
-      prev.set('serviceAreaId', serviceArea.id)
+      prev.set('branchActivitId', branchActivity.id)
       return prev
     })
   }
 
   async function handleDelete() {
-    await deleteServiceArea(serviceArea.id)
+    await deleteBranchActivity(branchActivity.id)
     toast.success('Área de atuação excluída com sucesso!', {
       dismissible: true,
       duration: 5000,

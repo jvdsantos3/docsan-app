@@ -12,7 +12,7 @@ import { Documents } from './pages/documents'
 import { NewDocument } from './pages/documents/new-document'
 import { DocumentTypes } from './pages/document-types'
 import { DocumentTypesVersions } from './pages/document-types/versions'
-import { ServiceAreas } from './pages/admin/service-areas'
+import { BranchesActivity } from './pages/admin/branches-activity'
 import { AdminLayout } from './pages/_layouts/admin'
 
 export function Router() {
@@ -27,7 +27,7 @@ export function Router() {
         </Route>
       </Route>
       <Route path="admin" element={<AdminLayout />}>
-        <Route path="service-areas" element={<ServiceAreas />} />
+        <Route path="branches-activity" element={<BranchesActivity />} />
       </Route>
       <Route path="/" element={<RootLayout />}>
         <Route index element={<LandingPage />} />
@@ -35,11 +35,14 @@ export function Router() {
           <Route index element={<Services />} />
           <Route path=":serviceId" element={<ServiceDetails />} />
         </Route>
-        
+
         <Route path="documents" element={<Documents />} />
         <Route path="documents/new" element={<NewDocument />} />
         <Route path="document-types" element={<DocumentTypes />} />
-        <Route path="document-types/:typeId/versions" element={<DocumentTypesVersions />} />
+        <Route
+          path="document-types/:typeId/versions"
+          element={<DocumentTypesVersions />}
+        />
       </Route>
     </Routes>
   )

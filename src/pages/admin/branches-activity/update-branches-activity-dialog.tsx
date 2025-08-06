@@ -5,39 +5,39 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { useServiceArea } from '@/http/use-service-area'
+import { useBranchActivity } from '@/http/use-branch-activity'
 import { useProfile } from '@/http/use-profile'
-import { useUpdateServiceArea } from '@/http/use-update-service-area'
+import { useUpdateBranchActivity } from '@/http/use-update-branch-activity'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
-import type { UpdateServiceAreaRequest } from '@/types/http/update-service-area-request'
-import { ServiceAreaForm } from '@/components/forms/service-area-form'
+import type { UpdateBranchActivityRequest } from '@/types/http/update-branch-activity-request'
+import { BranchActivityForm } from '@/components/forms/branch-activity-form'
 
-type UpdateServiceAreaDialog = {
+type UpdateBranchActivityDialog = {
   open: boolean
   onOpenChange: (open: boolean) => void
 }
 
-export const UpdateServiceAreaDialog = ({
+export const UpdateBranchActivityDialog = ({
   open,
   onOpenChange,
-}: UpdateServiceAreaDialog) => {
+}: UpdateBranchActivityDialog) => {
   const { data: profile } = useProfile()
   const [searchParams] = useSearchParams()
-  const serviceAreaId = searchParams.get('serviceAreaId') || ''
+  const branchActivitId = searchParams.get('branchActivitId') || ''
   const companyId = profile?.user.owner?.companyId || ''
-  const { data: serviceArea, isLoading } = useServiceArea(
-    serviceAreaId,
+  const { data: branchActivity, isLoading } = useBranchActivity(
+    branchActivitId,
     companyId,
   )
-  const { mutateAsync: updateServiceArea, error: updateError } =
-    useUpdateServiceArea()
+  const { mutateAsync: updateBranchActivity, error: updateError } =
+    useUpdateBranchActivity()
 
-  async function handleUpdateServiceArea(data: UpdateServiceAreaRequest) {
-    if (!serviceAreaId || !companyId) return
+  async function handleUpdateBranchActivity(data: UpdateBranchActivityRequest) {
+    if (!branchActivitId || !companyId) return
 
-    await updateServiceArea({
-      id: serviceAreaId,
+    await updateBranchActivity({
+      id: branchActivitId,
       companyId,
       data: {
         name: data.name,
@@ -55,7 +55,7 @@ export const UpdateServiceAreaDialog = ({
     return <div>Carregando...</div>
   }
 
-  if (!serviceArea) {
+  if (!branchActivity) {
     return null
   }
 
@@ -75,10 +75,10 @@ export const UpdateServiceAreaDialog = ({
         </DialogHeader>
 
         <div>
-          <ServiceAreaForm
-            onSubmit={handleUpdateServiceArea}
+          <BranchActivityForm
+            onSubmit={handleUpdateBranchActivity}
             onCancel={() => onOpenChange(false)}
-            serviceArea={serviceArea}
+            branchActivity={branchActivity}
             isEdit
           />
         </div>

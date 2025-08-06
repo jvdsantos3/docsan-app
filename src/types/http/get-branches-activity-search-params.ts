@@ -8,4 +8,4 @@ export const schema = z.object({
   filter: z.string().trim().optional(),
 })
 
-export type GetServiceAreasSearchParams = z.infer<typeof schema>
+export type GetBranchesActivitySearchParams = z.infer<typeof schema>

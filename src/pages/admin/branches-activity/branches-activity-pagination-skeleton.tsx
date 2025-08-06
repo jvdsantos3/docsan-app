@@ -7,7 +7,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 
-export const ServiceAreasPaginationSkeleton = () => {
+export const BranchesActivityPaginationSkeleton = () => {
   return (
     <div className="py-4 px-8">
       <Pagination className="justify-end">

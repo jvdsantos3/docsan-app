@@ -1,6 +1,6 @@
-"use client"
+'use client'
 
-import * as React from "react"
+import * as React from 'react'
 
 import {
   Sidebar,
@@ -8,40 +8,45 @@ import {
   SidebarHeader,
   SidebarMenuButton,
   useSidebar,
-} from "@/components/ui/sidebar"
-import { Logo } from "./logo"
-import { NavMain } from "./sidebar/nav-main"
-import { CircleIcon } from "lucide-react"
+} from '@/components/ui/sidebar'
+import { Logo } from './logo'
+import { NavMain } from './sidebar/nav-main'
+import { Settings } from 'lucide-react'
+import { SimpleLogo } from './simple-logo'
 
 const data = {
   navMain: [
     {
-      title: "Admninistração",
-      icon: CircleIcon,
+      title: 'Admninistração',
+      icon: Settings,
       isActive: true,
       items: [
         {
-          title: "Áreas de atuação",
-          url: "/admin/service-areas",
-        }
+          title: 'Ramos de atuação',
+          url: '/admin/branches-activity',
+        },
       ],
     },
   ],
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { toggleSidebar } = useSidebar()
+  const { toggleSidebar, state } = useSidebar()
 
   return (
-    <Sidebar  collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="bg-white">
         <SidebarMenuButton
           size="lg"
           className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer hover:bg-transparent active:bg-transparent"
           onClick={toggleSidebar}
         >
-          <div className="flex aspect-square  items-center justify-center rounded-lg">
-            <Logo className="w-25" />
+          <div className="flex aspect-square items-center justify-center rounded-lg">
+            {state === 'collapsed' ? (
+              <SimpleLogo className="w-8" />
+            ) : (
+              <Logo className="w-25" />
+            )}
           </div>
         </SidebarMenuButton>
       </SidebarHeader>
