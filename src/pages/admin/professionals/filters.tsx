@@ -1,10 +1,19 @@
 import { useEffect, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
 import { CircleXIcon, SearchIcon } from 'lucide-react'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
+import { useSearchParams } from 'react-router-dom'
 import { useDebounce } from '@/hooks/use-debounce'
 
-export const BranchesActivityFilters = () => {
+export const ProfessionalsFilters = () => {
   const inputRef = useRef<HTMLInputElement>(null)
   const [searchParams, setSearchParams] = useSearchParams()
   const initialFilter = searchParams.get('filter') || ''
@@ -16,6 +25,18 @@ export const BranchesActivityFilters = () => {
     if (inputRef.current) {
       inputRef.current.focus()
     }
+  }
+
+  const handleSelectStatus = (value: string) => {
+    setSearchParams((prev) => {
+      if (value === 'all') {
+        prev.delete('status')
+        return prev
+      }
+
+      prev.set('status', value)
+      return prev
+    })
   }
 
   useEffect(() => {
@@ -40,7 +61,7 @@ export const BranchesActivityFilters = () => {
             ref={inputRef}
             value={inputValue}
             className="peer ps-9 pe-9"
-            placeholder="Buscar por nome..."
+            placeholder="Buscar por nome, email..."
             type="text"
             onChange={(e) => setInputValue(e.target.value)}
           />
@@ -58,6 +79,26 @@ export const BranchesActivityFilters = () => {
           )}
         </div>
       </div>
+
+      <div>
+        <Select defaultValue="all" onValueChange={handleSelectStatus}>
+          <SelectTrigger className="sm:w-[180px] w-full">
+            <SelectValue placeholder="Selecione um status" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              <SelectLabel>Status</SelectLabel>
+              <SelectItem value="all">Todos os status</SelectItem>
+              <SelectItem value="pending">Pendente</SelectItem>
+              <SelectItem value="approved">Aprovado</SelectItem>
+              <SelectItem value="reproved">Reprovado</SelectItem>
+              <SelectItem value="in_correction">Em correção</SelectItem>
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+      </div>
+
+      
     </div>
   )
 }

@@ -1,0 +1,13 @@
+import { z } from 'zod'
+
+export const schema = z.object({
+  page: z.number().nonnegative().optional(),
+  limit: z.number().nonnegative().optional(),
+  order: z.enum(['asc', 'desc']).optional(),
+  orderBy: z.string().trim().optional(),
+  type: z.string().optional(),
+  status: z.enum(['approved', 'pending', 'reproved', 'in_correction']).optional(),
+  filter: z.string().trim().optional(),
+})
+
+export type GetProfessionalsSearchParams = z.infer<typeof schema>

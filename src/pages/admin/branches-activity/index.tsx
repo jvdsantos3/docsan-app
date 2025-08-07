@@ -9,7 +9,7 @@ export const BranchesActivity = () => {
 
   return (
     <div className="space-y-6 py-6">
-      <div className="flex justify-between">
+      <div className="flex flex-col lg:flex-row justify-between gap-4">
         <div>
           <h1 className="text-3xl">Ramos de atuação</h1>
           <p className="font-medium text-lg mt-4">
@@ -18,20 +18,18 @@ export const BranchesActivity = () => {
         </div>
 
         <Button
-          className="font-bold"
+          className="font-bold w-full md:w-auto"
           onClick={() => setCreateServAreaDialog(true)}
         >
           <Plus />
           Adicionar ramo de atuação
         </Button>
       </div>
-
       <div className="space-y-8">
         <div className="bg-white rounded-lg border border-gray-100">
           <BranchesActivityTable />
         </div>
       </div>
-
       <CreateBranchActivityDialog
         open={createServAreaDialog}
         onOpenChange={setCreateServAreaDialog}

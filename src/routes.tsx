@@ -15,6 +15,7 @@ import { DocumentTypesVersions } from './pages/document-types/versions'
 import { BranchesActivity } from './pages/admin/branches-activity'
 import { AdminLayout } from './pages/_layouts/admin'
 import { CNAEs } from './pages/admin/cnaes'
+import { Professionals } from './pages/admin/professionals'
 
 export function Router() {
   return (
@@ -30,6 +31,7 @@ export function Router() {
       <Route path="admin" element={<AdminLayout />}>
         <Route path="branches-activity" element={<BranchesActivity />} />
         <Route path="cnae" element={<CNAEs />} />
+        <Route path="professionals" element={<Professionals />} />
       </Route>
       <Route path="/" element={<RootLayout />}>
         <Route index element={<LandingPage />} />

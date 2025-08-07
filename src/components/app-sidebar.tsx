@@ -1,7 +1,3 @@
-'use client'
-
-import * as React from 'react'
-
 import {
   Sidebar,
   SidebarContent,
@@ -28,6 +24,10 @@ const data = {
         {
           title: 'CNAEs',
           url: '/admin/cnae',
+        },
+        {
+          title: 'Profissionais',
+          url: '/admin/professionals',
         },
       ],
     },

@@ -37,7 +37,7 @@ export const BranchesActivityTable = () => {
 
   return (
     <div>
-      <div className="px-8 py-6 flex justify-between items-center">
+      <div className="px-8 py-6 flex flex-col sm:flex-row sm:justify-between sm:items-center sm:space-y-0 space-y-6">
         <h2 className="font-lato font-bold text-[21px] text-blue-1000">
           Ramos de atuação
         </h2>
