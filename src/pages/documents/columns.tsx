@@ -2,13 +2,14 @@ import { Badge } from '@/components/ui/badge'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DocumentDataTableRowActions } from './actions'
 import type { GetDocumentsResponse } from '@/types/http/get-documents-response'
+import { SortByButton } from './sort-by-button'
 
 export const columns: ColumnDef<
   GetDocumentsResponse['documents']['data'][number]
 >[] = [
   {
     accessorKey: 'name',
-    header: 'Nome',
+    header: () => <SortByButton sortBy="name">Nome</SortByButton>,
     cell: ({ row }) => {
       return (
         <span className="font-lato font-bold text-gray-900">
@@ -17,10 +18,13 @@ export const columns: ColumnDef<
       )
     },
   },
-  { accessorKey: 'documentType.name', header: 'Tipo' },
+  {
+    accessorKey: 'documentType.name',
+    header: () => <SortByButton sortBy="type">Status</SortByButton>,
+  },
   {
     accessorKey: 'status',
-    header: 'Status',
+    header: () => <SortByButton sortBy="status">Status</SortByButton>,
     cell: ({ row }) => {
       if (row.getValue('status') === 'overdue') {
         return (
@@ -50,7 +54,7 @@ export const columns: ColumnDef<
   },
   {
     accessorKey: 'duedate',
-    header: 'Vencimento',
+    header: () => <SortByButton sortBy="duedate">Vencimento</SortByButton>,
     cell: ({ row }) => {
       return new Intl.DateTimeFormat('pt-BR', {
         year: 'numeric',
@@ -61,7 +65,7 @@ export const columns: ColumnDef<
   },
   {
     accessorKey: 'createdAt',
-    header: 'Recebido em',
+    header: () => <SortByButton sortBy="createdAt">Recebido em</SortByButton>,
     cell: ({ row }) => {
       return new Intl.DateTimeFormat('pt-BR', {
         year: 'numeric',

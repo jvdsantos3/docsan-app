@@ -5,20 +5,23 @@ import { AuthProvider } from './contexts/auth/auth-provider'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from '@/components/ui/sonner'
 import { Worker } from '@react-pdf-viewer/core'
+import { NuqsAdapter } from 'nuqs/adapters/react'
 
 const queryClient = new QueryClient()
 
 export function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-        <BrowserRouter>
-          <AuthProvider>
-            <Router />
-            <Toaster />
-          </AuthProvider>
-        </BrowserRouter>
-      </Worker>
-    </QueryClientProvider>
+    <NuqsAdapter>
+      <QueryClientProvider client={queryClient}>
+        <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+          <BrowserRouter>
+            <AuthProvider>
+              <Router />
+              <Toaster />
+            </AuthProvider>
+          </BrowserRouter>
+        </Worker>
+      </QueryClientProvider>
+    </NuqsAdapter>
   )
 }
