@@ -7,16 +7,14 @@ import {
 } from '@/components/ui/dropdown-menu'
 import type { Row } from '@tanstack/react-table'
 import {
-  Download,
+  Check,
   Eye,
-  FileText,
   MoreHorizontal,
   SquarePen,
-  History,
+  X,
 } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
-import type { GetDocumentsResponse } from '@/types/http/get-documents-response'
-import { Link } from 'react-router-dom'
+import type { GetProfessionalsResponse } from '@/types/http/get-professionals-response'
 
 type ProfessionalDataTableRowActionsProps<TData> = {
   row: Row<TData>
@@ -26,13 +24,37 @@ export function ProfessionalDataTableRowActions<TData>({
   row,
 }: ProfessionalDataTableRowActionsProps<TData>) {
   const [, setSearchParams] = useSearchParams()
-  const document =
-    row.original as GetDocumentsResponse['documents']['data'][number]
+  const professional =
+    row.original as GetProfessionalsResponse['professionals']['data'][number]
 
   function handleViewDetails() {
     setSearchParams((prev) => {
       prev.set('modal', 'details')
-      prev.set('documentId', document.id)
+      prev.set('professionalId', professional.id)
+      return prev
+    })
+  }
+
+  function handleApprove() {
+    setSearchParams((prev) => {
+      prev.set('modal', 'approve')
+      prev.set('professionalId', professional.id)
+      return prev
+    })
+  }
+
+  function handleReproved() {
+    setSearchParams((prev) => {
+      prev.set('modal', 'reproved')
+      prev.set('professionalId', professional.id)
+      return prev
+    })
+  }
+
+  function handleRequestCorrection() {
+    setSearchParams((prev) => {
+      prev.set('modal', 'request-correction')
+      prev.set('professionalId', professional.id)
       return prev
     })
   }
@@ -49,6 +71,18 @@ export function ProfessionalDataTableRowActions<TData>({
         <DropdownMenuItem onClick={handleViewDetails}>
           <Eye className="text-blue-source" />
           Ver detalhes
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleApprove}>
+          <Check className="text-green-700" />
+          Aprovar
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleReproved}>
+          <X className="text-red-700" />
+          Reprovar
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={handleRequestCorrection}>
+          <SquarePen className="text-blue-source" />
+          Solicitar correção
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

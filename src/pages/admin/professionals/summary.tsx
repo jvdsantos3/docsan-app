@@ -20,12 +20,12 @@ export const ProfessionalsSummary = () => {
       </div>
 
       <div className="font-lato bg-white border  py-4 px-6 rounded-xl min-w-52 space-y-3">
-        <p className="text-sm text-gray-600">Pendente</p>
+        <p className="text-sm text-gray-600">Pendentes</p>
         <div className="text-blue-source text-3xl">{response?.summary.pending}</div>
       </div>
 
       <div className="font-lato bg-white border  py-4 px-6 rounded-xl min-w-52 space-y-3">
-        <p className="text-sm text-gray-600">Reprovado</p>
+        <p className="text-sm text-gray-600">Reprovados</p>
         <div className="text-blue-source text-3xl">{response?.summary.reproved}</div>
       </div>
     </div>

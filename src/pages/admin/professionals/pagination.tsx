@@ -9,17 +9,17 @@ import { usePagination } from '@/hooks/use-pagination'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 
-type DocumentsPaginationProps = {
+type ProfessionalsPaginationProps = {
   currentPage: number
   totalPages: number
   paginationItemsToDisplay: number
 }
 
-export const DocumentsPagination = ({
+export const ProfessionalsPagination = ({
   currentPage,
   totalPages,
   paginationItemsToDisplay = 5,
-}: DocumentsPaginationProps) => {
+}: ProfessionalsPaginationProps) => {
   const [, setSearchParams] = useSearchParams()
   const { pages, showLeftEllipsis, showRightEllipsis } = usePagination({
     currentPage,

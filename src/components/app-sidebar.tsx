@@ -7,7 +7,7 @@ import {
 } from '@/components/ui/sidebar'
 import { Logo } from './logo'
 import { NavMain } from './sidebar/nav-main'
-import { Settings } from 'lucide-react'
+import { Settings, Users } from 'lucide-react'
 import { SimpleLogo } from './simple-logo'
 
 const data = {
@@ -18,19 +18,26 @@ const data = {
       isActive: true,
       items: [
         {
-          title: 'Ramos de atuação',
-          url: '/admin/branches-activity',
-        },
-        {
           title: 'CNAEs',
           url: '/admin/cnae',
         },
+        {
+          title: 'Ramos de atuação',
+          url: '/admin/branches-activity',
+        },
+      ],
+    },
+    {
+      title: 'Usuários',
+      icon: Users,
+      isActive: true,
+      items: [
         {
           title: 'Profissionais',
           url: '/admin/professionals',
         },
       ],
-    },
+    }
   ],
 }
 

@@ -2,8 +2,8 @@ import { useSearchParams } from 'react-router-dom'
 import { columns } from './columns'
 import { ProfessionalsFilters } from './filters'
 import { DataTable } from '@/components/ui/data-table'
-// import { DocumentsPagination } from './pagination'
-// import { DocumentDetailsDialog } from './components/details-dialog'
+import { ProfessionalsPagination } from './pagination'
+import { ProfessionalDetailsDialog } from './details-dialog'
 import { schema } from '@/types/http/get-professionals-search-params'
 // import { useProfile } from '@/http/use-profile'
 import { useProfessionals } from '@/http/use-professionals'
@@ -28,16 +28,16 @@ export const ProfessionalsDataTable = () => {
   // const companyId = profile?.user.owner?.companyId || ''
   const { data: response } = useProfessionals(parsedParams.data)
 
-  // const modalType = searchParams.get('modal')
-  // const professionalId = searchParams.get('professionalId')
+  const modalType = searchParams.get('modal')
+  const professionalId = searchParams.get('professionalId')
 
-  // const handleCloseDialog = () => {
-  //   setSearchParams((prev) => {
-  //     prev.delete('modal')
-  //     prev.delete('professionalId')
-  //     return prev
-  //   })
-  // }
+  const handleCloseDialog = () => {
+    setSearchParams((prev) => {
+      prev.delete('modal')
+      prev.delete('professionalId')
+      return prev
+    })
+  }
 
   return (
     <div>
@@ -51,16 +51,17 @@ export const ProfessionalsDataTable = () => {
 
       <div>
         <DataTable columns={columns} data={response?.data || []} />
-        {/* <DocumentsPagination
+        <ProfessionalsPagination
           currentPage={page}
           totalPages={response?.last || 1}
-        /> */}
+          paginationItemsToDisplay={5}
+        />
       </div>
 
-      {/* <DocumentDetailsDialog
-        open={modalType === 'details' && !!documentId}
+      <ProfessionalDetailsDialog
+        open={modalType === 'details' && !!professionalId}
         onOpenChange={handleCloseDialog}
-      /> */}
+      />
 
     </div>
   )

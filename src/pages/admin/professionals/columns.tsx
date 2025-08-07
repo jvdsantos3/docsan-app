@@ -17,38 +17,46 @@ export const columns: ColumnDef<
       )
     },
   },
-  { accessorKey: 'documentType.name', header: 'CPF/CNPJ' },
+  { accessorKey: 'cpf', header: 'CPF/CNPJ' },
   {
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      if (row.getValue('status') === 'overdue') {
+      if (row.getValue('status') === 'reproved') {
         return (
           <Badge
             variant="destructive"
             className="font-lato font-bold text-white"
           >
-            <span>Vencido</span>
+            <span>Reprovado</span>
           </Badge>
         )
       }
 
-      if (row.getValue('status') === 'due_soon') {
+      if (row.getValue('status') === 'pending') {
         return (
           <Badge className="bg-[#F58F00] font-lato font-bold text-white">
-            <span>Próximo</span>
+            <span>Pendente</span>
+          </Badge>
+        )
+      }
+
+      if (row.getValue('status') === 'in_correction') {
+        return (
+          <Badge className="bg-blue-600 font-lato font-bold text-white">
+            <span>Em correção</span>
           </Badge>
         )
       }
 
       return (
         <Badge className="bg-green-700 font-lato font-bold text-white">
-          <span>Em dia</span>
+          <span>Aprovado</span>
         </Badge>
       )
     },
   },
-  { accessorKey: 'documentType.name', header: 'E-mail' },
+  { accessorKey: 'email', header: 'E-mail' },
   {
     accessorKey: 'createdAt',
     header: 'Data de cadastro',
