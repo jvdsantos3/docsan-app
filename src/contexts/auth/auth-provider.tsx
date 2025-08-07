@@ -67,7 +67,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         navigate(payload.role === 'PROFESSIONAL' ? '/services' : '/documents')
       })
       .catch((err) => {
-        console.error(err)
         if (err.response?.status === 401) {
           let message = ''
           let description = ''

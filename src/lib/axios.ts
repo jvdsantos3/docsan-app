@@ -1,8 +1,19 @@
-import axios, { AxiosError } from 'axios'
+import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios'
 import { getToken, removeTokens, storeTokens } from '../utils/sessionMethods'
 import { env } from '@/config/env'
 
 const baseUrl = env.VITE_API_BASE_URL || 'http://localhost:3333'
+
+interface CustomAxiosRequestConfig extends InternalAxiosRequestConfig {
+  _retry?: boolean
+}
+
+const skippedRefreshEndpoints = ['/sessions']
+
+const shouldSkipInterceptor = (url?: string): boolean => {
+  if (!url) return false
+  return skippedRefreshEndpoints.some((endpoint) => url.includes(endpoint))
+}
 
 let isRefreshing = false
 let failedRequestsQueue: Array<{
@@ -37,9 +48,19 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config
+    const originalRequest = error.config as CustomAxiosRequestConfig
 
-    if (originalRequest && error.response?.status === 401) {
+    if (shouldSkipInterceptor(originalRequest.url)) {
+      return Promise.reject(error)
+    }
+
+    if (
+      originalRequest &&
+      error.response?.status === 401 &&
+      !originalRequest._retry
+    ) {
+      originalRequest._retry = true
+
       if (!isRefreshing) {
         isRefreshing = true
 
