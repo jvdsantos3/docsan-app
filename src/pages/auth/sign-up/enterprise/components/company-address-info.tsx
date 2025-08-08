@@ -25,6 +25,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { states } from '@/data/states'
+import { queryZipCode } from '@/lib/via-cep'
 
 const companyAddressInfoSchema = enterpriseSignUpSchema.pick({
   address: true,
@@ -57,43 +58,38 @@ export const CompanyAddressInfo = () => {
     },
   })
 
-  async function handleChangeZipCode(
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) {
-    const { value } = event.target
-    const formattedValue = format(value, cepInputOptions)
-    const zipCode = formattedValue.replace(/[^\d]+/g, '')
+  async function handleChangeZipCode(value: string) {
+    form.clearErrors('address.zipCode')
+    const formattedZipCode = value.replace(/[^\d]+/g, '')
 
-    if (zipCode.length === 8) {
-      try {
-        const response = await fetch(
-          `https://viacep.com.br/ws/${zipCode}/json/`,
-        )
-        const data = await response.json()
+    if (formattedZipCode.length !== 8) return
 
-        if (!data.erro) {
-          form.setValue('address.uf', data.uf)
-          form.clearErrors('address.uf')
-          form.setValue('address.city', data.localidade)
-          form.clearErrors('address.city')
-          form.setValue('address.street', data.logradouro)
-          form.clearErrors('address.street')
-          form.setValue('address.neighborhood', data.bairro)
-          form.clearErrors('address.neighborhood')
-        } else {
+    const { success, data, error } = await queryZipCode(formattedZipCode)
+
+    if (!success) {
+      switch (error) {
+        case 'InvalidZipCode':
           form.setError('address.zipCode', {
             type: 'manual',
             message: 'CEP inválido.',
           })
-          console.error('CEP inválido')
-        }
-      } catch (error) {
-        form.setError('address.zipCode', {
-          type: 'manual',
-          message: 'Erro ao buscar CEP.',
-        })
-        console.error('Erro ao buscar CEP:', error)
+          break
+        case 'FetchError':
+          break
       }
+
+      return
+    }
+
+    if (data) {
+      form.setValue('address.uf', data.uf)
+      form.clearErrors('address.uf')
+      form.setValue('address.city', data.localidade)
+      form.clearErrors('address.city')
+      form.setValue('address.street', data.logradouro)
+      form.clearErrors('address.street')
+      form.setValue('address.neighborhood', data.bairro)
+      form.clearErrors('address.neighborhood')
     }
   }
 
@@ -129,7 +125,7 @@ export const CompanyAddressInfo = () => {
                         {...field}
                         ref={cepInputRef}
                         onChange={(e) => {
-                          handleChangeZipCode(e)
+                          handleChangeZipCode(e.target.value)
                           field.onChange(e.target.value)
                         }}
                       />

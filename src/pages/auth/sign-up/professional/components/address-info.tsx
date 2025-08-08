@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import {
   Form,
   FormControl,
@@ -7,25 +7,26 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { CornerUpLeft } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
-import { professionalSignUpFormSchema } from "../schema";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useProfessionalSignUpMultiStepForm } from "../use-professional-sign-up-multi-step-form";
-import { format, useMask } from "@react-input/mask";
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { CornerUpLeft } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { Link } from 'react-router-dom'
+import { professionalSignUpFormSchema } from '../schema'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useProfessionalSignUpMultiStepForm } from '../use-professional-sign-up-multi-step-form'
+import { format, useMask } from '@react-input/mask'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { states } from "@/data/states";
-import { useAuth } from "@/hooks/use-auth";
+} from '@/components/ui/select'
+import { states } from '@/data/states'
+import { useAuth } from '@/hooks/use-auth'
+import { queryZipCode } from '@/lib/via-cep'
 
 const addressInfoSchema = professionalSignUpFormSchema.pick({
   zipCode: true,
@@ -36,41 +37,76 @@ const addressInfoSchema = professionalSignUpFormSchema.pick({
   neighborhood: true,
   complement: true,
   terms: true,
-});
+})
 
-type AddressInfoSchema = z.infer<typeof addressInfoSchema>;
+type AddressInfoSchema = z.infer<typeof addressInfoSchema>
 
 const cepInputOptions = {
-  mask: "#####-###",
-  replacement: { "#": /\d/ },
-};
+  mask: '#####-###',
+  replacement: { '#': /\d/ },
+}
 
 export const AddressInfo = () => {
-  const { registerProfessional } = useAuth();
+  const { registerProfessional } = useAuth()
   const {
     data: contextData,
     setData,
     previousStep,
-  } = useProfessionalSignUpMultiStepForm();
-  const cepInputRef = useMask(cepInputOptions);
+  } = useProfessionalSignUpMultiStepForm()
+  const cepInputRef = useMask(cepInputOptions)
   const form = useForm<AddressInfoSchema>({
     resolver: zodResolver(addressInfoSchema),
     defaultValues: {
-      zipCode: format(contextData?.zipCode || "", cepInputOptions),
-      uf: contextData?.uf || "",
-      city: contextData?.city || "",
-      street: contextData?.street || "",
-      number: contextData?.number || "",
-      neighborhood: contextData?.neighborhood || "",
-      complement: contextData?.complement || "",
+      zipCode: format(contextData?.zipCode || '', cepInputOptions),
+      uf: contextData?.uf || '',
+      city: contextData?.city || '',
+      street: contextData?.street || '',
+      number: contextData?.number || '',
+      neighborhood: contextData?.neighborhood || '',
+      complement: contextData?.complement || '',
       terms: false,
     },
-  });
+  })
+
+  async function handleChangeZipCode(value: string) {
+    form.clearErrors('zipCode')
+    const formattedZipCode = value.replace(/[^\d]+/g, '')
+
+    if (formattedZipCode.length !== 8) return
+
+    const { success, data, error } = await queryZipCode(formattedZipCode)
+
+    if (!success) {
+      switch (error) {
+        case 'InvalidZipCode':
+          form.setError('zipCode', {
+            type: 'manual',
+            message: 'CEP inválido.',
+          })
+          break
+        case 'FetchError':
+          break
+      }
+
+      return
+    }
+
+    if (data) {
+      form.setValue('uf', data.uf)
+      form.clearErrors('uf')
+      form.setValue('city', data.localidade)
+      form.clearErrors('city')
+      form.setValue('street', data.logradouro)
+      form.clearErrors('street')
+      form.setValue('neighborhood', data.bairro)
+      form.clearErrors('neighborhood')
+    }
+  }
 
   async function onSubmit(data: AddressInfoSchema) {
-    setData(data);
+    setData(data)
 
-    await registerProfessional({...contextData, ...data})
+    await registerProfessional({ ...contextData, ...data })
   }
 
   return (
@@ -97,7 +133,14 @@ export const AddressInfo = () => {
                       Cep
                     </FormLabel>
                     <FormControl>
-                      <Input {...field} ref={cepInputRef} />
+                      <Input
+                        {...field}
+                        onChange={(e) => {
+                          handleChangeZipCode(e.target.value)
+                          field.onChange(e.target.value)
+                        }}
+                        ref={cepInputRef}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -114,6 +157,7 @@ export const AddressInfo = () => {
                     <Select
                       onValueChange={field.onChange}
                       defaultValue={field.value}
+                      value={field.value}
                     >
                       <FormControl>
                         <SelectTrigger className="w-full">
@@ -222,9 +266,9 @@ export const AddressInfo = () => {
                       />
                     </FormControl>
                     <FormLabel className="font-lato text-gray-300">
-                      Li e concordo com os{" "}
+                      Li e concordo com os{' '}
                       <Link
-                        to={"/terms"}
+                        to={'/terms'}
                         className="text-blue-source font-bold"
                       >
                         Termos de Uso
@@ -239,8 +283,8 @@ export const AddressInfo = () => {
 
           <div className="flex gap-3 justify-between items-end">
             <p className="font-lato text-sm text-gray-600 text-center">
-              Já possui uma conta?{" "}
-              <Link to={"/sign-in"} className="text-blue-source font-bold">
+              Já possui uma conta?{' '}
+              <Link to={'/sign-in'} className="text-blue-source font-bold">
                 Faça login!
               </Link>
             </p>
@@ -255,5 +299,5 @@ export const AddressInfo = () => {
         </div>
       </form>
     </Form>
-  );
-};
+  )
+}
