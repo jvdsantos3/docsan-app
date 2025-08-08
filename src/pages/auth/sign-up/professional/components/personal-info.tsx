@@ -25,7 +25,11 @@ import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Calendar } from '@/components/ui/calendar'
-import { useMask, format as reactInputMaskFormat } from '@react-input/mask'
+import {
+  useMask,
+  format as reactInputMaskFormat,
+  type MaskOptions,
+} from '@react-input/mask'
 
 const personalInfoSchema = professionalSignUpFormSchema.pick({
   name: true,
@@ -38,21 +42,38 @@ const personalInfoSchema = professionalSignUpFormSchema.pick({
 
 type PersonalInfoSchema = z.infer<typeof personalInfoSchema>
 
-const cpfInputOptions = {
+const cpfInputMaskOptions: MaskOptions = {
   mask: '###.###.###-##',
   replacement: { '#': /\d/ },
 }
 
-const phoneInputOptions = {
-  mask: '############',
-  replacement: { '#': /\d/ },
+const phoneInputMaskOptions: MaskOptions = {
+  modify: ({ data, inputType, selectionEnd, selectionStart, value }) => {
+    const _value =
+      value.slice(0, selectionStart) + (data ?? '') + value.slice(selectionEnd)
+
+    const isMobilePhone = _value.replace(/[^\d]+/g, '').length > 10
+
+    return {
+      mask: isMobilePhone ? '(##) #####-####' : '(##) ####-####',
+      replacement: { '#': /\d/ },
+      selectionStart,
+      selectionEnd,
+      value,
+      data,
+      inputType,
+    }
+  },
 }
 
 export const PersonalInfo = () => {
   const { data, setData, nextStep } = useProfessionalSignUpMultiStepForm()
-  const cpfInputRef = useMask(cpfInputOptions)
-  const phoneInputRef = useMask(phoneInputOptions)
-  const cpfFormatted = reactInputMaskFormat(data?.cpf || '', cpfInputOptions)
+  const cpfInputRef = useMask(cpfInputMaskOptions)
+  const phoneInputRef = useMask(phoneInputMaskOptions)
+  const cpfFormatted = reactInputMaskFormat(data?.cpf || '', {
+    mask: cpfInputMaskOptions.mask || '',
+    replacement: cpfInputMaskOptions.replacement || '',
+  })
   const form = useForm<PersonalInfoSchema>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
@@ -100,6 +121,21 @@ export const PersonalInfo = () => {
             />
             <FormField
               control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-lato text-gray-300">
+                    Telefone
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...field} ref={phoneInputRef} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
               name="cpf"
               render={({ field }) => (
                 <FormItem>
@@ -124,6 +160,7 @@ export const PersonalInfo = () => {
                       <FormControl>
                         <Button
                           variant={'outline'}
+                          data-empty={!field.value}
                           className={cn(
                             'w-full pl-3 text-left font-normal border-input',
                             !field.value && 'text-muted-foreground',
@@ -147,6 +184,7 @@ export const PersonalInfo = () => {
                           date > new Date() || date < new Date('1900-01-01')
                         }
                         captionLayout="dropdown"
+                        locale={ptBR}
                       />
                     </PopoverContent>
                   </Popover>
@@ -179,21 +217,6 @@ export const PersonalInfo = () => {
                   </FormLabel>
                   <FormControl>
                     <PasswordInput {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    Telefone
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} ref={phoneInputRef} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

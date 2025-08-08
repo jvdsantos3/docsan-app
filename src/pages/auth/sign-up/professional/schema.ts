@@ -4,7 +4,12 @@ import { isValidCPF } from '@/lib/utils'
 export const professionalSignUpFormSchema = z.object({
   name: z
     .string()
-    .nonempty('Nome completo é obrigatório.'),
+    .trim()
+    .min(1, 'Nome completo é obrigatório.')
+    .regex(
+      /^[\p{L}'’-]+(?: [\p{L}'’-]+)+$/u,
+      'Por favor, insira seu nome completo.',
+    ),
   cpf: z
     .string()
     .transform((cpf) => cpf.replace(/[^\d]+/g, ''))
@@ -22,7 +27,9 @@ export const professionalSignUpFormSchema = z.object({
     .nonempty('O telefone é obrigatório.')
     .transform((phone) => phone.replace(/[^\d]+/g, '')),
   fieldExpertise: z.string().nonempty('Ramo de atuação é obrigatório.'),
-  professionalRegistry: z.string().nonempty('Registro profissional é obrigatório.'),
+  professionalRegistry: z
+    .string()
+    .nonempty('Registro profissional é obrigatório.'),
   registryUf: z.string().nonempty('UF do registro é obrigatório.'),
   cnae: z.string().nonempty('O CNAE é obrigatório'),
   zipCode: z
