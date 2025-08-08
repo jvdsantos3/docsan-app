@@ -1,6 +1,14 @@
 import { z } from 'zod'
 import { isValidCPF } from '@/lib/utils'
 
+const MIN_AGE = 18
+const today = new Date()
+const cutoffDate = new Date(
+  today.getFullYear() - MIN_AGE,
+  today.getMonth(),
+  today.getDate(),
+)
+
 export const professionalSignUpFormSchema = z.object({
   name: z
     .string()
@@ -19,7 +27,11 @@ export const professionalSignUpFormSchema = z.object({
     .refine((cpf) => isValidCPF(cpf), {
       message: 'CPF inválido.',
     }),
-  birthDate: z.date({ required_error: 'Data de nascimento é obrigatória' }),
+  birthDate: z
+    .date({ required_error: 'Data de nascimento é obrigatória' })
+    .refine((date) => date <= cutoffDate, {
+      message: `Você deve ter pelo menos ${MIN_AGE} anos.`,
+    }),
   email: z.string().email('E-mail inválido'),
   password: z.string().min(6, 'A senha deve ter pelo menos 6 caracteres'),
   phone: z
