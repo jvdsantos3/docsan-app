@@ -1,6 +1,7 @@
-export type BranchActivity = {
+export type Cnae = {
   id: string
-  name: string
+  code: string
+  description: string
   isActive: boolean
   createdAt: string
   updatedAt: string

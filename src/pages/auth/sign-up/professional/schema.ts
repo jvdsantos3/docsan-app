@@ -38,7 +38,8 @@ export const professionalSignUpFormSchema = z.object({
     .string()
     .nonempty('O telefone é obrigatório.')
     .transform((phone) => phone.replace(/[^\d]+/g, '')),
-  fieldExpertise: z.string().nonempty('Ramo de atuação é obrigatório.'),
+  branchActivity: z.string().nonempty('Ramo de atuação é obrigatório.'),
+  registryType: z.string().nonempty('Tipo de registro é obrigatório.'),
   professionalRegistry: z
     .string()
     .nonempty('Registro profissional é obrigatório.'),

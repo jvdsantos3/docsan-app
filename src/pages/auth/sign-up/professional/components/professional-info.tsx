@@ -23,12 +23,18 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { states } from '@/data/states'
+import { useMemo, useState } from 'react'
+import { useBranchesActivity } from '@/http/use-branches-activity'
+import { ComboBox } from '@/components/ui/combobox'
+import { useCnaes } from '@/http/use-cnaes'
+import { useRegistryTypes } from '@/http/use-registry-types'
 
 const professionalInfoSchema = professionalSignUpFormSchema.pick({
-  fieldExpertise: true,
+  branchActivity: true,
   professionalRegistry: true,
   registryUf: true,
   cnae: true,
+  registryType: true,
 })
 
 type ProfessionalInfoSchema = z.infer<typeof professionalInfoSchema>
@@ -39,12 +45,51 @@ export const ProfessionalInfo = () => {
   const form = useForm<ProfessionalInfoSchema>({
     resolver: zodResolver(professionalInfoSchema),
     defaultValues: {
-      fieldExpertise: data?.fieldExpertise || '',
+      branchActivity: data?.branchActivity || '',
       professionalRegistry: data?.professionalRegistry || '',
       registryUf: data?.registryUf || '',
       cnae: data?.cnae || '',
     },
   })
+  const [filterCnae, setFilterCnae] = useState('')
+  const [filterBranchActivity, setFilterBranchActivity] = useState('')
+  const [filterRegistryType, setFilterRegistryType] = useState('')
+
+  const { data: responseBranchActivity, isLoading: isLoadingBranchesActivity } =
+    useBranchesActivity({
+      active: true,
+      filter: filterBranchActivity,
+    })
+
+  const selectedBranchActivity = useMemo(() => {
+    const item = responseBranchActivity?.branchesActivity.data.find(
+      (branchActivity) => branchActivity.id === data.branchActivity,
+    )
+    return item ? { label: item.name, value: item.id } : undefined
+  }, [data.branchActivity, responseBranchActivity])
+
+  const { data: responseCnae, isLoading: isLoadingCnaes } = useCnaes({
+    active: true,
+    filter: filterCnae,
+  })
+
+  const selectedCnae = useMemo(() => {
+    const item = responseCnae?.cnaes.data.find((cnae) => cnae.id === data.cnae)
+    return item ? { label: item.code, value: item.id } : undefined
+  }, [data.cnae, responseCnae])
+
+  const { data: responseRegistryType, isLoading: isLoadingRegistryTypes } =
+    useRegistryTypes({
+      active: true,
+      filter: filterRegistryType,
+    })
+
+  const selectedRegistryType = useMemo(() => {
+    const item = responseRegistryType?.registryTypes.data.find(
+      (registryType) => registryType.id === data.registryType,
+    )
+    return item ? { label: item.name, value: item.id } : undefined
+  }, [data.registryType, responseRegistryType])
 
   function onSubmit(data: ProfessionalInfoSchema) {
     setData(data)
@@ -67,14 +112,69 @@ export const ProfessionalInfo = () => {
           <div className="space-y-6">
             <FormField
               control={form.control}
-              name="fieldExpertise"
+              name="branchActivity"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
                     Ramo de atuação
                   </FormLabel>
                   <FormControl>
-                    <Input {...field} />
+                    <ComboBox
+                      items={
+                        responseBranchActivity?.branchesActivity.data.map(
+                          (item) => ({
+                            value: item.id,
+                            label: item.name,
+                          }),
+                        ) || []
+                      }
+                      onChange={field.onChange}
+                      onSearch={(value) => setFilterBranchActivity(value)}
+                      value={field.value}
+                      selectedItem={selectedBranchActivity}
+                      isLoading={isLoadingBranchesActivity}
+                      className="w-full"
+                      contentClassName="w-[var(--radix-popover-trigger-width)]"
+                      placeholder="Todos os ramos de atuação"
+                      emptyMessage="Nenhum ramo de atuação encontrado."
+                      delay={300}
+                      shouldFilter={false}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="registryType"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-lato text-gray-300">
+                    Tipo de registro profissional
+                  </FormLabel>
+                  <FormControl>
+                    <ComboBox
+                      items={
+                        responseRegistryType?.registryTypes.data.map(
+                          (item) => ({
+                            value: item.id,
+                            label: item.name,
+                          }),
+                        ) || []
+                      }
+                      onChange={field.onChange}
+                      onSearch={(value) => setFilterRegistryType(value)}
+                      value={field.value}
+                      selectedItem={selectedRegistryType}
+                      isLoading={isLoadingRegistryTypes}
+                      className="w-full"
+                      contentClassName="w-[var(--radix-popover-trigger-width)]"
+                      placeholder="Todos os tipos de registro"
+                      emptyMessage="Nenhum tipo de registro encontrado."
+                      delay={300}
+                      shouldFilter={false}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -133,7 +233,25 @@ export const ProfessionalInfo = () => {
                     CNAE
                   </FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <ComboBox
+                      items={
+                        responseCnae?.cnaes.data.map((item) => ({
+                          value: item.id,
+                          label: item.code,
+                        })) || []
+                      }
+                      onChange={field.onChange}
+                      onSearch={(value) => setFilterCnae(value)}
+                      value={field.value}
+                      selectedItem={selectedCnae}
+                      isLoading={isLoadingCnaes}
+                      className="w-full"
+                      contentClassName="w-[var(--radix-popover-trigger-width)]"
+                      placeholder="Todos os ramos de atuação"
+                      emptyMessage="Nenhum CNAE encontrado."
+                      delay={300}
+                      shouldFilter={false}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

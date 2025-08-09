@@ -16,6 +16,9 @@ import { Button } from '@/components/ui/button'
 import { CornerUpLeft } from 'lucide-react'
 import { useEnterpriseSignUpMultiStepForm } from '../use-enterprise-sign-up-multi-step-form'
 import { format, useMask } from '@react-input/mask'
+import { useCnaes } from '@/http/use-cnaes'
+import { useMemo, useState } from 'react'
+import { ComboBox } from '@/components/ui/combobox'
 
 const companyInfoSchema = enterpriseSignUpSchema.pick({
   company: true,
@@ -39,14 +42,28 @@ export const CompanyInfo = () => {
         tradeName: data?.company?.tradeName || '',
         cnpj: format(data?.company?.cnpj || '', cnpjInputOptions),
         cnae: data?.company?.cnae || '',
-      }
-    }
+      },
+    },
   })
 
   function onSubmit(data: CompanyInfoSchema) {
     setData(data)
     nextStep()
   }
+
+  const [filterCnae, setFilterCnae] = useState('')
+
+  const { data: responseCnae, isLoading: isLoadingCnaes } = useCnaes({
+    active: true,
+    filter: filterCnae,
+  })
+
+  const selectedCnae = useMemo(() => {
+    const item = responseCnae?.cnaes.data.find(
+      (cnae) => cnae.id === data.company?.cnae,
+    )
+    return item ? { label: item.code, value: item.id } : undefined
+  }, [data.company?.cnae, responseCnae])
 
   return (
     <Form {...form}>
@@ -114,7 +131,25 @@ export const CompanyInfo = () => {
                     CNAE
                   </FormLabel>
                   <FormControl>
-                    <Input type="number" {...field} />
+                    <ComboBox
+                      items={
+                        responseCnae?.cnaes.data.map((item) => ({
+                          value: item.id,
+                          label: item.code,
+                        })) || []
+                      }
+                      onChange={field.onChange}
+                      onSearch={(value) => setFilterCnae(value)}
+                      value={field.value}
+                      selectedItem={selectedCnae}
+                      isLoading={isLoadingCnaes}
+                      className="w-full"
+                      contentClassName="w-[var(--radix-popover-trigger-width)]"
+                      placeholder="Todos os ramos de atuação"
+                      emptyMessage="Nenhum CNAE encontrado."
+                      delay={300}
+                      shouldFilter={false}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

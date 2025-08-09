@@ -1,4 +1,4 @@
-export type BranchActivity = {
+export type RegistryType = {
   id: string
   name: string
   isActive: boolean
