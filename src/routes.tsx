@@ -16,11 +16,12 @@ import { BranchesActivity } from './pages/admin/branches-activity'
 import { AdminLayout } from './pages/_layouts/admin'
 import { CNAEs } from './pages/admin/cnaes'
 import { Professionals } from './pages/admin/professionals'
+import { Chat } from './pages/chat'
 
 export function Router() {
   return (
     <Routes>
-      <Route path="/" element={<AuthLayout />}>
+      <Route element={<AuthLayout />}>
         <Route path="sign-in" element={<SignIn />} />
 
         <Route path="sign-up">
@@ -28,30 +29,31 @@ export function Router() {
           <Route path="enterprise" element={<EnterpriseSignUp />} />
         </Route>
       </Route>
+
       <Route path="admin" element={<AdminLayout />}>
         <Route path="branches-activity" element={<BranchesActivity />} />
         <Route path="cnae" element={<CNAEs />} />
         <Route path="professionals" element={<Professionals />} />
       </Route>
+
       <Route path="/" element={<RootLayout />}>
         <Route index element={<LandingPage />} />
+        <Route path="chat" element={<Chat />} />
 
         <Route path="services" element={<ServicesProvider />}>
           <Route index element={<Services />} />
           <Route path=":serviceId" element={<ServiceDetails />} />
         </Route>
 
-        <Route path="documents" element={<Documents />} />
-        <Route path="documents/new" element={<NewDocument />} />
-        <Route path="document-types" element={<DocumentTypes />} />
-        <Route
-          path="document-types/:typeId/versions"
-          element={<DocumentTypesVersions />}
-        />
-        <Route
-          path="document-types/:typeId/versions"
-          element={<DocumentTypesVersions />}
-        />
+        <Route path="documents">
+          <Route index element={<Documents />} />
+          <Route path="new" element={<NewDocument />} />
+        </Route>
+
+        <Route path="document-types">
+          <Route index element={<DocumentTypes />} />
+          <Route path=":typeId/versions" element={<DocumentTypesVersions />} />
+        </Route>
       </Route>
     </Routes>
   )
