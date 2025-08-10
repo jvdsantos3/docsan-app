@@ -48,6 +48,8 @@ const cpfInputMaskOptions: MaskOptions = {
 }
 
 const phoneInputMaskOptions: MaskOptions = {
+  mask: '(##) #####-####',
+  replacement: { '#': /\d/ },
   modify: ({ data, inputType, selectionEnd, selectionStart, value }) => {
     const _value =
       value.slice(0, selectionStart) + (data ?? '') + value.slice(selectionEnd)
@@ -74,6 +76,10 @@ export const PersonalInfo = () => {
     mask: cpfInputMaskOptions.mask || '',
     replacement: cpfInputMaskOptions.replacement || '',
   })
+  const phoneFormatted = reactInputMaskFormat(data?.phone || '', {
+    mask: phoneInputMaskOptions.mask || '',
+    replacement: phoneInputMaskOptions.replacement || '',
+  })
   const form = useForm<PersonalInfoSchema>({
     resolver: zodResolver(personalInfoSchema),
     defaultValues: {
@@ -82,7 +88,7 @@ export const PersonalInfo = () => {
       birthDate: data?.birthDate,
       email: data?.email || '',
       password: data?.password || '',
-      phone: data?.phone || '',
+      phone: phoneFormatted,
     },
   })
 

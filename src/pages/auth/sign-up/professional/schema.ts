@@ -38,21 +38,30 @@ export const professionalSignUpFormSchema = z.object({
     .string()
     .nonempty('O telefone é obrigatório.')
     .transform((phone) => phone.replace(/[^\d]+/g, '')),
-  fieldExpertise: z.string().nonempty('Ramo de atuação é obrigatório.'),
+  classification: z.enum(['cpf', 'cnpj'], {
+    required_error: 'Classificação é obrigatória.',
+  }),
+  cnpj: z
+    .string()
+    .trim()
+    .transform((cnpj) => cnpj.replace(/[^\d]+/g, ''))
+    .optional(),
+  cnae: z.string().trim().optional(),
+  branchActivity: z.string().min(1, 'Ramo de atuação é obrigatório.'),
+  registryType: z.string().min(1, 'Tipo de registro é obrigatório.'),
   professionalRegistry: z
     .string()
-    .nonempty('Registro profissional é obrigatório.'),
-  registryUf: z.string().nonempty('UF do registro é obrigatório.'),
-  cnae: z.string().nonempty('O CNAE é obrigatório'),
+    .min(1, 'Registro profissional é obrigatório.'),
+  registryUf: z.string().min(1, 'UF do registro é obrigatório.'),
   zipCode: z
     .string()
-    .nonempty('O CEP é obrigatório.')
+    .min(1, 'O CEP é obrigatório.')
     .transform((zipCode) => zipCode.replace(/[^\d]+/g, '')),
-  uf: z.string().nonempty('UF é obrigatória.'),
-  city: z.string().nonempty('Cidade é obrigatória.'),
-  street: z.string().nonempty('Rua é obrigatória.'),
-  number: z.string().nonempty('Número é obrigatório.'),
-  neighborhood: z.string().nonempty('Bairro é obrigatório'),
+  uf: z.string().min(1, 'UF é obrigatória.'),
+  city: z.string().min(1, 'Cidade é obrigatória.'),
+  street: z.string().min(1, 'Rua é obrigatória.'),
+  number: z.string().min(1, 'Número é obrigatório.'),
+  neighborhood: z.string().min(1, 'Bairro é obrigatório'),
   complement: z.string().optional(),
   terms: z.boolean().refine((val) => val, {
     message: 'Você deve aceitar os termos de uso',
