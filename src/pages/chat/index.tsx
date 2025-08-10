@@ -124,32 +124,6 @@ export const Chat = () => {
               Como posso ajudar?
             </div>
           )}
-          {/* <div className="pb-10 flex flex-col gap-8">
-            <div className="self-end p-2 bg-blue-50 rounded-xl">
-              Primeira pergunta feita pelo usuário
-            </div>
-            <div>
-              Esta é uma simulação de resposta para demonstração da plataforma
-              DocSan. Em uma implementação real, a resposta seria gerada por um
-              modelo de IA especializado em questões regulatórias.
-            </div>
-            <div className="self-end p-2 bg-blue-50 rounded-xl">
-              Segunda pergunta feita pelo usuário
-            </div>
-            <div>
-              Esta é uma simulação de resposta para demonstração da plataforma
-              DocSan. Em uma implementação real, a resposta seria gerada por um
-              modelo de IA especializado em questões regulatórias.
-            </div>
-            <div className="self-end p-2 bg-blue-50 rounded-xl">
-              Terceira pergunta feita pelo usuário
-            </div>
-            <div>
-              Esta é uma simulação de resposta para demonstração da plataforma
-              DocSan. Em uma implementação real, a resposta seria gerada por um
-              modelo de IA especializado em questões regulatórias.
-            </div>
-          </div> */}
         </div>
 
         <div>
@@ -157,7 +131,6 @@ export const Chat = () => {
             <div className="relative w-full">
               <Input
                 {...register('prompt')}
-                // ref={promptRef}
                 placeholder="Digite aqui a sua dúvida..."
                 className={cn(
                   'h-[3.5rem] w-full pl-4 pr-36 py-2 border rounded-lg text-gray-800 text-body-sm',
