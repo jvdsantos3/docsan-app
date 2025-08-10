@@ -3,7 +3,7 @@ import { AuthContext } from './auth-context'
 import type { ProfessionalSignUpFormSchema } from '@/pages/auth/sign-up/professional/schema'
 import { api } from '@/lib/axios'
 import { useNavigate } from 'react-router-dom'
-import { getToken, storeTokens } from '@/utils/sessionMethods'
+import { getToken, removeTokens, storeTokens } from '@/utils/sessionMethods'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'sonner'
 import type { Role, User } from '@/types/user'
@@ -107,6 +107,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       })
   }
 
+  async function logout() {
+    await api.delete('/sessions')
+
+    removeTokens()
+    setIsAuthenticated(false)
+    setAuthUser(null)
+    setToken(null)
+    navigate('/sign-in', { replace: true })
+  }
+
   useEffect(() => {
     const token = getToken()
 
@@ -143,16 +153,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       value={{
         registerProfessional,
         login,
+        logout,
         isAuthenticated,
         user: authUser,
         token: token,
-
-        signIn: (credencials) => {
-          console.log(credencials)
-        },
-        signOut: () => {
-          setAuthUser(null)
-        },
       }}
     >
       {children}
