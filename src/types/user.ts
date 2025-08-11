@@ -17,7 +17,7 @@ import type { Professional } from "./professional"
 //   profile: OwnerProfile // | ProfessionalProfile
 // }
 
-export type Role = 'OWNER' | 'PROFESSIONAL'
+export type Role = 'OWNER' | 'PROFESSIONAL' | 'ADMIN'
 
 export type User = {
   id: string

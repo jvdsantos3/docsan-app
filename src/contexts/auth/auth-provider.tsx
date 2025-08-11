@@ -64,7 +64,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setIsAuthenticated(true)
 
         toast.dismiss()
-        navigate(payload.role === 'PROFESSIONAL' ? '/services' : '/documents')
+
+        if (payload.role === 'ADMIN') {
+          navigate('/admin/cnae')
+        } else if (payload.role === 'PROFESSIONAL') {
+          navigate('/services')
+        } else {
+          navigate('/documents')
+        }
       })
       .catch((err) => {
         if (err.response?.status === 401) {

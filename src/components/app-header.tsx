@@ -4,7 +4,7 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from '@/components/ui/navigation-menu'
-import { Button, buttonVariants } from './ui/button'
+import { buttonVariants } from './ui/button'
 import { Link } from 'react-router-dom'
 import { Logo } from './logo'
 import { useAuth } from '@/hooks/use-auth'
@@ -19,18 +19,10 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
 import { SignUpSelectorDialog } from './dialogs/sign-up-selector-dialog'
 import { useState } from 'react'
 import { LogOut } from 'lucide-react'
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from './ui/dialog'
+import { SignOutDialog } from './dialogs/sign-out-dialog'
 
 export const AppHeader = () => {
-  const { isAuthenticated, logout } = useAuth()
+  const { isAuthenticated } = useAuth()
   const [open, setOpen] = useState(false)
   const [openSignOutDialog, setOpenSignOutDialog] = useState(false)
 
@@ -131,20 +123,10 @@ export const AppHeader = () => {
 
       <SignUpSelectorDialog open={open} onOpenChange={setOpen} />
 
-      <Dialog open={openSignOutDialog} onOpenChange={setOpenSignOutDialog}>
-        <DialogContent className="bg-white">
-          <DialogHeader>
-            <DialogTitle>Tem certeza de que deseja sair?</DialogTitle>
-            <DialogDescription></DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">Cancelar</Button>
-            </DialogClose>
-            <Button onClick={logout}>Sair</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <SignOutDialog
+        open={openSignOutDialog}
+        onOpenChange={setOpenSignOutDialog}
+      />
     </>
   )
 }
