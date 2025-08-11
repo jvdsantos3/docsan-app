@@ -92,7 +92,7 @@ export const Chat = () => {
   }, [questionsCounter])
 
   return (
-    <div className="space-y-6 py-6 h-full">
+    <div className="space-y-6 py-6 h-[calc(100vh-64px)]">
       <div className="bg-white rounded-2xl h-full px-4 md:px-8 lg:px-12 py-6 md:py-10 lg:py-12 flex flex-col justify-end">
         <div className="flex-1 overflow-auto">
           {messages.length ? (
