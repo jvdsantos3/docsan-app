@@ -1,31 +1,31 @@
 import { DataTable } from '@/components/ui/data-table'
-import { useBranchesActivity } from '@/http/use-branches-activity'
+import { useRegistryTypes } from '@/http/use-registry-types'
 import { useSearchParams } from 'react-router-dom'
-import { BranchesActivityPagination } from './branches-activity-pagination'
+import { RegistryTypesPagination } from './registry-types-pagination'
 import { columns } from './columns'
-import { BranchesActivityTableSkeleton } from './branches-activity-table-skeleton'
-import { BranchesActivityPaginationSkeleton } from './branches-activity-pagination-skeleton'
-import { BranchesActivityFilters } from './branches-activity-filters'
-import { UpdateBranchActivityDialog } from './update-branches-activity-dialog'
+import { RegistryTypesTableSkeleton } from './registry-types-table-skeleton'
+import { RegistryTypesPaginationSkeleton } from './registry-types-pagination-skeleton'
+import { RegistryTypesFilters } from './registry-types-filters'
+import { UpdateRegistryTypeDialog } from './update-registry-types-dialog'
 
-export const BranchesActivityTable = () => {
+export const RegistryTypesTable = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1
   const order = (searchParams.get('order') as 'asc' | 'desc' | null) ?? 'asc'
   const filter = searchParams.get('filter') || ''
 
-  const { data: response, isLoading } = useBranchesActivity({
+  const { data: response, isLoading } = useRegistryTypes({
     page,
     order,
     filter,
   })
   const modalType = searchParams.get('modal')
-  const branchActivitId = searchParams.get('branchActivitId')
+  const registryTypeId = searchParams.get('registryTypeId')
   
   function handleCloseDialog() {
     setSearchParams((prev) => {
       prev.delete('modal')
-      prev.delete('branchActivitId')
+      prev.delete('registryTypeId')
       return prev
     })
   }
@@ -34,30 +34,30 @@ export const BranchesActivityTable = () => {
     <div>
       <div className="px-8 py-6 flex flex-col sm:flex-row sm:justify-between sm:items-center sm:space-y-0 space-y-6">
         <h2 className="font-lato font-bold text-[21px] text-blue-1000">
-          Ramos de atuação
+          Tipos de registro profissional
         </h2>
 
-        <BranchesActivityFilters />
+        <RegistryTypesFilters />
       </div>
 
       {isLoading ? (
         <div>
-          <BranchesActivityTableSkeleton />
-          <BranchesActivityPaginationSkeleton />
+          <RegistryTypesTableSkeleton />
+          <RegistryTypesPaginationSkeleton />
         </div>
       ) : (
         <>
           <div>
-            <DataTable columns={columns} data={response?.branchesActivity.data || []} />
-            <BranchesActivityPagination
+            <DataTable columns={columns} data={response?.registryTypes.data || []} />
+            <RegistryTypesPagination
               currentPage={page}
-              totalPages={response?.branchesActivity.last || 1}
+              totalPages={response?.registryTypes.last || 1}
               paginationItemsToDisplay={5}
             />
           </div>
 
-          <UpdateBranchActivityDialog
-            open={modalType === 'edit' && !!branchActivitId}
+          <UpdateRegistryTypeDialog
+            open={modalType === 'edit' && !!registryTypeId}
             onOpenChange={handleCloseDialog}
           />
         </>

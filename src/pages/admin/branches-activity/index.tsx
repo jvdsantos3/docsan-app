@@ -5,7 +5,7 @@ import { CreateBranchActivityDialog } from '@/components/dialogs/create-branch-a
 import { useState } from 'react'
 
 export const BranchesActivity = () => {
-  const [createServAreaDialog, setCreateServAreaDialog] = useState(false)
+  const [createBranchActivDialog, setCreateBranchActivDialog] = useState(false)
 
   return (
     <div className="space-y-6 py-6">
@@ -19,7 +19,7 @@ export const BranchesActivity = () => {
 
         <Button
           className="font-bold w-full md:w-auto"
-          onClick={() => setCreateServAreaDialog(true)}
+          onClick={() => setCreateBranchActivDialog(true)}
         >
           <Plus />
           Adicionar ramo de atuação
@@ -31,8 +31,8 @@ export const BranchesActivity = () => {
         </div>
       </div>
       <CreateBranchActivityDialog
-        open={createServAreaDialog}
-        onOpenChange={setCreateServAreaDialog}
+        open={createBranchActivDialog}
+        onOpenChange={setCreateBranchActivDialog}
       />
     </div>
   )

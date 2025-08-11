@@ -24,50 +24,50 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
-import type { GetBranchesActivityResponse } from '@/types/http/get-branches-activity-response'
-import { useDeleteBranchActivity } from '@/http/use-delete-branch-activity'
+import type { GetRegistryTypesResponse } from '@/types/http/get-registry-types-response'
+import { useDeleteRegistryType } from '@/http/use-delete-registry-type'
 import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
-import { useToggleStatusBranchActivity } from '@/http/use-toggle-status-branch-activity'
+import { useToggleStatusRegistryType } from '@/http/use-toggle-status-registry-type'
 
-interface BranchesActivityRowActionsProps<TData> {
+interface RegistryTypesRowActionsProps<TData> {
   row: Row<TData>
 }
 
-export function BranchesActivityRowActions<TData>({
+export function RegistryTypesRowActions<TData>({
   row,
-}: BranchesActivityRowActionsProps<TData>) {
+}: RegistryTypesRowActionsProps<TData>) {
   const [, setSearchParams] = useSearchParams()
-  const { mutateAsync: deleteBranchActivity, error: deleteError } =
-    useDeleteBranchActivity()
+  const { mutateAsync: deleteRegistryType, error: deleteError } =
+    useDeleteRegistryType()
 
-  const { mutateAsync: toggleStatusBranchActivity, error: toggleStatusError } =
-    useToggleStatusBranchActivity()
-  const branchActivity =
-    row.original as GetBranchesActivityResponse['branchesActivity']['data'][number]
+  const { mutateAsync: toggleStatusRegistryType, error: toggleStatusError } =
+    useToggleStatusRegistryType()
+  const registryType =
+    row.original as GetRegistryTypesResponse['registryTypes']['data'][number]
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [toggleStatusOpen, setToggleStatusOpen] = useState(false)
 
   async function handleEdit() {
     setSearchParams((prev) => {
       prev.set('modal', 'edit')
-      prev.set('branchActivitId', branchActivity.id)
+      prev.set('registryTypeId', registryType.id)
       return prev
     })
   }
 
   async function handleDelete() {
-    await deleteBranchActivity(branchActivity.id)
-    toast.success('Ramo de atuação excluída com sucesso!', {
+    await deleteRegistryType(registryType.id)
+    toast.success('Tipo de registro excluído com sucesso!', {
       dismissible: true,
       duration: 5000,
     })
   }
 
   async function handleToggleStatus() {
-    await toggleStatusBranchActivity(branchActivity.id)
+    await toggleStatusRegistryType(registryType.id)
     toast.success('Status alterado com sucesso!', {
       dismissible: true,
       duration: 5000,
@@ -75,14 +75,14 @@ export function BranchesActivityRowActions<TData>({
   }
 
   if (deleteError) {
-    toast.error('Erro ao excluir ramo de atuação. Tente novamente.', {
+    toast.error('Erro ao excluir tipo de registro. Tente novamente.', {
       dismissible: true,
       duration: 5000,
     })
   }
 
   if (toggleStatusError) {
-    toast.error('Erro ao alterar status do ramo de atuação. Tente novamente.', {
+    toast.error('Erro ao alterar status. Tente novamente.', {
       dismissible: true,
       duration: 5000,
     })
@@ -109,7 +109,7 @@ export function BranchesActivityRowActions<TData>({
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setToggleStatusOpen(true)}>
-            {branchActivity.isActive ? (
+            {registryType.isActive ? (
               <>
                 <CircleMinus className="text-red-500" />
                 Desativar
@@ -128,11 +128,11 @@ export function BranchesActivityRowActions<TData>({
         <AlertDialogContent className="bg-white sm:max-w-2xl">
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Tem certeza que deseja excluir esse ramo de atuação?
+              Tem certeza que deseja excluir esse tipo de registro?
             </AlertDialogTitle>
             <AlertDialogDescription>
               Esta ação não pode ser desfeita. Isso excluirá permanentemente o
-              ramo de atuação.
+              tipo de registro.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -151,10 +151,10 @@ export function BranchesActivityRowActions<TData>({
         <AlertDialogContent className="bg-white sm:max-w-2xl">
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Deseja realmente alterar o status deste ramo de atuação?
+              Deseja realmente alterar o status deste tipo de registro?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              Esta alteração impactará a visibilidade do ramo no sistema. Caso
+              Esta alteração impactará a visibilidade do tipo de registro no sistema. Caso
               necessário, será possível reverter a mudança posteriormente.
             </AlertDialogDescription>
           </AlertDialogHeader>

@@ -12,27 +12,27 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import {
-  branchActivityFormSchema,
-  type BranchActivityFormSchema,
+  registryTypeFormSchema,
+  type RegistryTypeFormSchema,
 } from './schema'
-import type { BranchActivity } from '@/types/branch-activity'
+import type { RegistryType } from '@/types/registry-type'
 import { useEffect } from 'react'
 
-type BranchActivityFormProps = {
-  branchActivity?: BranchActivity
+type RegistryTypeFormProps = {
+  registryType?: RegistryType
   isEdit?: boolean
   onCancel?: () => void
-  onSubmit: (data: BranchActivityFormSchema) => Promise<void>
+  onSubmit: (data: RegistryTypeFormSchema) => Promise<void>
 }
 
-export const BranchActivityForm = ({
-  branchActivity,
+export const RegistryTypeForm = ({
+  registryType,
   isEdit = false,
   onCancel,
   onSubmit,
-}: BranchActivityFormProps) => {
-  const form = useForm<BranchActivityFormSchema>({
-    resolver: zodResolver(branchActivityFormSchema),
+}: RegistryTypeFormProps) => {
+  const form = useForm<RegistryTypeFormSchema>({
+    resolver: zodResolver(registryTypeFormSchema),
     defaultValues: {
       name: '',
     },
@@ -44,17 +44,17 @@ export const BranchActivityForm = ({
     }
   }
 
-  const handleSubmit = async (data: BranchActivityFormSchema) => {
+  const handleSubmit = async (data: RegistryTypeFormSchema) => {
     await onSubmit(data)
   }
 
   useEffect(() => {
-    if (branchActivity) {
+    if (registryType) {
       form.reset({
-        name: branchActivity.name,
+        name: registryType.name,
       })
     }
-  }, [branchActivity, form])
+  }, [registryType, form])
 
   return (
     <Form {...form}>
@@ -66,10 +66,10 @@ export const BranchActivityForm = ({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nome da área de atuação</FormLabel>
+                  <FormLabel>Nome do tipo de registro profissional</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Dê um nome para nova área de atuação"
+                      placeholder="Dê um nome para um novo tipo de registro profissional"
                       {...field}
                     />
                   </FormControl>
@@ -88,7 +88,7 @@ export const BranchActivityForm = ({
             {form.formState.isSubmitting && (
               <Loader2 className="animate-spin" />
             )}
-            {isEdit ? 'Salvar alterações' : 'Adicionar ramo'}
+            {isEdit ? 'Salvar alterações' : 'Adicionar registro'}
           </Button>
         </div>
       </form>

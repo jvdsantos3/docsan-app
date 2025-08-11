@@ -17,6 +17,7 @@ import { AdminLayout } from './pages/_layouts/admin'
 import { CNAEs } from './pages/admin/cnaes'
 import { Professionals } from './pages/admin/professionals'
 import { Chat } from './pages/chat'
+import { RegistryTypes } from './pages/admin/registry-types'
 
 export function Router() {
   return (
@@ -33,6 +34,7 @@ export function Router() {
       <Route path="admin" element={<AdminLayout />}>
         <Route path="branches-activity" element={<BranchesActivity />} />
         <Route path="cnae" element={<CNAEs />} />
+        <Route path="registry-types" element={<RegistryTypes />} />
         <Route path="professionals" element={<Professionals />} />
       </Route>
 
