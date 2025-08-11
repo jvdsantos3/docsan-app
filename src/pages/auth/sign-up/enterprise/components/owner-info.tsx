@@ -70,7 +70,7 @@ export const ResponsibleInfo = () => {
       name: company.name,
       tradeName: company.tradeName,
       cnpj: company.cnpj,
-      cnae: company.cnae,
+      cnaeId: company.cnaeId,
       ownerName: data.owner.name,
       ownerCpf: data.owner.cpf,
       phone: data.owner.phone,

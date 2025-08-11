@@ -6,7 +6,6 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useBranchActivity } from '@/http/use-branch-activity'
-import { useProfile } from '@/http/use-profile'
 import { useUpdateBranchActivity } from '@/http/use-update-branch-activity'
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
@@ -22,28 +21,22 @@ export const UpdateBranchActivityDialog = ({
   open,
   onOpenChange,
 }: UpdateBranchActivityDialog) => {
-  const { data: profile } = useProfile()
   const [searchParams] = useSearchParams()
   const branchActivitId = searchParams.get('branchActivitId') || ''
-  const companyId = profile?.user.owner?.companyId || ''
-  const { data: branchActivity, isLoading } = useBranchActivity(
-    branchActivitId,
-    companyId,
-  )
+  const { data: branchActivity, isLoading } = useBranchActivity(branchActivitId)
   const { mutateAsync: updateBranchActivity, error: updateError } =
     useUpdateBranchActivity()
 
   async function handleUpdateBranchActivity(data: UpdateBranchActivityRequest) {
-    if (!branchActivitId || !companyId) return
+    if (!branchActivitId) return
 
     await updateBranchActivity({
       id: branchActivitId,
-      companyId,
       data: {
         name: data.name,
       },
     })
-    toast.success('Área de atuação atualizada com sucesso!', {
+    toast.success('Ramo de atuação atualizado com sucesso!', {
       dismissible: true,
       duration: 5000,
       richColors: true,

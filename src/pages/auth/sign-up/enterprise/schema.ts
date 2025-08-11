@@ -14,7 +14,7 @@ export const enterpriseSignUpSchema = z.object({
       .refine((cnpj) => isValidCNPJ(cnpj), {
         message: 'CNPJ inválido.',
       }),
-    cnae: z.string().nonempty('O CNAE é obrigatório.'),
+    cnaeId: z.string().nonempty('O CNAE é obrigatório.'),
   }),
   address: z.object({
     zipCode: z

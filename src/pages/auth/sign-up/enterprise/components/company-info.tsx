@@ -41,7 +41,7 @@ export const CompanyInfo = () => {
         name: data?.company?.name || '',
         tradeName: data?.company?.tradeName || '',
         cnpj: format(data?.company?.cnpj || '', cnpjInputOptions),
-        cnae: data?.company?.cnae || '',
+        cnaeId: data?.company?.cnaeId || '',
       },
     },
   })
@@ -60,10 +60,10 @@ export const CompanyInfo = () => {
 
   const selectedCnae = useMemo(() => {
     const item = responseCnae?.cnaes.data.find(
-      (cnae) => cnae.id === data.company?.cnae,
+      (cnae) => cnae.id === data.company?.cnaeId,
     )
     return item ? { label: item.code, value: item.id } : undefined
-  }, [data.company?.cnae, responseCnae])
+  }, [data.company?.cnaeId, responseCnae])
 
   return (
     <Form {...form}>
@@ -124,7 +124,7 @@ export const CompanyInfo = () => {
             />
             <FormField
               control={form.control}
-              name="company.cnae"
+              name="company.cnaeId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -145,7 +145,7 @@ export const CompanyInfo = () => {
                       isLoading={isLoadingCnaes}
                       className="w-full"
                       contentClassName="w-[var(--radix-popover-trigger-width)]"
-                      placeholder="Todos os ramos de atuação"
+                      placeholder="Todos os CNAEs"
                       emptyMessage="Nenhum CNAE encontrado."
                       delay={300}
                       shouldFilter={false}

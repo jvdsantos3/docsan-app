@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import { BranchesActivityRowActions } from './branches-activity-row-actions'
+import { RegistryTypesRowActions } from './registry-types-row-actions'
 import { OrderButton } from '@/components/tables/order-button'
 import { ArrowUpDown } from 'lucide-react'
 import type { GetBranchesActivityResponse } from '@/types/http/get-branches-activity-response'
@@ -55,7 +55,7 @@ export const columns: ColumnDef<GetBranchesActivityResponse['branchesActivity'][
       cell: ({ row }) => {
         return (
           <div className="text-center">
-            <BranchesActivityRowActions row={row} />
+            <RegistryTypesRowActions row={row} />
           </div>
         )
       },

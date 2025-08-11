@@ -8,8 +8,6 @@ import {
 import { useCreateBranchActivity } from '@/http/use-create-branch-activity'
 import type { CreateBranchActivityRequest } from '@/types/http/create-branch-activity-request'
 import { toast } from 'sonner'
-import { useAuth } from '@/hooks/use-auth'
-import { useProfile } from '@/http/use-profile'
 import { BranchActivityForm } from '../forms/branch-activity-form'
 
 type CreateBranchActivityDialogProps = {
@@ -21,27 +19,19 @@ export const CreateBranchActivityDialog = ({
   open,
   onOpenChange,
 }: CreateBranchActivityDialogProps) => {
-  const { user } = useAuth()
-  const { data: profile } = useProfile({ enabled: !!user })
   const { mutateAsync: createBranchActivity, error: createError } =
     useCreateBranchActivity()
 
   const handleCreateBranchActivity = async (
     data: CreateBranchActivityRequest,
   ) => {
-    const companyId = profile?.user?.owner?.companyId
-
-    if (!companyId) {
-      return
-    }
 
     await createBranchActivity({
-      companyId,
       data: {
         name: data.name,
       },
     })
-    toast.success('Área de atuação criada com sucesso!', {
+    toast.success('Ramo de atuação criada com sucesso!', {
       dismissible: true,
       duration: 5000,
       richColors: true,

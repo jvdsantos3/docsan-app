@@ -15,7 +15,7 @@ export function useRegistryTypes(params: GetRegistryTypesSearchParams = {}) {
   }
 
   return useQuery({
-    queryKey: ['get-use-registry-types', parsedParams.data],
+    queryKey: ['get-registry-types', parsedParams.data],
     queryFn: async () => {
       const searchParams = createQueryStringClean(parsedParams.data)
       const response = await api.get<GetRegistryTypesResponse>(

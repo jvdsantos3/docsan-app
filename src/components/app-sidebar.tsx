@@ -25,6 +25,10 @@ const data = {
           title: 'Ramos de atuação',
           url: '/admin/branches-activity',
         },
+        {
+          title: 'Tipos de registro',
+          url: '/admin/registry-types',
+        },
       ],
     },
     {
@@ -37,7 +41,7 @@ const data = {
           url: '/admin/professionals',
         },
       ],
-    }
+    },
   ],
 }
 
