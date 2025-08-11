@@ -155,7 +155,7 @@ export function DocumentTypesRowActions<TData>({
         <AlertDialogContent className="bg-white sm:max-w-2xl">
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Tem certeza que deseja excluir do tipo de documento?
+              Tem certeza que deseja excluir o tipo de documento?
             </AlertDialogTitle>
             <AlertDialogDescription>
               Esta ação não pode ser desfeita. Isso excluirá permanentemente o
