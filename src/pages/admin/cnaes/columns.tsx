@@ -2,6 +2,8 @@ import type { ColumnDef } from '@tanstack/react-table'
 import { CNAEsRowActions } from './cnaes-row-actions'
 import type { GetCnaesResponse } from '@/types/http/get-cnaes-response'
 import { Badge } from '@/components/ui/badge'
+import { OrderButton } from '@/components/tables/order-button'
+import { ArrowUpDown } from 'lucide-react'
 
 export const columns: ColumnDef<GetCnaesResponse['cnaes']['data'][number]>[] = [
   {
@@ -13,7 +15,12 @@ export const columns: ColumnDef<GetCnaesResponse['cnaes']['data'][number]>[] = [
   },
   {
     accessorKey: 'description',
-    header: 'Descrição',
+    header: () => (
+      <OrderButton>
+        Descrição
+        <ArrowUpDown />
+      </OrderButton>
+    ),
     cell: ({ row }) => {
       return row.getValue('description')
     },

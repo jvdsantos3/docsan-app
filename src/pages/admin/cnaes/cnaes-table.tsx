@@ -5,18 +5,22 @@ import { useCnaes } from '@/http/use-cnaes'
 import { parseAsInteger, useQueryState } from 'nuqs'
 import { UpdateCnaeDialog } from './components/update-cnae-dialog'
 import { CnaesFilters } from './cnaes-filters'
+import { useSearchParams } from 'react-router-dom'
 
 export const CNAEsTable = () => {
+  const [searchParams] = useSearchParams()
   const [page] = useQueryState('page', parseAsInteger.withDefault(1))
   const [modal, setModal] = useQueryState('modal')
   const [cnaeId, setCnaeId] = useQueryState('cnaeId')
   const [filter] = useQueryState('filter', { defaultValue: '' })
   const [status] = useQueryState('status', { defaultValue: '' })
+  const order = (searchParams.get('order') as 'asc' | 'desc' | null) ?? 'asc'
   const { data } = useCnaes({
     page,
     filter,
     active:
       status === 'active' ? true : status === 'inactive' ? false : undefined,
+    order,
   })
 
   const handleCloseDialog = () => {
