@@ -67,7 +67,7 @@ export const CnaesFilters = () => {
             ref={inputRef}
             value={inputValue}
             className="peer ps-9 pe-9"
-            placeholder="Buscar por nome..."
+            placeholder="Buscar por código ou descrição..."
             type="text"
             onChange={(e) => setInputValue(e.target.value)}
           />
