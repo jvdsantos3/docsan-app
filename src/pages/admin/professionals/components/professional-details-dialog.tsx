@@ -11,7 +11,7 @@ import { Label } from '@/components/ui/label'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { formatCPFCNPJ, formatZipCode, formatPhone } from '@/utils/format'
-import { getStatusBadge } from './get-status-badge'
+import { getStatusBadge } from '../get-status-badge'
 
 type ProfessionalDetailsDialogProps = {
   open: boolean

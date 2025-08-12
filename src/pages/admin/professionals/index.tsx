@@ -1,6 +1,6 @@
 import { CornerUpLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { ProfessionalsDataTable } from './data-table'
+import { ProfessionalsDataTable } from './professionals-table'
 import { useNavigate } from 'react-router-dom'
 import { ProfessionalsSummary } from './summary'
 

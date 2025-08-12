@@ -1,5 +1,5 @@
 import type { ColumnDef } from '@tanstack/react-table'
-import { ProfessionalDataTableRowActions } from './actions'
+import { ProfessionalDataTableRowActions } from './professionals-row-actions'
 import type { GetProfessionalsResponse } from '@/types/http/get-professionals-response'
 import { SortByButton } from '@/components/tables/sort-by-button'
 import { getStatusBadge } from './get-status-badge'

@@ -1,11 +1,12 @@
 import { useSearchParams } from 'react-router-dom'
 import { columns } from './columns'
-import { ProfessionalsFilters } from './filters'
+import { ProfessionalsFilters } from './professionals-filters'
 import { DataTable } from '@/components/ui/data-table'
-import { ProfessionalsPagination } from './pagination'
-import { ProfessionalDetailsDialog } from './details-dialog'
+import { ProfessionalsPagination } from './professionals-pagination'
+import { ProfessionalDetailsDialog } from './components/professional-details-dialog'
 import { schema } from '@/types/http/get-professionals-search-params'
 import { useProfessionals } from '@/http/use-professionals'
+import { ProfessionalApproveDialog } from './components/professional-approve-dialog'
 
 export const ProfessionalsDataTable = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -59,6 +60,10 @@ export const ProfessionalsDataTable = () => {
       </div>
       <ProfessionalDetailsDialog
         open={modalType === 'details' && !!professionalId}
+        onOpenChange={handleCloseDialog}
+      />
+      <ProfessionalApproveDialog
+        open={modalType === 'approve' && !!professionalId}
         onOpenChange={handleCloseDialog}
       />
     </div>
