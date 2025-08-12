@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import type { ColumnDef } from '@tanstack/react-table'
 import { DocumentDataTableRowActions } from './actions'
 import type { GetDocumentsResponse } from '@/types/http/get-documents-response'
-import { SortByButton } from './sort-by-button'
+import { SortByButton } from '../../components/tables/sort-by-button'
 
 export const columns: ColumnDef<
   GetDocumentsResponse['documents']['data'][number]
@@ -20,7 +20,7 @@ export const columns: ColumnDef<
   },
   {
     accessorKey: 'documentType.name',
-    header: () => <SortByButton sortBy="type">Status</SortByButton>,
+    header: () => <SortByButton sortBy="type">Tipo</SortByButton>,
   },
   {
     accessorKey: 'status',

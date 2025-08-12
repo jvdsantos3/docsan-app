@@ -5,11 +5,9 @@ import { DataTable } from '@/components/ui/data-table'
 import { ProfessionalsPagination } from './pagination'
 import { ProfessionalDetailsDialog } from './details-dialog'
 import { schema } from '@/types/http/get-professionals-search-params'
-// import { useProfile } from '@/http/use-profile'
 import { useProfessionals } from '@/http/use-professionals'
 
 export const ProfessionalsDataTable = () => {
-  // const { data: profile } = useProfile()
   const [searchParams, setSearchParams] = useSearchParams()
   const page = searchParams.get('page') ? Number(searchParams.get('page')) : 1
   const sort = searchParams.get('sort') ?? ''
@@ -25,7 +23,6 @@ export const ProfessionalsDataTable = () => {
     filter,
   })
 
-  // const companyId = profile?.user.owner?.companyId || ''
   const { data: response } = useProfessionals(parsedParams.data)
 
   const modalType = searchParams.get('modal')
@@ -50,19 +47,20 @@ export const ProfessionalsDataTable = () => {
       </div>
 
       <div>
-        <DataTable columns={columns} data={response?.data || []} />
+        <DataTable
+          columns={columns}
+          data={response?.professionals.data || []}
+        />
         <ProfessionalsPagination
           currentPage={page}
-          totalPages={response?.last || 1}
+          totalPages={response?.professionals.last || 1}
           paginationItemsToDisplay={5}
         />
       </div>
-
       <ProfessionalDetailsDialog
         open={modalType === 'details' && !!professionalId}
         onOpenChange={handleCloseDialog}
       />
-
     </div>
   )
 }

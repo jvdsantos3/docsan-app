@@ -223,7 +223,7 @@ export const ProfessionalInfo = () => {
                             isLoading={isLoadingCnaes}
                             className="w-full"
                             contentClassName="w-[var(--radix-popover-trigger-width)]"
-                            placeholder="Todos os ramos de atuação"
+                            placeholder="Todos os CNAEs"
                             emptyMessage="Nenhum CNAE encontrado."
                             delay={300}
                             shouldFilter={false}

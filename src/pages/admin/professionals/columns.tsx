@@ -2,13 +2,14 @@ import { Badge } from '@/components/ui/badge'
 import type { ColumnDef } from '@tanstack/react-table'
 import { ProfessionalDataTableRowActions } from './actions'
 import type { GetProfessionalsResponse } from '@/types/http/get-professionals-response'
+import { SortByButton } from '@/components/tables/sort-by-button'
 
 export const columns: ColumnDef<
   GetProfessionalsResponse['professionals']['data'][number]
 >[] = [
   {
     accessorKey: 'name',
-    header: 'Nome',
+    header: () => <SortByButton sortBy="name">Nome</SortByButton>,
     cell: ({ row }) => {
       return (
         <span className="font-lato font-bold text-gray-900">
@@ -17,12 +18,15 @@ export const columns: ColumnDef<
       )
     },
   },
-  { accessorKey: 'cpf', header: 'CPF/CNPJ' },
+  {
+    accessorKey: 'cpf',
+    header: () => <SortByButton sortBy="cpf">CPF</SortByButton>,
+  },
   {
     accessorKey: 'status',
-    header: 'Status',
+    header: () => <SortByButton sortBy="status">Status</SortByButton>,
     cell: ({ row }) => {
-      if (row.getValue('status') === 'reproved') {
+      if (row.getValue('status') === 'REJECTED') {
         return (
           <Badge
             variant="destructive"
@@ -33,7 +37,7 @@ export const columns: ColumnDef<
         )
       }
 
-      if (row.getValue('status') === 'pending') {
+      if (row.getValue('status') === 'PENDING') {
         return (
           <Badge className="bg-[#F58F00] font-lato font-bold text-white">
             <span>Pendente</span>
@@ -41,10 +45,10 @@ export const columns: ColumnDef<
         )
       }
 
-      if (row.getValue('status') === 'in_correction') {
+      if (row.getValue('status') === 'BANNED') {
         return (
-          <Badge className="bg-blue-600 font-lato font-bold text-white">
-            <span>Em correção</span>
+          <Badge className="bg-red-950 font-lato font-bold text-white">
+            <span>Banido</span>
           </Badge>
         )
       }
@@ -56,10 +60,16 @@ export const columns: ColumnDef<
       )
     },
   },
-  { accessorKey: 'email', header: 'E-mail' },
+  {
+    accessorKey: 'user.email',
+    // header: () => <SortByButton sortBy="email">E-mail</SortByButton>,
+    header: 'E-mail',
+  },
   {
     accessorKey: 'createdAt',
-    header: 'Data de cadastro',
+    header: () => (
+      <SortByButton sortBy="createdAt">Data de cadastro</SortByButton>
+    ),
     cell: ({ row }) => {
       return new Intl.DateTimeFormat('pt-BR', {
         year: 'numeric',

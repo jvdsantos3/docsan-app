@@ -10,6 +10,8 @@ export type Professional = {
   fieldActivity: string
   registry: string
   registryUf: string
+  status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'BANNED'
+  rejectedUntil: Date | null
   cnae: string
   createdAt: Date
   updatedAt: Date

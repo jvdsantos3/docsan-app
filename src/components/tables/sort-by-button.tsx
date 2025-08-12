@@ -4,7 +4,7 @@ import type { PropsWithChildren } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 type SortByButtonProps = PropsWithChildren & {
-  sortBy: 'name' | 'type' | 'status' | 'duedate' | 'createdAt'
+  sortBy: string
 }
 
 export const SortByButton = ({
