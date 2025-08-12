@@ -1,16 +1,13 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { CNAEsRowActions } from './cnaes-row-actions'
+import type { GetCnaesResponse } from '@/types/http/get-cnaes-response'
 
-export const columns: ColumnDef<{
-  id: string
-  cnae: string
-  description: string
-}>[] = [
+export const columns: ColumnDef<GetCnaesResponse['cnaes']['data'][number]>[] = [
   {
-    accessorKey: 'cnae',
+    accessorKey: 'code',
     header: 'CNAE',
     cell: ({ row }) => {
-      return row.getValue('cnae')
+      return row.getValue('code')
     },
   },
   {
@@ -29,6 +26,6 @@ export const columns: ColumnDef<{
           <CNAEsRowActions row={row} />
         </div>
       )
-    }
+    },
   },
 ]

@@ -1,5 +1,5 @@
 import { api } from '@/lib/axios'
-import { keepPreviousData, useQuery,  } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import {
   schema,
   type GetCnaesSearchParams,
@@ -18,9 +18,7 @@ export function useCnaes(params: GetCnaesSearchParams = {}) {
     queryKey: ['get-cnaes', parsedParams.data],
     queryFn: async () => {
       const searchParams = createQueryStringClean(parsedParams.data)
-      const response = await api.get<GetCnaesResponse>(
-        `/cnaes?${searchParams}`,
-      )
+      const response = await api.get<GetCnaesResponse>(`/cnaes?${searchParams}`)
       return response.data
     },
     placeholderData: keepPreviousData,

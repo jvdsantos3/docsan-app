@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { CNAEsTable } from './cnaes-table'
 import { useState } from 'react'
-import { RegisterCnaeDialog } from './register-cnae-dialog'
+import { RegisterCnaeDialog } from './components/register-cnae-dialog'
 
 export const CNAEs = () => {
   const [open, setOpen] = useState(false)
