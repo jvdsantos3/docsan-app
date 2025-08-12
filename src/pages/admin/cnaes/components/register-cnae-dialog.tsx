@@ -22,6 +22,7 @@ export const RegisterCnaeDialog = ({
 
   const handleCreateCnae = async (data: CreateCnaeRequest) => {
     await createCnae(data)
+    onOpenChange(false)
   }
 
   return (

@@ -20,6 +20,7 @@ import { useDeleteCnae } from '@/http/use-delete-cnae'
 import { cn } from '@/lib/utils'
 import type { Row } from '@tanstack/react-table'
 import { Loader2, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import { useQueryState } from 'nuqs'
 import { useState } from 'react'
 import { toast } from 'sonner'
 
@@ -30,7 +31,14 @@ type CNAEsRowActionsProps<TData> = {
 export function CNAEsRowActions<TData>({ row }: CNAEsRowActionsProps<TData>) {
   const cnae = row.original as (typeof cnaes)[number]
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const [, setModal] = useQueryState('modal')
+  const [, setCnaeId] = useQueryState('cnaeId')
   const { isPending, mutateAsync: deleteCnaeFn, error } = useDeleteCnae()
+
+  const handleEditCnae = () => {
+    setModal('edit')
+    setCnaeId(cnae.id)
+  }
 
   const handleDeleteCnae = async (id: string) => {
     await deleteCnaeFn(id)
@@ -50,7 +58,7 @@ export function CNAEsRowActions<TData>({ row }: CNAEsRowActionsProps<TData>) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => {}}>
+          <DropdownMenuItem onClick={handleEditCnae}>
             <Pencil />
             Editar
           </DropdownMenuItem>

@@ -13,8 +13,12 @@ import { Loader2 } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import type { Cnae } from '@/types/cnae'
+import { useEffect } from 'react'
 
 type CnaeFormProps = {
+  cnae?: Cnae
+  isEdit?: boolean
   onSubmit: (data: CnaeFormSchema) => Promise<void>
   onCancel?: () => void
 }
@@ -30,7 +34,12 @@ const schema = z.object({
 
 type CnaeFormSchema = z.infer<typeof schema>
 
-export const CnaeForm = ({ onCancel, onSubmit }: CnaeFormProps) => {
+export const CnaeForm = ({
+  cnae,
+  isEdit,
+  onCancel,
+  onSubmit,
+}: CnaeFormProps) => {
   const form = useForm<CnaeFormSchema>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -48,6 +57,13 @@ export const CnaeForm = ({ onCancel, onSubmit }: CnaeFormProps) => {
   const handleSubmit = async (data: CnaeFormSchema) => {
     await onSubmit(data)
   }
+
+  useEffect(() => {
+    if (cnae) {
+      form.setValue('code', cnae.code)
+      form.setValue('description', cnae.description)
+    }
+  }, [cnae, form])
 
   return (
     <Form {...form}>
@@ -96,7 +112,7 @@ export const CnaeForm = ({ onCancel, onSubmit }: CnaeFormProps) => {
             {form.formState.isSubmitting && (
               <Loader2 className="animate-spin" />
             )}
-            Salvar
+            {isEdit ? 'Salvar alterações' : 'Adicionar'}
           </Button>
         </div>
       </form>

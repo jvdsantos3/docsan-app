@@ -3,10 +3,18 @@ import { columns } from './columns'
 import { CNAEsPagination } from './cnaes-pagination'
 import { useCnaes } from '@/http/use-cnaes'
 import { parseAsInteger, useQueryState } from 'nuqs'
+import { UpdateCnaeDialog } from './components/update-cnae-dialog'
 
 export const CNAEsTable = () => {
   const [page] = useQueryState('page', parseAsInteger.withDefault(1))
+  const [modal, setModal] = useQueryState('modal')
+  const [cnaeId, setCnaeId] = useQueryState('cnaeId')
   const { data } = useCnaes()
+
+  const handleCloseDialog = () => {
+    setModal(null)
+    setCnaeId(null)
+  }
 
   return (
     <div>
@@ -22,6 +30,11 @@ export const CNAEsTable = () => {
           paginationItemsToDisplay={5}
         />
       </div>
+
+      <UpdateCnaeDialog
+        open={modal === 'edit' && !!cnaeId}
+        onOpenChange={handleCloseDialog}
+      />
     </div>
   )
 }
