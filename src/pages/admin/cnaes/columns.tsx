@@ -1,6 +1,7 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { CNAEsRowActions } from './cnaes-row-actions'
 import type { GetCnaesResponse } from '@/types/http/get-cnaes-response'
+import { Badge } from '@/components/ui/badge'
 
 export const columns: ColumnDef<GetCnaesResponse['cnaes']['data'][number]>[] = [
   {
@@ -15,6 +16,21 @@ export const columns: ColumnDef<GetCnaesResponse['cnaes']['data'][number]>[] = [
     header: 'Descrição',
     cell: ({ row }) => {
       return row.getValue('description')
+    },
+  },
+  {
+    accessorKey: 'isActive',
+    header: 'Status',
+    cell: ({ row }) => {
+      return row.getValue('isActive') ? (
+        <Badge className="bg-green-700 font-bold text-white">
+          <span>Ativo</span>
+        </Badge>
+      ) : (
+        <Badge variant="destructive" className="font-bold">
+          <span>Inativo</span>
+        </Badge>
+      )
     },
   },
   {

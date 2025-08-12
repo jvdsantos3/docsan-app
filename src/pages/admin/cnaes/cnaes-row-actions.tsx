@@ -13,13 +13,22 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { cnaes } from '@/data/mockups/cnaes'
 import { useDeleteCnae } from '@/http/use-delete-cnae'
+import { useToggleStatusCnae } from '@/http/use-toggle-status-cnae'
 import { cn } from '@/lib/utils'
+import type { GetCnaesResponse } from '@/types/http/get-cnaes-response'
 import type { Row } from '@tanstack/react-table'
-import { Loader2, MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import {
+  CircleCheckBig,
+  CircleOff,
+  Loader2,
+  MoreHorizontal,
+  Pencil,
+  Trash2,
+} from 'lucide-react'
 import { useQueryState } from 'nuqs'
 import { useState } from 'react'
 import { toast } from 'sonner'
@@ -29,15 +38,38 @@ type CNAEsRowActionsProps<TData> = {
 }
 
 export function CNAEsRowActions<TData>({ row }: CNAEsRowActionsProps<TData>) {
-  const cnae = row.original as (typeof cnaes)[number]
+  const cnae = row.original as GetCnaesResponse['cnaes']['data'][number]
   const [deleteOpen, setDeleteOpen] = useState(false)
   const [, setModal] = useQueryState('modal')
   const [, setCnaeId] = useQueryState('cnaeId')
+  const {
+    mutateAsync: toggleStatusCnaeFn,
+    error: toggleError,
+    isSuccess,
+  } = useToggleStatusCnae()
   const { isPending, mutateAsync: deleteCnaeFn, error } = useDeleteCnae()
 
   const handleEditCnae = () => {
     setModal('edit')
     setCnaeId(cnae.id)
+  }
+
+  const handleToggleStatus = async () => {
+    await toggleStatusCnaeFn({ id: cnae.id })
+
+    if (isSuccess) {
+      toast.success('Status do CNAE alterado com sucesso!', {
+        dismissible: true,
+        duration: 5000,
+      })
+    }
+
+    if (toggleError) {
+      toast.error('Erro ao alterar status do CNAE. Tente novamente.', {
+        dismissible: true,
+        duration: 5000,
+      })
+    }
   }
 
   const handleDeleteCnae = async (id: string) => {
@@ -62,6 +94,20 @@ export function CNAEsRowActions<TData>({ row }: CNAEsRowActionsProps<TData>) {
             <Pencil />
             Editar
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleToggleStatus}>
+            {cnae.isActive ? (
+              <>
+                <CircleOff className="text-gray-700" />
+                Inativar
+              </>
+            ) : (
+              <>
+                <CircleCheckBig className="text-green-600" />
+                Ativar
+              </>
+            )}
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setDeleteOpen(true)}>
             <Trash2 className="text-[#d82020]" />
             Excluir
