@@ -6,7 +6,7 @@ export const schema = z.object({
   order: z.enum(['asc', 'desc']).optional(),
   orderBy: z.string().trim().optional(),
   type: z.string().optional(),
-  status: z.enum(['approved', 'pending', 'reproved', 'in_correction']).optional(),
+  status: z.enum(['APPROVED', 'PENDING', 'REJECTED', 'BANNED']).optional(),
   filter: z.string().trim().optional(),
 })
 

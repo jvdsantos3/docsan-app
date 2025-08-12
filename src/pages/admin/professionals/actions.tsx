@@ -6,13 +6,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import type { Row } from '@tanstack/react-table'
-import {
-  Check,
-  Eye,
-  MoreHorizontal,
-  SquarePen,
-  X,
-} from 'lucide-react'
+import { Ban, Check, Eye, MoreHorizontal, UserCheck, X } from 'lucide-react'
 import { useSearchParams } from 'react-router-dom'
 import type { GetProfessionalsResponse } from '@/types/http/get-professionals-response'
 
@@ -43,17 +37,17 @@ export function ProfessionalDataTableRowActions<TData>({
     })
   }
 
-  function handleReproved() {
+  function handleReject() {
     setSearchParams((prev) => {
-      prev.set('modal', 'reproved')
+      prev.set('modal', 'reject')
       prev.set('professionalId', professional.id)
       return prev
     })
   }
 
-  function handleRequestCorrection() {
+  function handleBan() {
     setSearchParams((prev) => {
-      prev.set('modal', 'request-correction')
+      prev.set('modal', 'ban')
       prev.set('professionalId', professional.id)
       return prev
     })
@@ -72,18 +66,32 @@ export function ProfessionalDataTableRowActions<TData>({
           <Eye className="text-blue-source" />
           Ver detalhes
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleApprove}>
-          <Check className="text-green-700" />
-          Aprovar
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleReproved}>
-          <X className="text-red-700" />
-          Reprovar
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={handleRequestCorrection}>
-          <SquarePen className="text-blue-source" />
-          Solicitar correção
-        </DropdownMenuItem>
+        {professional.status === 'PENDING' && (
+          <>
+            <DropdownMenuItem onClick={handleApprove}>
+              <Check className="text-green-700" />
+              Aprovar
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleReject}>
+              <X className="text-red-700" />
+              Reprovar
+            </DropdownMenuItem>
+          </>
+        )}
+        {professional.status === 'APPROVED' ||
+          (professional.status === 'PENDING' && (
+            <DropdownMenuItem onClick={handleBan}>
+              <Ban className="text-red-950" />
+              Banir
+            </DropdownMenuItem>
+          ))}
+
+        {professional.status === 'BANNED' && (
+          <DropdownMenuItem onClick={handleBan}>
+            <UserCheck className="text-green-700" />
+            Desbanir
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

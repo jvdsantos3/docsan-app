@@ -1,8 +1,9 @@
 export type GetProfessionalsSummaryResponse = {
   summary: {
-    pending: number
-    approved: number
-    reproved: number
+    totalPending: number
+    totalApproved: number
+    totalRejected: number
+    totalBanned: number
     total: number
   }
 }

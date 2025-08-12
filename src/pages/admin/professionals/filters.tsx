@@ -89,16 +89,14 @@ export const ProfessionalsFilters = () => {
             <SelectGroup>
               <SelectLabel>Status</SelectLabel>
               <SelectItem value="all">Todos os status</SelectItem>
-              <SelectItem value="pending">Pendente</SelectItem>
-              <SelectItem value="approved">Aprovado</SelectItem>
-              <SelectItem value="reproved">Reprovado</SelectItem>
-              <SelectItem value="in_correction">Em correção</SelectItem>
+              <SelectItem value="PENDING">Pendente</SelectItem>
+              <SelectItem value="APPROVED">Aprovado</SelectItem>
+              <SelectItem value="REJECTED">Reprovado</SelectItem>
+              <SelectItem value="BANNED">Banido</SelectItem>
             </SelectGroup>
           </SelectContent>
         </Select>
       </div>
-
-      
     </div>
   )
 }

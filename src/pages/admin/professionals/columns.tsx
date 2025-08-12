@@ -1,8 +1,8 @@
-import { Badge } from '@/components/ui/badge'
 import type { ColumnDef } from '@tanstack/react-table'
 import { ProfessionalDataTableRowActions } from './actions'
 import type { GetProfessionalsResponse } from '@/types/http/get-professionals-response'
 import { SortByButton } from '@/components/tables/sort-by-button'
+import { getStatusBadge } from './get-status-badge'
 
 export const columns: ColumnDef<
   GetProfessionalsResponse['professionals']['data'][number]
@@ -26,38 +26,7 @@ export const columns: ColumnDef<
     accessorKey: 'status',
     header: () => <SortByButton sortBy="status">Status</SortByButton>,
     cell: ({ row }) => {
-      if (row.getValue('status') === 'REJECTED') {
-        return (
-          <Badge
-            variant="destructive"
-            className="font-lato font-bold text-white"
-          >
-            <span>Reprovado</span>
-          </Badge>
-        )
-      }
-
-      if (row.getValue('status') === 'PENDING') {
-        return (
-          <Badge className="bg-[#F58F00] font-lato font-bold text-white">
-            <span>Pendente</span>
-          </Badge>
-        )
-      }
-
-      if (row.getValue('status') === 'BANNED') {
-        return (
-          <Badge className="bg-red-950 font-lato font-bold text-white">
-            <span>Banido</span>
-          </Badge>
-        )
-      }
-
-      return (
-        <Badge className="bg-green-700 font-lato font-bold text-white">
-          <span>Aprovado</span>
-        </Badge>
-      )
+      return getStatusBadge(row.getValue('status'))
     },
   },
   {

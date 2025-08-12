@@ -7,12 +7,13 @@ export type Professional = {
   cpf: string
   birthDate: string
   phone: string
-  fieldActivity: string
+  branchActivityId: string
   registry: string
   registryUf: string
   status: 'PENDING' | 'APPROVED' | 'REJECTED' | 'BANNED'
   rejectedUntil: Date | null
-  cnae: string
+  cnaeId: string
+  registryTypeId: string
   createdAt: Date
   updatedAt: Date
   addressId: Address['id']
