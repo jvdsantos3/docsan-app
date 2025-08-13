@@ -1,13 +1,20 @@
 import { api } from '@/lib/axios'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import type { BanProfessionalRequest } from '@/types/http/ban-professional-request '
 import type { Professional } from '@/types/professional'
 
-export function useApproveProfessional() {
+export function useBanProfessional() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (professionalId: Professional['id']) => {
-      await api.patch(`/professionals/${professionalId}/approve`)
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: Professional['id']
+      data: BanProfessionalRequest
+    }) => {
+      await api.patch(`/professionals/${id}/reject`, data)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-professional'] })

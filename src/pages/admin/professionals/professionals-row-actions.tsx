@@ -49,6 +49,8 @@ export function ProfessionalDataTableRowActions<TData>({
     setSearchParams((prev) => {
       prev.set('modal', 'ban')
       prev.set('professionalId', professional.id)
+      prev.set('profesional', professional.status)
+      
       return prev
     })
   }

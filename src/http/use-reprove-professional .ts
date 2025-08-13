@@ -1,13 +1,20 @@
 import { api } from '@/lib/axios'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
+import type { ReproveProfessionalRequest } from '@/types/http/reprove-professional-request '
 import type { Professional } from '@/types/professional'
 
-export function useApproveProfessional() {
+export function useReproveProfessional() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (professionalId: Professional['id']) => {
-      await api.patch(`/professionals/${professionalId}/approve`)
+    mutationFn: async ({
+      id,
+      data,
+    }: {
+      id: Professional['id']
+      data: ReproveProfessionalRequest
+    }) => {
+      await api.patch(`/professionals/${id}/reject`, data)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-professional'] })

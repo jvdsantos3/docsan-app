@@ -3,6 +3,7 @@ import { ProfessionalDataTableRowActions } from './professionals-row-actions'
 import type { GetProfessionalsResponse } from '@/types/http/get-professionals-response'
 import { SortByButton } from '@/components/tables/sort-by-button'
 import { getStatusBadge } from './get-status-badge'
+import { formatCPFCNPJ } from '@/utils/format'
 
 export const columns: ColumnDef<
   GetProfessionalsResponse['professionals']['data'][number]
@@ -21,6 +22,13 @@ export const columns: ColumnDef<
   {
     accessorKey: 'cpf',
     header: () => <SortByButton sortBy="cpf">CPF</SortByButton>,
+    cell: ({ row }) => {
+      return (
+        <span className="font-lato font-bold text-gray-900">
+          {formatCPFCNPJ(row.getValue('cpf'))}
+        </span>
+      )
+    },
   },
   {
     accessorKey: 'status',
