@@ -4,9 +4,9 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
 } from '@/components/ui/navigation-menu'
-import { buttonVariants } from './ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import { Link } from 'react-router-dom'
-import { Logo } from './logo'
+import { Logo } from '@/components/logo'
 import { useAuth } from '@/hooks/use-auth'
 import {
   DropdownMenu,
@@ -14,39 +14,49 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu'
-import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
-import { SignUpSelectorDialog } from './dialogs/sign-up-selector-dialog'
+} from '@/components/ui/dropdown-menu'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { SignUpSelectorDialog } from '@/components/dialogs/sign-up-selector-dialog'
 import { useState } from 'react'
 import { LogOut } from 'lucide-react'
-import { SignOutDialog } from './dialogs/sign-out-dialog'
+import { SignOutDialog } from '@/components/dialogs/sign-out-dialog'
+import type { Role } from '@/types/user'
+import { AppHeaderSkeleton } from './app-header-skeleton'
+
+type NavigationLinkProps = {
+  path: string
+  label: string
+  active?: boolean
+  hidden?: boolean
+  allowedRoles?: Role[]
+}
 
 export const AppHeader = () => {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, user } = useAuth()
   const [open, setOpen] = useState(false)
   const [openSignOutDialog, setOpenSignOutDialog] = useState(false)
 
-  const navigationLinks = [
+  const navigationLinks: NavigationLinkProps[] = [
     {
-      href: '/documents',
+      path: '/documents',
       label: 'Documentos',
-      active: true,
       hidden: !isAuthenticated,
     },
     {
-      href: '/services',
+      path: '/services',
       label: 'Serviços',
-      active: true,
       hidden: !isAuthenticated,
     },
     {
-      href: '/courses',
+      path: '/courses',
       label: 'Cursos',
-      active: true,
       hidden: !isAuthenticated,
     },
-    // { href: '#', label: 'Cadastre-se', active: true, hidden: isAuthenticated },
   ]
+
+  if (user === undefined) {
+    return <AppHeaderSkeleton />
+  }
 
   return (
     <>
@@ -59,14 +69,17 @@ export const AppHeader = () => {
           <NavigationMenu>
             <NavigationMenuList className="gap-2">
               {navigationLinks.map((link, i) => {
-                return link.hidden ? null : (
+                return link.hidden ||
+                  (user &&
+                    link.allowedRoles &&
+                    link.allowedRoles.includes(user.role)) ? null : (
                   <NavigationMenuItem key={i}>
                     <NavigationMenuLink
                       active={link.active}
                       className="font-bold text-base text-blue-900"
                       asChild
                     >
-                      <Link to={link.href}>{link.label}</Link>
+                      <Link to={link.path}>{link.label}</Link>
                     </NavigationMenuLink>
                   </NavigationMenuItem>
                 )
