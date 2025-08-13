@@ -8,6 +8,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '../ui/alert-dialog'
+import { Checkbox } from '../ui/checkbox'
+import { Link } from 'react-router-dom'
+import { Label } from '../ui/label'
+import { useState } from 'react'
 
 type TermsDialogProps = {
   open: boolean
@@ -15,13 +19,15 @@ type TermsDialogProps = {
 }
 
 export const TermsDialog = ({ open, onOpenChange }: TermsDialogProps) => {
+  const [accepted, setAccepted] = useState(false)
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent
-        className="bg-white w-full sm:max-w-md md:max-w-lg lg:max-w-4xl 
-                   max-h-[90vh] flex flex-col"
+        className="bg-white w-full sm:max-w-md md:max-w-lg lg:max-w-5xl 
+                   max-h-[90vh] flex flex-col pt-14 pb-10 px-14 gap-8"
       >
-        <AlertDialogHeader>
+        <AlertDialogHeader className="flex flex-col gap-8">
           <img
             className="w-20 mr-auto mb-4"
             src="/logo-02.svg"
@@ -32,9 +38,9 @@ export const TermsDialog = ({ open, onOpenChange }: TermsDialogProps) => {
           </AlertDialogTitle>
         </AlertDialogHeader>
 
-        <div className="relative bg-blue-50 p-2 rounded-md flex-1 ">
-          <ScrollArea className="flex flex-col max-h-[50vh] px-3 py-4 ">
-            <div className="flex flex-col gap-4">
+        <div className="relative bg-blue-50 py-10 px-6 rounded-md flex-1 mb-4">
+          <ScrollArea className="flex flex-col max-h-[50vh] px-2 backdrop-blur-lg">
+            <div className="flex flex-col gap-8 px-3">
               <h1 className="font-lato font-bold text-lg">
                 What is Lorem Ipsum?
               </h1>
@@ -79,14 +85,38 @@ export const TermsDialog = ({ open, onOpenChange }: TermsDialogProps) => {
                 Lorem Ipsum, "Lorem ipsum dolor sit amet..", comes from a line
                 in section 1.10.32.
               </p>
+              <div className="flex flex-row items-center gap-2">
+                <Checkbox
+                  checked={accepted}
+                  onCheckedChange={(checked) => setAccepted(!!checked)}
+                  className="data-[state=checked]:bg-blue-source data-[state=checked]:border-blue-source"
+                />
+                <Label className="font-lato text-body-sm text-gray-300">
+                  Li e concordo com os{' '}
+                  <Link to={'#'} className="text-blue-source font-bold">
+                    Termos de Uso e Politica de privacidade
+                  </Link>
+                </Label>
+              </div>
             </div>
-            <ScrollBar />
+            <ScrollBar orientation="vertical" />
           </ScrollArea>
         </div>
 
         <AlertDialogFooter>
-          <AlertDialogCancel disabled>Cancelar</AlertDialogCancel>
-          <AlertDialogAction>Aceitar</AlertDialogAction>
+          <AlertDialogCancel className="font-lato text-gray-400 w-32 h-10 rounded-2xl">
+            Cancelar
+          </AlertDialogCancel>
+          <AlertDialogAction
+            disabled={!accepted}
+            className={`font-lato font-bold w-32 h-10 rounded-2xl ${
+              accepted
+                ? 'bg-blue-source text-white hover:bg-blue-600'
+                : 'bg-gray-400'
+            }`}
+          >
+            Aceitar
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
