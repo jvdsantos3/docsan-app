@@ -1,4 +1,3 @@
-import { useRef, useState, useEffect } from 'react'
 import { ScrollArea, ScrollBar } from '../ui/scroll-area'
 import {
   AlertDialog,
