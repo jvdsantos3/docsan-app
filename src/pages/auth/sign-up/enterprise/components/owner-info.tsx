@@ -20,6 +20,8 @@ import { format, useMask } from '@react-input/mask'
 import { PasswordInput } from '@/components/ui/password-input'
 import { z } from 'zod'
 import { api } from '@/lib/axios'
+import { useState } from 'react'
+import { TermsDialog } from '@/components/dialogs/terms-dialog'
 
 const ownerInfoSchema = enterpriseSignUpSchema.pick({
   owner: true,
@@ -39,6 +41,7 @@ const phoneInputOptions = {
 }
 
 export const ResponsibleInfo = () => {
+  const [open, setOpen] = useState(false)
   const navigate = useNavigate()
   const {
     data: contextData,
@@ -90,137 +93,142 @@ export const ResponsibleInfo = () => {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="space-y-8">
-          <Button
-            type="button"
-            variant="ghost"
-            className={cn('text-blue-source')}
-            onClick={previousStep}
-          >
-            <CornerUpLeft /> Voltar
-          </Button>
-          <div className="space-y-6">
-            <FormField
-              control={form.control}
-              name="owner.name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    Nome completo do responsável legal
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="owner.cpf"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    CPF do responsável legal
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} ref={cpfInputRef} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="owner.phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    Telefone
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} ref={phoneInputRef} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="owner.email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    E-mail
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="owner.password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    Senha
-                  </FormLabel>
-                  <FormControl>
-                    <PasswordInput {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="terms"
-              render={({ field }) => (
-                <FormItem>
-                  <FormItem className="flex flex-row items-center gap-2">
-                    <FormControl>
-                      <Checkbox
-                        onCheckedChange={(checked) => field.onChange(checked)}
-                      />
-                    </FormControl>
-                    <FormLabel className="font-lato text-gray-300">
-                      Li e concordo com os{' '}
-                      <Link
-                        to={'/terms'}
-                        className="text-blue-source font-bold"
-                      >
-                        Termos de Uso
-                      </Link>
-                    </FormLabel>
-                  </FormItem>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          <div className="flex gap-3 justify-between items-end">
-            <p className="font-lato text-sm text-gray-600 text-center">
-              Já possui uma conta?{' '}
-              <Link to={'/sign-in'} className="text-blue-source font-bold">
-                Faça login!
-              </Link>
-            </p>
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="space-y-8">
             <Button
-              type="submit"
-              className="font-bold text-base rounded-xl"
-              size="lg"
+              type="button"
+              variant="ghost"
+              className={cn('text-blue-source')}
+              onClick={previousStep}
             >
-              Cadastrar
+              <CornerUpLeft /> Voltar
             </Button>
+            <div className="space-y-6">
+              <FormField
+                control={form.control}
+                name="owner.name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-lato text-gray-300">
+                      Nome completo do responsável legal
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="owner.cpf"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-lato text-gray-300">
+                      CPF do responsável legal
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} ref={cpfInputRef} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="owner.phone"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-lato text-gray-300">
+                      Telefone
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} ref={phoneInputRef} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="owner.email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-lato text-gray-300">
+                      E-mail
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="owner.password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-lato text-gray-300">
+                      Senha
+                    </FormLabel>
+                    <FormControl>
+                      <PasswordInput {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="terms"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormItem className="flex flex-row items-center gap-2">
+                      <FormControl>
+                        <Checkbox
+                          onCheckedChange={(checked) => field.onChange(checked)}
+                        />
+                      </FormControl>
+                      <FormLabel className="font-lato text-gray-300">
+                        Li e concordo com os{' '}
+                        <Link
+                          to={'#'}
+                          onClick={() => setOpen(true)}
+                          className="text-blue-source font-bold"
+                        >
+                          Termos de Uso
+                        </Link>
+                      </FormLabel>
+                    </FormItem>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="flex gap-3 justify-between items-end">
+              <p className="font-lato text-sm text-gray-600 text-center">
+                Já possui uma conta?{' '}
+                <Link to={'/sign-in'} className="text-blue-source font-bold">
+                  Faça login!
+                </Link>
+              </p>
+              <Button
+                type="submit"
+                className="font-bold text-base rounded-xl"
+                size="lg"
+              >
+                Cadastrar
+              </Button>
+            </div>
           </div>
-        </div>
-      </form>
-    </Form>
+        </form>
+      </Form>
+
+      <TermsDialog open={open} onOpenChange={setOpen} />
+    </>
   )
 }
