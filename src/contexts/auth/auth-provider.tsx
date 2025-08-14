@@ -114,6 +114,72 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       })
   }
 
+  async function loginGoogle(access_token: string) {
+    await api
+      .post('/sessions/google', { token: access_token })
+      .then((res) => {
+        const accessToken = res.data.access_token
+
+        storeTokens(accessToken)
+        setToken(accessToken)
+
+        const payload: Pick<AccessTokenPayload, 'sub' | 'role'> =
+          jwtDecode(accessToken)
+
+        setIsAuthenticated(true)
+
+        toast.dismiss()
+
+        if (payload.role === 'ADMIN') {
+          navigate('/admin/cnae')
+        } else if (payload.role === 'PROFESSIONAL') {
+          navigate('/services')
+        } else {
+          navigate('/documents')
+        }
+      })
+      .catch((err) => {
+        if (err.response?.status === 401) {
+          let message = ''
+          let description = ''
+
+          switch (err.response.data.error) {
+            case 'Unauthorized':
+              message = 'Usuário não localizado'
+              description =
+                'Para realizar o acesso é necessário realizar o cadastro.'
+              break
+          }
+
+          toast.error(message, {
+            position: 'top-center',
+            duration: 3000,
+            description,
+            richColors: true,
+          })
+          return
+        }
+
+        if (err.response?.status >= 500) {
+          toast.error('Erro interno do servidor.', {
+            position: 'top-center',
+            duration: 3000,
+            description: 'Parece que houve um erro ao tentar fazer login.',
+            richColors: true,
+          })
+          return
+        }
+
+        toast.error('Erro desconhecido.', {
+          position: 'top-center',
+          duration: 3000,
+          description: 'Parece que estamos enfrentando um problema.',
+          richColors: true,
+        })
+        return
+      })
+  }
+
   async function logout() {
     await api.delete('/sessions')
 
@@ -160,6 +226,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       value={{
         registerProfessional,
         login,
+        loginGoogle,
         logout,
         isAuthenticated,
         user: authUser,
