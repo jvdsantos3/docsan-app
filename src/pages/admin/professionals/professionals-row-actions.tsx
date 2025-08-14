@@ -49,8 +49,8 @@ export function ProfessionalDataTableRowActions<TData>({
     setSearchParams((prev) => {
       prev.set('modal', 'ban')
       prev.set('professionalId', professional.id)
-      prev.set('profesional', professional.status)
-      
+      prev.set('professionalStatus', professional.status)
+
       return prev
     })
   }
@@ -80,13 +80,13 @@ export function ProfessionalDataTableRowActions<TData>({
             </DropdownMenuItem>
           </>
         )}
-        {professional.status === 'APPROVED' ||
-          (professional.status === 'PENDING' && (
-            <DropdownMenuItem onClick={handleBan}>
-              <Ban className="text-red-950" />
-              Banir
-            </DropdownMenuItem>
-          ))}
+        {(professional.status === 'APPROVED' ||
+          professional.status === 'PENDING') && (
+          <DropdownMenuItem onClick={handleBan}>
+            <Ban className="text-red-950" />
+            Banir
+          </DropdownMenuItem>
+        )}
 
         {professional.status === 'BANNED' && (
           <DropdownMenuItem onClick={handleBan}>

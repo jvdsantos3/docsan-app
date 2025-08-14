@@ -1,9 +1,9 @@
 import { api } from '@/lib/axios'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import type { ReproveProfessionalRequest } from '@/types/http/reprove-professional-request '
+import type { ChangeBanProfessionalRequest } from '@/types/http/ban-professional-request'
 import type { Professional } from '@/types/professional'
 
-export function useReproveProfessional() {
+export function useChangeBanProfessional() {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -12,9 +12,9 @@ export function useReproveProfessional() {
       data,
     }: {
       id: Professional['id']
-      data: ReproveProfessionalRequest
+      data: ChangeBanProfessionalRequest
     }) => {
-      await api.patch(`/professionals/${id}/reject`, data)
+      await api.patch(`/professionals/${id}/change-ban`, data)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['get-professional'] })

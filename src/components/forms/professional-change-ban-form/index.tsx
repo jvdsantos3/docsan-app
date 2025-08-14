@@ -11,26 +11,28 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Loader2 } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import {
-  professionalBanFormSchema,
-  type ProfessionalBanFormSchema,
+  professionalChangeBanFormSchema,
+  type ProfessionalChangeBanFormSchema,
 } from './schema'
 import type { Professional } from '@/types/professional'
 import { useEffect } from 'react'
 import { Textarea } from '@/components/ui/textarea'
 
-type ProfessionalBanFormProps = {
+type ProfessionalChangeBanFormProps = {
   professional?: Professional
   onCancel?: () => void
-  onSubmit: (data: ProfessionalBanFormSchema) => Promise<void>
+  onSubmit: (data: ProfessionalChangeBanFormSchema) => Promise<void>
+  professionalIsBanned: boolean
 }
 
-export const ProfessionalBanForm = ({
+export const ProfessionalChangeBanForm = ({
   professional,
   onCancel,
   onSubmit,
-}: ProfessionalBanFormProps) => {
-  const form = useForm<ProfessionalBanFormSchema>({
-    resolver: zodResolver(professionalBanFormSchema),
+  professionalIsBanned,
+}: ProfessionalChangeBanFormProps) => {
+  const form = useForm<ProfessionalChangeBanFormSchema>({
+    resolver: zodResolver(professionalChangeBanFormSchema),
     defaultValues: {
       reason: '',
     },
@@ -42,7 +44,7 @@ export const ProfessionalBanForm = ({
     }
   }
 
-  const handleSubmit = async (data: ProfessionalBanFormSchema) => {
+  const handleSubmit = async (data: ProfessionalChangeBanFormSchema) => {
     await onSubmit(data)
   }
 
@@ -64,10 +66,10 @@ export const ProfessionalBanForm = ({
               name="reason"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Digite o motivo da reprovação do profissional</FormLabel>
+                  <FormLabel>{`Digite o motivo do ${professionalIsBanned ? 'desbanimento' : 'banimento'} do profissional`}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder="Dê um motivo para a reprovação do profissional"
+                      placeholder={`Dê um motivo para o ${professionalIsBanned ? 'desbanimento' : 'banimento'} do profissional`}
                       {...field}
                     />
                   </FormControl>
@@ -82,11 +84,19 @@ export const ProfessionalBanForm = ({
           <Button type="button" variant="outline" onClick={handleCancel}>
             Cancelar
           </Button>
-          <Button type="submit" disabled={form.formState.isSubmitting}>
+          <Button
+            type="submit"
+            className={
+              professionalIsBanned
+                ? 'bg-green-700 hover:bg-green-800'
+                : 'bg-red-600 hover:bg-red-700'
+            }
+            disabled={form.formState.isSubmitting}
+          >
             {form.formState.isSubmitting && (
               <Loader2 className="animate-spin" />
             )}
-            Reprovar
+            {professionalIsBanned ? 'Desbanir' : 'Banir'}
           </Button>
         </div>
       </form>

@@ -64,7 +64,9 @@ export const ProfessionalReproveForm = ({
               name="reason"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Digite o motivo da reprovação do profissional</FormLabel>
+                  <FormLabel>
+                    Digite o motivo da reprovação do profissional
+                  </FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Dê um motivo para a reprovação do profissional"

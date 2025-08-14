@@ -8,8 +8,8 @@ import {
 import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import { ProfessionalReproveForm } from '@/components/forms/professional-reprove-form'
-import type { ReproveProfessionalRequest } from '@/types/http/reprove-professional-request '
-import { useReproveProfessional } from '@/http/use-reprove-professional '
+import type { ReproveProfessionalRequest } from '@/types/http/reprove-professional-request'
+import { useReproveProfessional } from '@/http/use-reprove-professional'
 
 type ProfessionalReproveDialogProps = {
   open: boolean
@@ -53,7 +53,9 @@ export const ProfessionalReproveDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-white">
         <DialogHeader>
-          <DialogTitle>Tem certeza que deseja reprovar o profissional?</DialogTitle>
+          <DialogTitle>
+            Tem certeza que deseja reprovar o profissional?
+          </DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
 

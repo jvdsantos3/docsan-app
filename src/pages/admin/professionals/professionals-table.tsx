@@ -8,7 +8,7 @@ import { schema } from '@/types/http/get-professionals-search-params'
 import { useProfessionals } from '@/http/use-professionals'
 import { ProfessionalApproveDialog } from './components/professional-approve-dialog'
 import { ProfessionalReproveDialog } from './components/professional-reprove-dialog'
-import { ProfessionalBanDialog } from './components/professional-ban-dialog'
+import { ProfessionalChangeBanDialog } from './components/professional-ban-dialog'
 
 export const ProfessionalsDataTable = () => {
   const [searchParams, setSearchParams] = useSearchParams()
@@ -74,7 +74,7 @@ export const ProfessionalsDataTable = () => {
         onOpenChange={handleCloseDialog}
       />
 
-      <ProfessionalBanDialog
+      <ProfessionalChangeBanDialog
         open={modalType === 'ban' && !!professionalId}
         onOpenChange={handleCloseDialog}
       />
