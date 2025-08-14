@@ -18,6 +18,7 @@ import { CNAEs } from './pages/admin/cnaes'
 import { Professionals } from './pages/admin/professionals'
 import { Chat } from './pages/chat'
 import { RegistryTypes } from './pages/admin/registry-types'
+import { Services as ServicesManage } from './pages/admin/services'
 
 export function Router() {
   return (
@@ -36,6 +37,10 @@ export function Router() {
         <Route path="cnae" element={<CNAEs />} />
         <Route path="registry-types" element={<RegistryTypes />} />
         <Route path="professionals" element={<Professionals />} />
+
+        <Route path="services">
+          <Route index element={<ServicesManage />}></Route>
+        </Route>
       </Route>
 
       <Route path="/" element={<RootLayout />}>
