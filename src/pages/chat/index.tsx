@@ -19,6 +19,9 @@ import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
 import { z } from 'zod'
 import Markdown from 'react-markdown'
+import { useQueryState } from 'nuqs'
+
+type StoredMessage = { text: string | null; type: 'question' | 'answer' }
 
 const schema = z.object({
   prompt: z.string().trim().min(1),
@@ -37,29 +40,35 @@ export const Chat = () => {
   } = useForm<ChatSchema>({
     resolver: zodResolver(schema),
   })
-  const { isAuthenticated } = useAuth()
+  const storedMessages = localStorage.getItem('messages')
+    ? JSON.parse(localStorage.getItem('messages')!)
+    : []
+  const storedQuestionCounter = localStorage.getItem('questionsCounter')
+    ? parseInt(localStorage.getItem('questionsCounter')!)
+    : 0
+
+  const { isAuthenticated, user } = useAuth()
+  const [question] = useQueryState('question', { defaultValue: '' })
+  const [loading, setLoading] = useState(false)
   const [openMaxQuestionLimit, setOpenMaxQuestionLimit] = useState(false)
   const [questionsCounter, setQuestionsCounter] = useState(
-    localStorage.getItem('questionsCounter')
-      ? parseInt(localStorage.getItem('questionsCounter')!)
-      : 0,
+    storedQuestionCounter,
   )
-  const [messages, setMessages] = useState<
-    { text: string | null; type: 'question' | 'answer' }[]
-  >(
-    localStorage.getItem('messages')
-      ? JSON.parse(localStorage.getItem('messages')!)
-      : [],
-  )
+  const [messages, setMessages] = useState<StoredMessage[]>(storedMessages)
 
   const sendMessage = async (prompt: string) => {
-    if (!isAuthenticated && questionsCounter >= MAX_QUESTION_LIMIT) {
+    if (
+      user === null &&
+      !isAuthenticated &&
+      questionsCounter >= MAX_QUESTION_LIMIT
+    ) {
       setOpenMaxQuestionLimit(true)
       return
     }
 
     setMessages((prev) => [...prev, { text: prompt, type: 'question' }])
     setValue('prompt', '')
+    setLoading(true)
 
     await api
       .post<ChatResponse>(
@@ -77,10 +86,12 @@ export const Chat = () => {
           setOpenMaxQuestionLimit(true)
         }
       })
+
+    setLoading(false)
   }
 
-  const onSubmit = ({ prompt }: ChatSchema) => {
-    sendMessage(prompt)
+  const onSubmit = async ({ prompt }: ChatSchema) => {
+    await sendMessage(prompt)
   }
 
   useEffect(() => {
@@ -90,6 +101,10 @@ export const Chat = () => {
   useEffect(() => {
     localStorage.setItem('questionsCounter', questionsCounter.toString())
   }, [questionsCounter])
+
+  useEffect(() => {
+    if (question) setValue('prompt', question)
+  }, [question, setValue])
 
   return (
     <div className="space-y-6 py-6 h-[calc(100vh-64px)]">
@@ -118,6 +133,12 @@ export const Chat = () => {
                   )}
                 </div>
               ))}
+              {loading && (
+                <div className="flex items-center gap-2">
+                  <Loader2 className="animate-spin" />
+                  Pensando...
+                </div>
+              )}
             </div>
           ) : (
             <div className="h-full flex flex-col gap-8 items-center justify-center">
@@ -131,6 +152,7 @@ export const Chat = () => {
             <div className="relative w-full">
               <Input
                 {...register('prompt')}
+                autoFocus
                 placeholder="Digite aqui a sua dúvida..."
                 className={cn(
                   'h-[3.5rem] w-full pl-4 pr-36 py-2 border rounded-lg text-gray-800 text-body-sm',

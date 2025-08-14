@@ -11,7 +11,7 @@ import { useProfile } from '@/http/use-profile'
 
 export type AuthProviderProps = PropsWithChildren
 
-type AccessTokenPayload = {
+export type AccessTokenPayload = {
   sub: string
   role: Role
   iat: number
@@ -25,12 +25,13 @@ export interface LoginInput {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const navigate = useNavigate()
   const [authUser, setAuthUser] = useState<User | null>()
   const [token, setToken] = useState<string | null>(getToken())
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const { data: profileData } = useProfile({ enabled: isAuthenticated })
-
-  const navigate = useNavigate()
+  const { data: profileData, isLoading: isLoadingProfile } = useProfile({
+    enabled: !!token,
+  })
 
   async function registerProfessional(data: ProfessionalSignUpFormSchema) {
     await api
@@ -43,11 +44,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       })
   }
 
-  function isTokenExpired(token: string): boolean {
-    const payload: AccessTokenPayload = jwtDecode(token)
-    const currentTime = Math.floor(Date.now() / 1000)
-    return payload.exp < currentTime
-  }
+  // function isTokenExpired(token: string): boolean {
+  //   const payload: AccessTokenPayload = jwtDecode(token)
+  //   const currentTime = Math.floor(Date.now() / 1000)
+  //   return payload.exp < currentTime
+  // }
 
   async function login(data: LoginInput) {
     await api
@@ -125,35 +126,18 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }
 
   useEffect(() => {
-    const token = getToken()
-
-    if (!token) {
-      setIsAuthenticated(false)
-      setAuthUser(null)
-      return
-      // redirect
-    }
-
-    if (token && isTokenExpired(token)) {
-      setIsAuthenticated(false)
-      setAuthUser(null)
-      return
-      // redirect
-    }
-
-    setIsAuthenticated(true)
-    setToken(token)
-  }, [])
-
-  useEffect(() => {
-    if (isAuthenticated && profileData) {
+    if (profileData) {
       setAuthUser({
         ...profileData.user,
       })
-    } else {
-      setAuthUser(null)
+      setIsAuthenticated(true)
     }
-  }, [isAuthenticated, profileData])
+
+    if (!profileData && !isLoadingProfile) {
+      setAuthUser(null)
+      setIsAuthenticated(false)
+    }
+  }, [isLoadingProfile, profileData])
 
   return (
     <AuthContext.Provider
