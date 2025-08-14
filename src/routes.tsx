@@ -19,6 +19,7 @@ import { Professionals } from './pages/admin/professionals'
 import { Chat } from './pages/chat'
 import { RegistryTypes } from './pages/admin/registry-types'
 import { ProtectedLayout } from './protected-layout'
+import { RoleProtectedLayout } from './role-protected-layout'
 
 export function Router() {
   return (
@@ -32,13 +33,6 @@ export function Router() {
         </Route>
       </Route>
 
-      <Route path="admin" element={<AdminLayout />}>
-        <Route path="branches-activity" element={<BranchesActivity />} />
-        <Route path="cnae" element={<CNAEs />} />
-        <Route path="registry-types" element={<RegistryTypes />} />
-        <Route path="professionals" element={<Professionals />} />
-      </Route>
-
       <Route element={<RootLayout />}>
         <Route index element={<LandingPage />} />
         <Route path="chat" element={<Chat />} />
@@ -47,8 +41,19 @@ export function Router() {
           <Route index element={<Services />} />
           <Route path=":serviceId" element={<ServiceDetails />} />
         </Route>
+      </Route>
 
-        <Route element={<ProtectedLayout />}>
+      <Route element={<ProtectedLayout />}>
+        <Route element={<RoleProtectedLayout allowedRoles={['ADMIN']} />}>
+          <Route path="admin" element={<AdminLayout />}>
+            <Route path="branches-activity" element={<BranchesActivity />} />
+            <Route path="cnae" element={<CNAEs />} />
+            <Route path="registry-types" element={<RegistryTypes />} />
+            <Route path="professionals" element={<Professionals />} />
+          </Route>
+        </Route>
+
+        <Route element={<RootLayout />}>
           <Route path="documents">
             <Route index element={<Documents />} />
             <Route path="new" element={<NewDocument />} />
@@ -56,7 +61,10 @@ export function Router() {
 
           <Route path="document-types">
             <Route index element={<DocumentTypes />} />
-            <Route path=":typeId/versions" element={<DocumentTypesVersions />} />
+            <Route
+              path=":typeId/versions"
+              element={<DocumentTypesVersions />}
+            />
           </Route>
         </Route>
       </Route>

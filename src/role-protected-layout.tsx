@@ -1,5 +1,5 @@
 import { type PropsWithChildren } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import type { Role } from './types/user'
 import { useAuth } from './hooks/use-auth'
 
@@ -11,7 +11,6 @@ export const RoleProtectedLayout = ({
   allowedRoles,
 }: RoleProtectedLayoutProps) => {
   const { user } = useAuth()
-  const navigate = useNavigate()
 
   if (user === undefined) {
     return <>Carregando...</>
