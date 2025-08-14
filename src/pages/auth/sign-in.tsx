@@ -89,7 +89,7 @@ export const SignIn = () => {
               />
 
               <div className="text-right">
-                <Link to={'#'} className="text-blue-source font-lato text-xs ">
+                <Link to={'/forgot-password'} className="text-blue-source font-lato text-xs ">
                   Esqueceu sua senha?
                 </Link>
               </div>
