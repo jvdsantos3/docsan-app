@@ -202,16 +202,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }
 
   useEffect(() => {
-    if (profileData) {
-      setAuthUser({
-        ...profileData.user,
-      })
-      setIsAuthenticated(true)
-    }
-
-    if (token && !profileData && !isLoadingProfile) {
+    if (!token) {
       setAuthUser(null)
       setIsAuthenticated(false)
+    }
+
+    if (token) {
+      if (profileData) {
+        setAuthUser({
+          ...profileData.user,
+        })
+        setIsAuthenticated(true)
+      }
+
+      if (!profileData && !isLoadingProfile) {
+        setAuthUser(null)
+        setIsAuthenticated(false)
+      }
     }
   }, [isLoadingProfile, profileData, token])
 
