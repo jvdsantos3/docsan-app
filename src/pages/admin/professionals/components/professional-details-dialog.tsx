@@ -125,12 +125,14 @@ export const ProfessionalDetailsDialog = ({
                     {response.professional.registryUf}
                   </p>
                 </div>
-                <div className="flex flex-col gap-2 ">
-                  <Label className="text-gray-600">CNAE</Label>
-                  <p className="text-sm font-medium">
-                    {response.professional.cnae.code}
-                  </p>
-                </div>
+                {response.professional.cnae?.code && (
+                  <div className="flex flex-col gap-2 ">
+                    <Label className="text-gray-600">CNAE</Label>
+                    <p className="text-sm font-medium">
+                      {response.professional.cnae.code}
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
 

@@ -199,11 +199,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       setIsAuthenticated(true)
     }
 
-    if (!profileData && !isLoadingProfile) {
+    if (token && !profileData && !isLoadingProfile) {
       setAuthUser(null)
       setIsAuthenticated(false)
     }
-  }, [isLoadingProfile, profileData])
+  }, [isLoadingProfile, profileData, token])
 
   return (
     <AuthContext.Provider

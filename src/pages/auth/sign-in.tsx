@@ -16,8 +16,8 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuth } from '@/hooks/use-auth'
 import { SignUpSelectorDialog } from '@/components/dialogs/sign-up-selector-dialog'
-import { GoogleLogin } from '@react-oauth/google'
-import { toast } from 'sonner'
+// import { GoogleLogin } from '@react-oauth/google'
+// import { toast } from 'sonner'
 
 const signInFormSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -29,7 +29,7 @@ type SignInFormSchema = z.infer<typeof signInFormSchema>
 export const SignIn = () => {
   const [open, setOpen] = useState(false)
 
-  const { login, loginGoogle } = useAuth()
+  const { login } = useAuth()
 
   const form = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
@@ -104,7 +104,7 @@ export const SignIn = () => {
             </form>
           </Form>
 
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <p className="font-lato text-sm text-gray-600">Ou acesse usando</p>
             <GoogleLogin
               shape="circle"
@@ -133,7 +133,7 @@ export const SignIn = () => {
                 })
               }}
             />
-          </div>
+          </div> */}
         </div>
 
         <p className="font-lato text-sm text-gray-600 text-center">
