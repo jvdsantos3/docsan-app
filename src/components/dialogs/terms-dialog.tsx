@@ -25,9 +25,9 @@ export const TermsDialog = ({ open, onOpenChange }: TermsDialogProps) => {
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent
         className="bg-white w-full sm:max-w-md md:max-w-lg lg:max-w-5xl 
-                   max-h-[90vh] flex flex-col pt-14 pb-10 px-14 gap-8"
+                   max-h-[90vh] flex flex-col pt-14 pb-10 px-14 gap-6"
       >
-        <AlertDialogHeader className="flex flex-col gap-8">
+        <AlertDialogHeader className="flex flex-col gap-6">
           <img
             className="w-20 mr-auto mb-4"
             src="/logo-02.svg"
@@ -38,9 +38,9 @@ export const TermsDialog = ({ open, onOpenChange }: TermsDialogProps) => {
           </AlertDialogTitle>
         </AlertDialogHeader>
 
-        <div className="relative bg-blue-50 py-10 px-6 rounded-md flex-1 mb-4">
-          <ScrollArea className="flex flex-col max-h-[50vh] px-2 backdrop-blur-lg">
-            <div className="flex flex-col gap-8 px-3">
+        <div className="relative bg-blue-50 px-6 py-2 rounded-md flex-1 mb-4">
+          <ScrollArea className="flex flex-col py-10 max-h-[40vh] px-2 backdrop-blur-lg">
+            <div className="flex flex-col  gap-8 px-3">
               <h1 className="font-lato font-bold text-lg">
                 What is Lorem Ipsum?
               </h1>

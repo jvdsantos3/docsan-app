@@ -1,4 +1,3 @@
-// import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import {
   Form,
@@ -14,12 +13,16 @@ import { Link, useNavigate } from 'react-router-dom'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CornerUpLeft, Send } from 'lucide-react'
+import { useForgotPassword } from '@/http/use-forgot-password'
+import { toast } from 'sonner'
 
 const forgotPasswordFormSchema = z.object({
   email: z.string().email('E-mail inválido'),
 })
 
 type ForgotPasswordFormSchema = z.infer<typeof forgotPasswordFormSchema>
+
+
 
 export const ForgotPassword = () => {
   const form = useForm<ForgotPasswordFormSchema>({
@@ -29,9 +32,19 @@ export const ForgotPassword = () => {
     },
   })
 
-  // async function handleForgotPassword(data: ForgotPasswordFormSchema) {
-  //   await forgotPassword(data)
-  // }
+  const { mutateAsync: forgotPassword, error: createError } =
+    useForgotPassword()
+
+  async function handleForgotPassword(data: ForgotPasswordFormSchema) {
+    await forgotPassword(data)
+  }
+
+  if (createError) {
+    toast.error('Erro ao enviar email de recuperação de senha. Tente novamente.', {
+      dismissible: true,
+      duration: 5000,
+    })
+  }
 
   const navigate = useNavigate()
 
@@ -64,7 +77,7 @@ export const ForgotPassword = () => {
 
           <Form {...form}>
             <form
-              // onSubmit={form.handleSubmit(handleForgotPassword)}
+              onSubmit={form.handleSubmit(handleForgotPassword)}
               className="space-y-4"
             >
               <FormField

@@ -1,42 +1,12 @@
 import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { CornerUpLeft } from 'lucide-react'
-import { PasswordInput } from '@/components/ui/password-input'
-
-const resetPasswordFormSchema = z.object({
-  password: z.string().min(1, 'Senha obrigatória'),
-  password_confirm: z.string().min(1, 'Senha obrigatória'),
-})
-
-type ResetPasswordFormSchema = z.infer<typeof resetPasswordFormSchema>
+import { ResetPasswordForm } from '@/components/forms/reset-password-form'
 
 export const ResetPassword = () => {
-  const form = useForm<ResetPasswordFormSchema>({
-    resolver: zodResolver(resetPasswordFormSchema),
-    defaultValues: {
-      password: '',
-      password_confirm: ''
-    },
-  })
-  // const { token } = useParams<{ token: string }>()
-
-  // async function handleResetPassword(data: ResetPasswordFormSchema) {
-  //   await resetPassword(data, token)
-  // }
+  const { token } = useParams<{ token: string }>()
 
   const navigate = useNavigate()
-  
 
   return (
     <>
@@ -64,47 +34,7 @@ export const ResetPassword = () => {
             </p>
           </div>
 
-          <Form {...form}>
-            <form
-              // onSubmit={form.handleSubmit(handleResetPassword)}
-              className="space-y-4"
-            >
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-lato text-gray-300">
-                      Nova senha
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="password_confirm"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-lato text-gray-300">
-                      Confirmar nova senha
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" className="w-full rounded-xl">
-                Redefinir senha
-              </Button>
-            </form>
-          </Form>
+          <ResetPasswordForm token={token!} />
         </div>
       </div>
     </>
