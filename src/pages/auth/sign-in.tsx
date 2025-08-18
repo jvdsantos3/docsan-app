@@ -11,12 +11,13 @@ import {
 import { Input } from '@/components/ui/input'
 import { useForm } from 'react-hook-form'
 import { Link } from 'react-router-dom'
-import { Google } from '@ridemountainpig/svgl-react'
 import { PasswordInput } from '@/components/ui/password-input'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuth } from '@/hooks/use-auth'
 import { SignUpSelectorDialog } from '@/components/dialogs/sign-up-selector-dialog'
+import { GoogleLogin } from '@react-oauth/google'
+import { toast } from 'sonner'
 
 const signInFormSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -28,7 +29,7 @@ type SignInFormSchema = z.infer<typeof signInFormSchema>
 export const SignIn = () => {
   const [open, setOpen] = useState(false)
 
-  const { login } = useAuth()
+  const { login, loginGoogle } = useAuth()
 
   const form = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
@@ -89,7 +90,10 @@ export const SignIn = () => {
               />
 
               <div className="text-right">
-                <Link to={'#'} className="text-blue-source font-lato text-xs ">
+                <Link
+                  to={'/forgot-password'}
+                  className="text-blue-source font-lato text-xs "
+                >
                   Esqueceu sua senha?
                 </Link>
               </div>
@@ -102,13 +106,33 @@ export const SignIn = () => {
 
           <div className="space-y-4">
             <p className="font-lato text-sm text-gray-600">Ou acesse usando</p>
-            <Button
-              className="w-full text-gray-700 font-bold"
-              variant="outline"
-            >
-              <Google />
-              Google
-            </Button>
+            <GoogleLogin
+              shape="circle"
+              logo_alignment="center"
+              text="signin"
+              onSuccess={async (credentialResponse) => {
+                if (credentialResponse.credential) {
+                  await loginGoogle(credentialResponse.credential)
+                } else {
+                  toast.error('Erro', {
+                    description:
+                      'Não foi possível realizar o login com o Google..',
+                    position: 'top-center',
+                    duration: 3000,
+                    richColors: true,
+                  })
+                }
+              }}
+              onError={() => {
+                toast.error('Erro', {
+                  description:
+                    'Não foi possível realizar o login com o Google.',
+                  position: 'top-center',
+                  duration: 3000,
+                  richColors: true,
+                })
+              }}
+            />
           </div>
         </div>
 

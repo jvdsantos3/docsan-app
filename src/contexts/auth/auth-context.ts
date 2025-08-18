@@ -6,6 +6,7 @@ import type { User } from '@/types/user'
 export type AuthContextData = {
   registerProfessional: (data: ProfessionalSignUpFormSchema) => Promise<void>
   login: (data: LoginInput) => Promise<void>
+  loginGoogle: (access_token: string) => Promise<void>
   logout: () => Promise<void>
   isAuthenticated: boolean
   token?: string | null

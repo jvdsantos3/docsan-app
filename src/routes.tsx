@@ -20,12 +20,16 @@ import { Chat } from './pages/chat'
 import { RegistryTypes } from './pages/admin/registry-types'
 import { ProtectedLayout } from './protected-layout'
 import { RoleProtectedLayout } from './role-protected-layout'
+import { ForgotPassword } from './pages/auth/forgot-password'
+import { ResetPassword } from './pages/auth/reset-password'
 
 export function Router() {
   return (
     <Routes>
       <Route element={<AuthLayout />}>
         <Route path="sign-in" element={<SignIn />} />
+        <Route path="forgot-password" element={<ForgotPassword />} />
+        <Route path="reset-password/:token" element={<ResetPassword />} />
 
         <Route path="sign-up">
           <Route path="professional" element={<ProfessionalSignUp />} />
