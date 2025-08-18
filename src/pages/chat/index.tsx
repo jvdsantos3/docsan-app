@@ -188,7 +188,7 @@ export const Chat = () => {
               <Button variant="outline">Fechar</Button>
             </DialogClose>
             <Button asChild>
-              <Link to="sign-in">Fazer Login</Link>
+              <Link to="/sign-in">Fazer Login</Link>
             </Button>
           </DialogFooter>
         </DialogContent>

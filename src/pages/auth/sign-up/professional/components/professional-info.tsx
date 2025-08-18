@@ -139,7 +139,7 @@ export const ProfessionalInfo = () => {
   function onSubmit(data: ProfessionalInfoSchema) {
     setData({
       ...data,
-      cnpj: data.cnpj ?? undefined,
+      cnpj: data.cnpj || undefined,
     })
     nextStep()
   }
