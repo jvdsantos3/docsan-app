@@ -75,6 +75,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
       })
       .catch((err) => {
+        if (err.response?.status === 400) {
+          toast.warning('Alerta!', {
+            position: 'top-center',
+            duration: 3000,
+            description: err.response.data.message,
+            richColors: true,
+          })
+          return
+        }
+
         if (err.response?.status === 401) {
           let message = ''
           let description = ''
