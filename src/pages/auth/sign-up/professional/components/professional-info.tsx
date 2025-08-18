@@ -35,19 +35,19 @@ const professionalInfoSchema = professionalSignUpFormSchema
   .pick({
     classification: true,
     cnpj: true,
-    cnae: true,
-    branchActivity: true,
-    professionalRegistry: true,
+    cnaeId: true,
+    branchActivityId: true,
+    registry: true,
     registryUf: true,
-    registryType: true,
+    registryTypeId: true,
   })
   .superRefine((data, ctx) => {
-    if (data.classification === 'cnpj') {
-      if (!data.cnae) {
+    if (data.classification === 'COMPANY') {
+      if (!data.cnaeId) {
         ctx.addIssue({
           code: z.ZodIssueCode.custom,
           message: 'CNAE é obrigatório.',
-          path: ['cnae'],
+          path: ['cnaeId'],
         })
       }
 
@@ -83,13 +83,13 @@ export const ProfessionalInfo = () => {
   const form = useForm<ProfessionalInfoSchema>({
     resolver: zodResolver(professionalInfoSchema),
     defaultValues: {
-      classification: data?.classification || 'cpf',
+      classification: data?.classification || 'PERSON',
       cnpj: format(data?.cnpj || '', cnpjInputOptions),
-      branchActivity: data?.branchActivity || '',
-      registryType: data?.registryType || '',
-      professionalRegistry: data?.professionalRegistry || '',
+      branchActivityId: data?.branchActivityId || '',
+      registryTypeId: data?.registryTypeId || '',
+      registry: data?.registry || '',
       registryUf: data?.registryUf || '',
-      cnae: data?.cnae || '',
+      cnaeId: data?.cnaeId || '',
     },
   })
   const [filterCnae, setFilterCnae] = useState('')
@@ -106,10 +106,10 @@ export const ProfessionalInfo = () => {
 
   const selectedBranchActivity = useMemo(() => {
     const item = responseBranchActivity?.branchesActivity.data.find(
-      (branchActivity) => branchActivity.id === data.branchActivity,
+      (branchActivity) => branchActivity.id === data.branchActivityId,
     )
     return item ? { label: item.name, value: item.id } : undefined
-  }, [data.branchActivity, responseBranchActivity])
+  }, [data.branchActivityId, responseBranchActivity])
 
   const { data: responseCnae, isLoading: isLoadingCnaes } = useCnaes({
     active: true,
@@ -117,9 +117,11 @@ export const ProfessionalInfo = () => {
   })
 
   const selectedCnae = useMemo(() => {
-    const item = responseCnae?.cnaes.data.find((cnae) => cnae.id === data.cnae)
+    const item = responseCnae?.cnaes.data.find(
+      (cnae) => cnae.id === data.cnaeId,
+    )
     return item ? { label: item.code, value: item.id } : undefined
-  }, [data.cnae, responseCnae])
+  }, [data.cnaeId, responseCnae])
 
   const { data: responseRegistryType, isLoading: isLoadingRegistryTypes } =
     useRegistryTypes({
@@ -129,13 +131,16 @@ export const ProfessionalInfo = () => {
 
   const selectedRegistryType = useMemo(() => {
     const item = responseRegistryType?.registryTypes.data.find(
-      (registryType) => registryType.id === data.registryType,
+      (registryType) => registryType.id === data.registryTypeId,
     )
     return item ? { label: item.name, value: item.id } : undefined
-  }, [data.registryType, responseRegistryType])
+  }, [data.registryTypeId, responseRegistryType])
 
   function onSubmit(data: ProfessionalInfoSchema) {
-    setData(data)
+    setData({
+      ...data,
+      cnpj: data.cnpj ?? undefined,
+    })
     nextStep()
   }
 
@@ -170,8 +175,8 @@ export const ProfessionalInfo = () => {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="cpf">Pessoa física</SelectItem>
-                        <SelectItem value="cnpj">Pessoa jurídica</SelectItem>
+                        <SelectItem value="PERSON">Pessoa física</SelectItem>
+                        <SelectItem value="COMPANY">Pessoa jurídica</SelectItem>
                       </SelectContent>
                     </Select>
                   </FormItem>
@@ -181,7 +186,7 @@ export const ProfessionalInfo = () => {
                 role="region"
                 className="grid transition-all ease-in-out data-[state=collapsed]:grid-rows-[0fr] data-[state=collapsed]:opacity-0 data-[state=expanded]:grid-rows-[1fr] data-[state=expanded]:opacity-100 data-[state=expanded]:mt-6"
                 data-state={
-                  classification === 'cnpj' ? 'expanded' : 'collapsed'
+                  classification === 'COMPANY' ? 'expanded' : 'collapsed'
                 }
               >
                 <div className="space-y-6 overflow-y-hidden">
@@ -195,7 +200,7 @@ export const ProfessionalInfo = () => {
                           <Input
                             {...field}
                             ref={cnpjInputRef}
-                            disabled={classification !== 'cnpj'}
+                            disabled={classification !== 'COMPANY'}
                           />
                         </FormControl>
                         <FormMessage />
@@ -204,7 +209,7 @@ export const ProfessionalInfo = () => {
                   />
                   <FormField
                     control={form.control}
-                    name="cnae"
+                    name="cnaeId"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="text-gray-300">CNAE</FormLabel>
@@ -238,7 +243,7 @@ export const ProfessionalInfo = () => {
             </div>
             <FormField
               control={form.control}
-              name="branchActivity"
+              name="branchActivityId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -273,7 +278,7 @@ export const ProfessionalInfo = () => {
             />
             <FormField
               control={form.control}
-              name="registryType"
+              name="registryTypeId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">
@@ -308,7 +313,7 @@ export const ProfessionalInfo = () => {
             />
             <FormField
               control={form.control}
-              name="professionalRegistry"
+              name="registry"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-lato text-gray-300">

@@ -38,7 +38,7 @@ export const professionalSignUpFormSchema = z.object({
     .string()
     .nonempty('O telefone é obrigatório.')
     .transform((phone) => phone.replace(/[^\d]+/g, '')),
-  classification: z.enum(['cpf', 'cnpj'], {
+  classification: z.enum(['PERSON', 'COMPANY'], {
     required_error: 'Classificação é obrigatória.',
   }),
   cnpj: z
@@ -46,10 +46,10 @@ export const professionalSignUpFormSchema = z.object({
     .trim()
     .transform((cnpj) => cnpj.replace(/[^\d]+/g, ''))
     .optional(),
-  cnae: z.string().trim().optional(),
-  branchActivity: z.string().min(1, 'Ramo de atuação é obrigatório.'),
-  registryType: z.string().min(1, 'Tipo de registro é obrigatório.'),
-  professionalRegistry: z
+  cnaeId: z.string().trim().optional(),
+  branchActivityId: z.string().min(1, 'Ramo de atuação é obrigatório.'),
+  registryTypeId: z.string().min(1, 'Tipo de registro é obrigatório.'),
+  registry: z
     .string()
     .min(1, 'Registro profissional é obrigatório.'),
   registryUf: z.string().min(1, 'UF do registro é obrigatório.'),
