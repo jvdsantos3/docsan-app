@@ -11,16 +11,20 @@ import {
 import { Checkbox } from '../ui/checkbox'
 import { Link } from 'react-router-dom'
 import { Label } from '../ui/label'
-import { useState } from 'react'
 
 type TermsDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
+  accepted: boolean
+  onAcceptedChange: (value: boolean) => void
 }
 
-export const TermsDialog = ({ open, onOpenChange }: TermsDialogProps) => {
-  const [accepted, setAccepted] = useState(false)
-
+export const TermsDialog = ({
+  open,
+  onOpenChange,
+  accepted,
+  onAcceptedChange,
+}: TermsDialogProps) => {
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent
@@ -88,7 +92,7 @@ export const TermsDialog = ({ open, onOpenChange }: TermsDialogProps) => {
               <div className="flex flex-row items-center gap-2">
                 <Checkbox
                   checked={accepted}
-                  onCheckedChange={(checked) => setAccepted(!!checked)}
+                  onCheckedChange={(checked) => onAcceptedChange(!!checked)}
                   className="data-[state=checked]:bg-blue-source data-[state=checked]:border-blue-source"
                 />
                 <Label className="font-lato text-body-sm text-gray-300">
@@ -109,6 +113,7 @@ export const TermsDialog = ({ open, onOpenChange }: TermsDialogProps) => {
           </AlertDialogCancel>
           <AlertDialogAction
             disabled={!accepted}
+            onClick={() => onOpenChange(false)}
             className={`font-lato font-bold w-32 h-10 rounded-2xl ${
               accepted
                 ? 'bg-blue-source text-white hover:bg-blue-600'

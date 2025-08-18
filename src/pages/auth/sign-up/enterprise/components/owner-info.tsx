@@ -189,7 +189,10 @@ export const ResponsibleInfo = () => {
                     <FormItem className="flex flex-row items-center gap-2">
                       <FormControl>
                         <Checkbox
-                          onCheckedChange={(checked) => field.onChange(checked)}
+                          checked={!!field.value}
+                          onCheckedChange={(checked) =>
+                            field.onChange(!!checked)
+                          }
                         />
                       </FormControl>
                       <FormLabel className="font-lato text-gray-300">
@@ -228,7 +231,14 @@ export const ResponsibleInfo = () => {
         </form>
       </Form>
 
-      <TermsDialog open={open} onOpenChange={setOpen} />
+      <TermsDialog
+        open={open}
+        onOpenChange={setOpen}
+        accepted={form.watch('terms')}
+        onAcceptedChange={(val) =>
+          form.setValue('terms', val)
+        }
+      />
     </>
   )
 }

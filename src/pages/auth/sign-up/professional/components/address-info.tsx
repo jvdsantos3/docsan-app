@@ -27,6 +27,8 @@ import {
 import { states } from '@/data/states'
 import { useAuth } from '@/hooks/use-auth'
 import { queryZipCode } from '@/lib/via-cep'
+import { TermsDialog } from '@/components/dialogs/terms-dialog'
+import { useState } from 'react'
 
 const addressInfoSchema = professionalSignUpFormSchema.pick({
   zipCode: true,
@@ -47,6 +49,7 @@ const cepInputOptions = {
 }
 
 export const AddressInfo = () => {
+  const [open, setOpen] = useState(false)
   const { registerProfessional } = useAuth()
   const {
     data: contextData,
@@ -110,96 +113,128 @@ export const AddressInfo = () => {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="space-y-8">
-          <Button
-            type="button"
-            variant="ghost"
-            className="text-blue-source"
-            onClick={previousStep}
-          >
-            <CornerUpLeft /> Voltar
-          </Button>
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="space-y-8">
+            <Button
+              type="button"
+              variant="ghost"
+              className="text-blue-source"
+              onClick={previousStep}
+            >
+              <CornerUpLeft /> Voltar
+            </Button>
 
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="zipCode"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-lato text-gray-300">
+                        Cep
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          onChange={(e) => {
+                            handleChangeZipCode(e.target.value)
+                            field.onChange(e.target.value)
+                          }}
+                          ref={cepInputRef}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="uf"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-lato text-gray-300">
+                        UF
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                        value={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="w-full">
+                            <SelectValue placeholder="Selecione o estado" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {states.map((state, i) => (
+                            <SelectItem key={i} value={state.acronym}>
+                              {state.acronym}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
-                name="zipCode"
+                name="city"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-lato text-gray-300">
-                      Cep
+                      Cidade
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        {...field}
-                        onChange={(e) => {
-                          handleChangeZipCode(e.target.value)
-                          field.onChange(e.target.value)
-                        }}
-                        ref={cepInputRef}
-                      />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="uf"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="font-lato text-gray-300">
-                      UF
-                    </FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                      value={field.value}
-                    >
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormField
+                  control={form.control}
+                  name="street"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-lato text-gray-300">
+                        Rua
+                      </FormLabel>
                       <FormControl>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Selecione o estado" />
-                        </SelectTrigger>
+                        <Input {...field} />
                       </FormControl>
-                      <SelectContent>
-                        {states.map((state, i) => (
-                          <SelectItem key={i} value={state.acronym}>
-                            {state.acronym}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormField
-              control={form.control}
-              name="city"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    Cidade
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="number"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-lato text-gray-300">
+                        Número
+                      </FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
               <FormField
                 control={form.control}
-                name="street"
+                name="neighborhood"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-lato text-gray-300">
-                      Rua
+                      Bairro
                     </FormLabel>
                     <FormControl>
                       <Input {...field} />
@@ -210,94 +245,75 @@ export const AddressInfo = () => {
               />
               <FormField
                 control={form.control}
-                name="number"
+                name="complement"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="font-lato text-gray-300">
-                      Número
+                      Complemento <em>(opcional)</em>
                     </FormLabel>
                     <FormControl>
-                      <Input type="number" {...field} />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
-            <FormField
-              control={form.control}
-              name="neighborhood"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    Bairro
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="complement"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="font-lato text-gray-300">
-                    Complemento <em>(opcional)</em>
-                  </FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="terms"
-              render={({ field }) => (
-                <FormItem>
-                  <FormItem className="flex flex-row items-center gap-2">
-                    <FormControl>
-                      <Checkbox
-                        onCheckedChange={(checked) => field.onChange(checked)}
-                      />
-                    </FormControl>
-                    <FormLabel className="font-lato text-gray-300">
-                      Li e concordo com os{' '}
-                      <Link
-                        to={'/terms'}
-                        className="text-blue-source font-bold"
-                      >
-                        Termos de Uso
-                      </Link>
-                    </FormLabel>
+              <FormField
+                control={form.control}
+                name="terms"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormItem className="flex flex-row items-center gap-2">
+                      <FormControl>
+                        <Checkbox
+                          checked={!!field.value}
+                          onCheckedChange={(checked) =>
+                            field.onChange(!!checked)
+                          }
+                        />
+                      </FormControl>
+                      <FormLabel className="font-lato text-gray-300">
+                        Li e concordo com os{' '}
+                        <Link
+                          to={'#'}
+                          onClick={() => setOpen(true)}
+                          className="text-blue-source font-bold"
+                        >
+                          Termos de Uso
+                        </Link>
+                      </FormLabel>
+                    </FormItem>
+                    <FormMessage />
                   </FormItem>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+                )}
+              />
+            </div>
 
-          <div className="flex gap-3 justify-between items-end">
-            <p className="font-lato text-sm text-gray-600 text-center">
-              Já possui uma conta?{' '}
-              <Link to={'/sign-in'} className="text-blue-source font-bold">
-                Faça login!
-              </Link>
-            </p>
-            <Button
-              type="submit"
-              className="font-bold text-base rounded-xl"
-              size="lg"
-            >
-              Continuar
-            </Button>
+            <div className="flex gap-3 justify-between items-end">
+              <p className="font-lato text-sm text-gray-600 text-center">
+                Já possui uma conta?{' '}
+                <Link to={'/sign-in'} className="text-blue-source font-bold">
+                  Faça login!
+                </Link>
+              </p>
+              <Button
+                type="submit"
+                className="font-bold text-base rounded-xl"
+                size="lg"
+              >
+                Continuar
+              </Button>
+            </div>
           </div>
-        </div>
-      </form>
-    </Form>
+        </form>
+      </Form>
+
+      <TermsDialog
+        open={open}
+        onOpenChange={setOpen}
+        accepted={form.watch('terms')}
+        onAcceptedChange={(val) => form.setValue('terms', val)}
+      />
+    </>
   )
 }
