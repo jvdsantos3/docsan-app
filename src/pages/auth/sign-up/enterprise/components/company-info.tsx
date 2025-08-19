@@ -135,7 +135,7 @@ export const CompanyInfo = () => {
                       items={
                         responseCnae?.cnaes.data.map((item) => ({
                           value: item.id,
-                          label: item.code,
+                          label: `${item.code} - ${item.description}`,
                         })) || []
                       }
                       onChange={field.onChange}
