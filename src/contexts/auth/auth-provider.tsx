@@ -7,7 +7,7 @@ import { getToken, removeTokens, storeTokens } from '@/utils/sessionMethods'
 import { jwtDecode } from 'jwt-decode'
 import { toast } from 'sonner'
 import type { Role, User } from '@/types/user'
-import { useProfile } from '@/http/use-profile'
+import type { GetProfileResponse } from '@/types/http/get-profile-response'
 
 export type AuthProviderProps = PropsWithChildren
 
@@ -26,12 +26,9 @@ export interface LoginInput {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const navigate = useNavigate()
-  const [authUser, setAuthUser] = useState<User | null>()
+  const [user, setUser] = useState<User | null>()
   const [token, setToken] = useState<string | null>(getToken())
   const [isAuthenticated, setIsAuthenticated] = useState(false)
-  const { data: profileData, isLoading: isLoadingProfile } = useProfile({
-    enabled: !!token,
-  })
 
   async function registerProfessional(data: ProfessionalSignUpFormSchema) {
     await api
@@ -50,79 +47,23 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   //   return payload.exp < currentTime
   // }
 
-  async function login(data: LoginInput) {
-    await api
-      .post('/sessions', data)
-      .then((res) => {
-        const accessToken = res.data.access_token
+  async function login({ email, password }: LoginInput) {
+    const response = await api.post<{ access_token: string }>('/sessions', {
+      email,
+      password,
+    })
+    const {
+      data: { access_token },
+    } = response
 
-        storeTokens(accessToken)
-        setToken(accessToken)
+    storeTokens(access_token)
+    setToken(access_token)
+    setIsAuthenticated(true)
 
-        const payload: Pick<AccessTokenPayload, 'sub' | 'role'> =
-          jwtDecode(accessToken)
-
-        setIsAuthenticated(true)
-
-        toast.dismiss()
-
-        if (payload.role === 'ADMIN') {
-          navigate('/admin/cnae')
-        } else if (payload.role === 'PROFESSIONAL') {
-          navigate('/services')
-        } else {
-          navigate('/documents')
-        }
-      })
-      .catch((err) => {
-        if (err.response?.status === 400) {
-          toast.warning('Alerta!', {
-            position: 'top-center',
-            duration: 3000,
-            description: err.response.data.message,
-            richColors: true,
-          })
-          return
-        }
-
-        if (err.response?.status === 401) {
-          let message = ''
-          let description = ''
-
-          switch (err.response.data.error) {
-            case 'Unauthorized':
-              message = 'E-mail ou senha inválidos.'
-              description = 'Verifique suas credenciais e tente novamente.'
-              break
-          }
-
-          toast.error(message, {
-            position: 'top-center',
-            duration: 3000,
-            description,
-            richColors: true,
-          })
-          return
-        }
-
-        if (err.response?.status >= 500) {
-          toast.error('Erro interno do servidor.', {
-            position: 'top-center',
-            duration: 3000,
-            description: 'Parece que houve um erro ao tentar fazer login.',
-            richColors: true,
-          })
-          return
-        }
-
-        toast.error('Erro desconhecido.', {
-          position: 'top-center',
-          duration: 3000,
-          description: 'Parece que estamos enfrentando um problema.',
-          richColors: true,
-        })
-        return
-      })
+    const {
+      data: { user },
+    } = await api.get<GetProfileResponse>('/profile')
+    setUser(user)
   }
 
   async function loginGoogle(access_token: string) {
@@ -196,31 +137,26 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
 
     removeTokens()
     setIsAuthenticated(false)
-    setAuthUser(null)
+    setUser(null)
     setToken(null)
-    navigate('/sign-in', { replace: true })
   }
 
   useEffect(() => {
-    if (!token) {
-      setAuthUser(null)
-      setIsAuthenticated(false)
+    const token = getToken()
+
+    const getProfile = async () => {
+      const { data } = await api.get<GetProfileResponse>('/profile')
+      setUser(data.user)
+      setIsAuthenticated(true)
     }
 
     if (token) {
-      if (profileData) {
-        setAuthUser({
-          ...profileData.user,
-        })
-        setIsAuthenticated(true)
-      }
-
-      if (!profileData && !isLoadingProfile) {
-        setAuthUser(null)
-        setIsAuthenticated(false)
-      }
+      getProfile()
+    } else {
+      setUser(null)
+      setIsAuthenticated(false)
     }
-  }, [isLoadingProfile, profileData, token])
+  }, [])
 
   return (
     <AuthContext.Provider
@@ -230,8 +166,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         loginGoogle,
         logout,
         isAuthenticated,
-        user: authUser,
-        token: token,
+        user,
+        token,
       }}
     >
       {children}

@@ -9,6 +9,7 @@ import {
 } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { useAuth } from '@/hooks/use-auth'
+import { useNavigate } from 'react-router-dom'
 
 interface SignOutDialogProps {
   open: boolean
@@ -16,7 +17,13 @@ interface SignOutDialogProps {
 }
 
 export const SignOutDialog = ({ open, onOpenChange }: SignOutDialogProps) => {
+  const navigate = useNavigate()
   const { logout } = useAuth()
+
+  const handleLogout = async () => {
+    await logout()
+    navigate('/sign-in', { replace: true })
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -29,7 +36,7 @@ export const SignOutDialog = ({ open, onOpenChange }: SignOutDialogProps) => {
           <DialogClose asChild>
             <Button variant="outline">Cancelar</Button>
           </DialogClose>
-          <Button onClick={logout}>Sair</Button>
+          <Button onClick={handleLogout}>Sair</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
