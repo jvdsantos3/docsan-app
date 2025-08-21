@@ -16,8 +16,9 @@ import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useAuth } from '@/hooks/use-auth'
 import { SignUpSelectorDialog } from '@/components/dialogs/sign-up-selector-dialog'
+import { AxiosError } from 'axios'
+import { toast } from 'sonner'
 // import { GoogleLogin } from '@react-oauth/google'
-// import { toast } from 'sonner'
 
 const signInFormSchema = z.object({
   email: z.string().email('E-mail inválido'),
@@ -27,9 +28,8 @@ const signInFormSchema = z.object({
 type SignInFormSchema = z.infer<typeof signInFormSchema>
 
 export const SignIn = () => {
-  const [open, setOpen] = useState(false)
-
   const { login } = useAuth()
+  const [open, setOpen] = useState(false)
 
   const form = useForm<SignInFormSchema>({
     resolver: zodResolver(signInFormSchema),
@@ -40,7 +40,53 @@ export const SignIn = () => {
   })
 
   async function signIn(data: SignInFormSchema) {
-    await login(data)
+    try {
+      await login(data)
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        if (error.response?.status === 400) {
+          if (error.response.data.message.includes('analyzed')) {
+            toast.warning('Perfil em análise.', {
+              position: 'top-center',
+              duration: 5000,
+              description:
+                'Seu perfil está sendo analizado pelos nossos administradores. Você receberá um retorno ao final da análise.',
+              richColors: true,
+            })
+            return
+          }
+        }
+
+        if (error.response?.status === 401) {
+          if (error.response.data.error === 'Unauthorized') {
+            toast.error('E-mail ou senha inválidos.', {
+              position: 'top-center',
+              duration: 3000,
+              description: 'Verifique suas credenciais e tente novamente.',
+              richColors: true,
+            })
+            return
+          }
+        }
+
+        if (error.response?.status && error.response.status >= 500) {
+          toast.error('Erro interno do servidor.', {
+            position: 'top-center',
+            duration: 3000,
+            description: 'Parece que houve um erro ao tentar fazer login.',
+            richColors: true,
+          })
+          return
+        }
+      }
+
+      toast.error('Erro desconhecido.', {
+        position: 'top-center',
+        duration: 3000,
+        description: 'Parece que estamos enfrentando um problema.',
+        richColors: true,
+      })
+    }
   }
 
   return (
