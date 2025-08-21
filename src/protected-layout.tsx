@@ -2,6 +2,7 @@ import { useAuth } from './hooks/use-auth'
 import { Navigate, Outlet } from 'react-router-dom'
 import type { Role } from './types/user'
 import { Loader2 } from 'lucide-react'
+import { getRedirectPathByRole } from './utils/auth'
 
 type ProtectedLayoutProps = {
   allowedRoles?: Role[]
@@ -28,7 +29,7 @@ export const ProtectedLayout = ({ allowedRoles }: ProtectedLayoutProps) => {
     allowedRoles.length > 0 &&
     !allowedRoles.includes(user.role)
   ) {
-    return <>Acesso negado</>
+    return <Navigate to={getRedirectPathByRole(user.role)} replace />
   }
 
   return <Outlet />
