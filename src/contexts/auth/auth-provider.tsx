@@ -27,7 +27,7 @@ export interface LoginInput {
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const navigate = useNavigate()
   const [user, setUser] = useState<User | null>()
-  const [token, setToken] = useState<string | null>(getToken())
+  const [token, setToken] = useState<string | null>(getToken)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   async function registerProfessional(data: ProfessionalSignUpFormSchema) {
@@ -41,11 +41,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       })
   }
 
-  // function isTokenExpired(token: string): boolean {
-  //   const payload: AccessTokenPayload = jwtDecode(token)
-  //   const currentTime = Math.floor(Date.now() / 1000)
-  //   return payload.exp < currentTime
-  // }
+  function isTokenExpired(token: string): boolean {
+    const payload: AccessTokenPayload = jwtDecode(token)
+    const currentTime = Math.floor(Date.now() / 1000)
+    return payload.exp < currentTime
+  }
 
   async function login({ email, password }: LoginInput) {
     const response = await api.post<{ access_token: string }>('/sessions', {
@@ -145,9 +145,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const token = getToken()
 
     const getProfile = async () => {
-      const { data } = await api.get<GetProfileResponse>('/profile')
-      setUser(data.user)
-      setIsAuthenticated(true)
+      try {
+        if (token && !isTokenExpired(token)) {
+          const { data } = await api.get<GetProfileResponse>('/profile')
+          setUser(data.user)
+          setIsAuthenticated(true)
+        } else {
+          removeTokens()
+          setUser(null)
+          setIsAuthenticated(false)
+          setToken(null)
+        }
+      } catch (error) {
+        console.error(error)
+        removeTokens()
+        setUser(null)
+        setIsAuthenticated(false)
+        setToken(null)
+      }
     }
 
     if (token) {

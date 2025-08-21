@@ -1,16 +1,35 @@
-import { useEffect } from 'react'
 import { useAuth } from './hooks/use-auth'
-import { Outlet, useNavigate } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
+import type { Role } from './types/user'
+import { Loader2 } from 'lucide-react'
 
-export const ProtectedLayout = () => {
-  const { user } = useAuth()
-  const navigate = useNavigate()
+type ProtectedLayoutProps = {
+  allowedRoles?: Role[]
+}
 
-  useEffect(() => {
-    if (user === null) {
-      navigate('/sign-in', { replace: true })
-    }
-  }, [navigate, user])
+export const ProtectedLayout = ({ allowedRoles }: ProtectedLayoutProps) => {
+  const { isAuthenticated, user } = useAuth()
+
+  if (user === undefined) {
+    return (
+      <div className="min-h-screen flex items-center justify-center gap-2">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-source" />
+        Carregando...
+      </div>
+    )
+  }
+
+  if (user === null || !isAuthenticated) {
+    return <Navigate to="/" replace />
+  }
+
+  if (
+    allowedRoles &&
+    allowedRoles.length > 0 &&
+    !allowedRoles.includes(user.role)
+  ) {
+    return <>Acesso negado</>
+  }
 
   return <Outlet />
 }

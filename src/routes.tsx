@@ -19,7 +19,6 @@ import { Professionals } from './pages/admin/professionals'
 import { Chat } from './pages/chat'
 import { RegistryTypes } from './pages/admin/registry-types'
 import { ProtectedLayout } from './protected-layout'
-import { RoleProtectedLayout } from './role-protected-layout'
 import { ForgotPassword } from './pages/auth/forgot-password'
 import { ResetPassword } from './pages/auth/reset-password'
 
@@ -48,7 +47,7 @@ export function Router() {
       </Route>
 
       <Route element={<ProtectedLayout />}>
-        <Route element={<RoleProtectedLayout allowedRoles={['ADMIN']} />}>
+        <Route element={<ProtectedLayout allowedRoles={['ADMIN']} />}>
           <Route path="admin" element={<AdminLayout />}>
             <Route path="branches-activity" element={<BranchesActivity />} />
             <Route path="cnae" element={<CNAEs />} />

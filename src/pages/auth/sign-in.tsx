@@ -18,6 +18,7 @@ import { useAuth } from '@/hooks/use-auth'
 import { SignUpSelectorDialog } from '@/components/dialogs/sign-up-selector-dialog'
 import { AxiosError } from 'axios'
 import { toast } from 'sonner'
+import { Loader2 } from 'lucide-react'
 // import { GoogleLogin } from '@react-oauth/google'
 
 const signInFormSchema = z.object({
@@ -144,7 +145,14 @@ export const SignIn = () => {
                 </Link>
               </div>
 
-              <Button type="submit" className="w-full rounded-xl">
+              <Button
+                type="submit"
+                className="w-full rounded-xl"
+                disabled={form.formState.isSubmitting}
+              >
+                {form.formState.isSubmitting && (
+                  <Loader2 className="animate-spin" />
+                )}
                 Entrar
               </Button>
             </form>
