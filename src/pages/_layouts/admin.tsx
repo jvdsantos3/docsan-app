@@ -1,4 +1,4 @@
-import { AppFooter } from '@/components/app-footer'
+import { AppFooter } from '@/components/layout/app-footer'
 import { AppHeaderAdmin } from '@/components/app-header-admin'
 import { AppSidebar } from '@/components/app-sidebar'
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar'

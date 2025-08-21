@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Logo } from './logo'
+import { Logo } from '../logo'
 import { SiFacebook, SiX, SiInstagram } from '@icons-pack/react-simple-icons'
 import { WhatsApp } from '@ridemountainpig/svgl-react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,7 +10,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from './ui/accordion'
+} from '../ui/accordion'
 
 const links = [
   {
