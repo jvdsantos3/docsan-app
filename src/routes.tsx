@@ -22,6 +22,7 @@ import { ProtectedLayout } from './protected-layout'
 import { ForgotPassword } from './pages/auth/forgot-password'
 import { ResetPassword } from './pages/auth/reset-password'
 import { Services as ServicesManage } from './pages/admin/services'
+import { Leads } from './pages/leads'
 
 export function Router() {
   return (
@@ -65,6 +66,10 @@ export function Router() {
           <Route path="documents">
             <Route index element={<Documents />} />
             <Route path="new" element={<NewDocument />} />
+          </Route>
+
+          <Route path="leads">
+            <Route index element={<Leads />} />
           </Route>
 
           <Route path="document-types">
