@@ -8,7 +8,6 @@ import { EnterpriseSignUp } from './pages/auth/sign-up/enterprise'
 import { Services } from './pages/services'
 import { ServiceDetails } from './pages/services/service-details'
 import { LandingPage } from './pages/landing-page'
-import { ServicesProvider } from './contexts/services/services-provider'
 import { Documents } from './pages/documents'
 import { NewDocument } from './pages/documents/new-document'
 import { DocumentTypes } from './pages/document-types'
@@ -22,6 +21,7 @@ import { ProtectedLayout } from './protected-layout'
 import { ForgotPassword } from './pages/auth/forgot-password'
 import { ResetPassword } from './pages/auth/reset-password'
 import { Services as ServicesManage } from './pages/admin/services'
+import { NewService } from './pages/admin/services/new-service'
 
 export function Router() {
   return (
@@ -41,7 +41,7 @@ export function Router() {
         <Route index element={<LandingPage />} />
         <Route path="chat" element={<Chat />} />
 
-        <Route path="services" element={<ServicesProvider />}>
+        <Route path="services">
           <Route index element={<Services />} />
           <Route path=":serviceId" element={<ServiceDetails />} />
         </Route>
@@ -57,6 +57,7 @@ export function Router() {
 
             <Route path="services">
               <Route index element={<ServicesManage />} />
+              <Route path="new" element={<NewService />} />
             </Route>
           </Route>
         </Route>

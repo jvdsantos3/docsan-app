@@ -29,6 +29,10 @@ const data = {
           title: 'Tipos de registro',
           url: '/admin/registry-types',
         },
+        {
+          title: 'Serviços',
+          url: '/admin/services',
+        },
       ],
     },
     {
