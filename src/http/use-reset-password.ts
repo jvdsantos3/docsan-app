@@ -17,11 +17,11 @@ export function useResetPassword(form: UseFormReturn<ResetPasswordFormSchema>) {
       toast.success('Senha alterada com sucesso.')
       navigate('/sign-in')
     },
-    onError: (error: any) => {
+    onError: (error: { response?: { data?: { errors?: { details?: { path: string[]; message: string }[] } } } }) => {
       if (error.response?.data?.errors?.details) {
         error.response.data.errors.details.forEach(
           (err: { path: string[]; message: string }) => {
-            form.setError(err.path[0] as any, {
+            form.setError(err.path[0] as keyof ResetPasswordFormSchema, {
               type: 'server',
               message: err.message,
             })

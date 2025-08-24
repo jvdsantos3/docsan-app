@@ -28,7 +28,7 @@ export const TermsDialog = ({
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent
-        className="bg-white w-full sm:max-w-md md:max-w-lg lg:max-w-5xl 
+        className="bg-white w-full sm:max-w-md md:max-w-lg lg:max-w-5xl
                    max-h-[90vh] flex flex-col pt-14 pb-10 px-14 gap-6"
       >
         <AlertDialogHeader className="flex flex-col gap-6">
@@ -49,7 +49,7 @@ export const TermsDialog = ({
                 What is Lorem Ipsum?
               </h1>
               <p className="font-lato font-medium">
-                Lorem Ipsum is simply dummy text of the printing and typesetting
+                Lorem Ipsum is simply dummy text of the printing and typesetting
                 industry. Lorem Ipsum has been the industry's standard dummy
                 text ever since the 1500s, when an unknown printer took a galley
                 of type and scrambled it to make a type specimen book. It has
