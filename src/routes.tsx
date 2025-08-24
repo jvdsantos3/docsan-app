@@ -21,6 +21,7 @@ import { RegistryTypes } from './pages/admin/registry-types'
 import { ProtectedLayout } from './protected-layout'
 import { ForgotPassword } from './pages/auth/forgot-password'
 import { ResetPassword } from './pages/auth/reset-password'
+import { Services as ServicesManage } from './pages/admin/services'
 
 export function Router() {
   return (
@@ -53,6 +54,10 @@ export function Router() {
             <Route path="cnae" element={<CNAEs />} />
             <Route path="registry-types" element={<RegistryTypes />} />
             <Route path="professionals" element={<Professionals />} />
+
+            <Route path="services">
+              <Route index element={<ServicesManage />} />
+            </Route>
           </Route>
         </Route>
 
