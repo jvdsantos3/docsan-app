@@ -27,12 +27,12 @@ export const AppHeaderAdmin = () => {
 
   return (
     <>
-      <header className="border-b w-auto bg-white flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
-        <div className="flex h-16 items-center justify-between gap-4 px-4 xl:px-0 container mx-auto">
+      <header className="border-b w-full bg-white flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
+        <div className="flex h-16 items-center justify-between gap-4 px-4 w-full max-w-none">
           <div>
             <Button
               variant="ghost"
-              className="sm:hidden"
+              className="md:hidden"
               onClick={toggleSidebar}
             >
               <SimpleLogo className="w-8" />

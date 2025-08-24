@@ -39,11 +39,11 @@ const links = [
 ]
 
 export const AppFooter = () => {
-  const isDesktop = useMediaQuery('(min-width: 768px)')
+  const isDesktop = useMediaQuery('(min-width: 1024px)')
 
   if (isDesktop) {
     return (
-      <footer className="bg-blue-source text-white font-lato">
+      <footer className="bg-blue-source text-white font-lato px-4">
         <div className="container mx-auto px-4 xl:px-0 py-20">
           <div className="grid grid-cols-3 gap-12">
             <div>
