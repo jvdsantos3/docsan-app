@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { CornerUpLeft } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { enterpriseSignUpSchema } from '../schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -19,8 +19,8 @@ import { useEnterpriseSignUpMultiStepForm } from '../use-enterprise-sign-up-mult
 import { format, useMask } from '@react-input/mask'
 import { PasswordInput } from '@/components/ui/password-input'
 import { z } from 'zod'
-import { api } from '@/lib/axios'
 import { useState } from 'react'
+import { useCreateCompany } from '@/http/use-create-company'
 import { TermsDialog } from '@/components/dialogs/terms-dialog'
 
 const ownerInfoSchema = enterpriseSignUpSchema.pick({
@@ -42,12 +42,12 @@ const phoneInputOptions = {
 
 export const ResponsibleInfo = () => {
   const [open, setOpen] = useState(false)
-  const navigate = useNavigate()
   const {
     data: contextData,
     previousStep,
     setData,
   } = useEnterpriseSignUpMultiStepForm()
+  const { mutate: createCompany, isPending } = useCreateCompany()
   const cpfInputRef = useMask(cpfInputOptions)
   const phoneInputRef = useMask(phoneInputOptions)
   const form = useForm<OwnerInfoSchema>({
@@ -64,7 +64,7 @@ export const ResponsibleInfo = () => {
     },
   })
 
-  async function onSubmit(data: OwnerInfoSchema) {
+  function onSubmit(data: OwnerInfoSchema) {
     setData(data)
 
     const { company, address } = contextData
@@ -88,8 +88,7 @@ export const ResponsibleInfo = () => {
       complement: address.complement,
     }
 
-    await api.post('/companies', payload)
-    navigate('/sign-in')
+    createCompany(payload)
   }
 
   return (
@@ -223,8 +222,9 @@ export const ResponsibleInfo = () => {
                 type="submit"
                 className="font-bold text-base rounded-xl"
                 size="lg"
+                disabled={isPending}
               >
-                Cadastrar
+                {isPending ? 'Cadastrando...' : 'Cadastrar'}
               </Button>
             </div>
           </div>

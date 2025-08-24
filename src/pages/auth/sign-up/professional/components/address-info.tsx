@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { states } from '@/data/states'
-import { useAuth } from '@/hooks/use-auth'
+import { useCreateProfessional } from '@/http/use-create-professional'
 import { queryZipCode } from '@/lib/via-cep'
 import { TermsDialog } from '@/components/dialogs/terms-dialog'
 import { useState } from 'react'
@@ -50,7 +50,7 @@ const cepInputOptions = {
 
 export const AddressInfo = () => {
   const [open, setOpen] = useState(false)
-  const { registerProfessional } = useAuth()
+  const { mutate: createProfessional, isPending } = useCreateProfessional()
   const {
     data: contextData,
     setData,
@@ -106,10 +106,15 @@ export const AddressInfo = () => {
     }
   }
 
-  async function onSubmit(data: AddressInfoSchema) {
+  function onSubmit(data: AddressInfoSchema) {
     setData(data)
 
-    await registerProfessional({ ...contextData, ...data })
+    const payload = {
+      ...contextData,
+      ...data,
+    }
+
+    createProfessional(payload)
   }
 
   return (
@@ -300,8 +305,9 @@ export const AddressInfo = () => {
                 type="submit"
                 className="font-bold text-base rounded-xl"
                 size="lg"
+                disabled={isPending}
               >
-                Continuar
+                {isPending ? 'Cadastrando...' : 'Cadastrar'}
               </Button>
             </div>
           </div>

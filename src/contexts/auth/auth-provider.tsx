@@ -1,6 +1,5 @@
 import { useEffect, useState, type PropsWithChildren } from 'react'
 import { AuthContext } from './auth-context'
-import type { ProfessionalSignUpFormSchema } from '@/pages/auth/sign-up/professional/schema'
 import { api } from '@/lib/axios'
 import { useNavigate } from 'react-router-dom'
 import { getToken, removeTokens, storeTokens } from '@/utils/sessionMethods'
@@ -30,16 +29,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(getToken)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  async function registerProfessional(data: ProfessionalSignUpFormSchema) {
-    await api
-      .post('/professionals', data)
-      .then(() => {
-        navigate('/sign-in')
-      })
-      .catch((err) => {
-        console.log(err)
-      })
-  }
 
   function isTokenExpired(token: string): boolean {
     const payload: AccessTokenPayload = jwtDecode(token)
@@ -176,7 +165,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        registerProfessional,
         login,
         loginGoogle,
         logout,
