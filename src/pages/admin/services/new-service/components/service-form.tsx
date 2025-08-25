@@ -20,8 +20,11 @@ import {
 } from './schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Service } from '@/types/service'
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { BannerUpload } from './banner-upload'
+import { useCreateService } from '@/http/use-create-service'
+import { toast } from 'sonner'
+import { useNavigate } from 'react-router-dom'
 
 type ServiceFormProps = {
   service?: Service
@@ -34,16 +37,21 @@ const defaultValues = {
 }
 
 export const ServiceForm = ({ service }: ServiceFormProps) => {
+  const navigate = useNavigate()
   const form = useForm<ServiceSchema>({
     resolver: zodResolver(serviceSchema),
     defaultValues,
   })
   const {
-    // value,
+    value,
     characterCount,
     handleChange,
     maxLength: limit,
-  } = useCharacterLimit({ maxLength: MAX_LENGTH })
+  } = useCharacterLimit({
+    maxLength: MAX_LENGTH,
+    initialValue: service?.summary ?? '',
+  })
+  const { mutateAsync: createServiceFn } = useCreateService()
 
   const {
     control,
@@ -52,8 +60,17 @@ export const ServiceForm = ({ service }: ServiceFormProps) => {
     setValue,
   } = form
 
+  const handleBannerChange = useCallback(
+    (file?: File) => {
+      setValue('file', file)
+    },
+    [setValue],
+  )
+
   const onSubmit = async (data: ServiceSchema) => {
-    console.log(data)
+    await createServiceFn(data)
+    toast.success('Serviço criado com sucesso!', { richColors: true })
+    navigate('/admin/services')
   }
 
   useEffect(() => {
@@ -94,6 +111,7 @@ export const ServiceForm = ({ service }: ServiceFormProps) => {
                 <FormControl>
                   <Textarea
                     {...field}
+                    value={value}
                     placeholder="Resuma o que o serviço soluciona"
                     maxLength={MAX_LENGTH}
                     onChange={(e) => {
@@ -127,9 +145,7 @@ export const ServiceForm = ({ service }: ServiceFormProps) => {
                 <FormControl>
                   <BannerUpload
                     maxSize={MAX_FILE_SIZE}
-                    onChange={(file) => {
-                      setValue('file', file)
-                    }}
+                    onChange={handleBannerChange}
                   />
                 </FormControl>
                 <FormMessage />
@@ -147,10 +163,6 @@ export const ServiceForm = ({ service }: ServiceFormProps) => {
                   <Textarea
                     {...field}
                     placeholder="Descreva o que o serviço faz"
-                    onChange={(e) => {
-                      handleChange(e)
-                      field.onChange(e)
-                    }}
                   />
                 </FormControl>
                 <FormMessage />
