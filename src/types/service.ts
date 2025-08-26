@@ -3,7 +3,7 @@ export type Service = {
   name: string
   summary: string
   description: string
-  imageUrl: string
+  imageUrl?: string
   isActive: boolean
   isHighlighted: boolean
   createdAt: Date
