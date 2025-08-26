@@ -46,7 +46,7 @@ export const professionalSignUpFormSchema = z.object({
     .trim()
     .transform((cnpj) => cnpj.replace(/[^\d]+/g, ''))
     .optional(),
-  cnaeId: z.string().trim().optional(),
+  // cnaeId: z.string().trim().optional(),
   branchActivityId: z.string().min(1, 'Ramo de atuação é obrigatório.'),
   registryTypeId: z.string().min(1, 'Tipo de registro é obrigatório.'),
   registry: z

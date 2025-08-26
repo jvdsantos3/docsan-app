@@ -26,7 +26,7 @@ import { states } from '@/data/states'
 import { useMemo, useState } from 'react'
 import { useBranchesActivity } from '@/http/use-branches-activity'
 import { ComboBox } from '@/components/ui/combobox'
-import { useCnaes } from '@/http/use-cnaes'
+// import { useCnaes } from '@/http/use-cnaes'
 import { useRegistryTypes } from '@/http/use-registry-types'
 import { format, useMask } from '@react-input/mask'
 import { isValidCNPJ } from '@/lib/utils'
@@ -35,7 +35,7 @@ const professionalInfoSchema = professionalSignUpFormSchema
   .pick({
     classification: true,
     cnpj: true,
-    cnaeId: true,
+    // cnaeId: true,
     branchActivityId: true,
     registry: true,
     registryUf: true,
@@ -43,13 +43,13 @@ const professionalInfoSchema = professionalSignUpFormSchema
   })
   .superRefine((data, ctx) => {
     if (data.classification === 'COMPANY') {
-      if (!data.cnaeId) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'CNAE é obrigatório.',
-          path: ['cnaeId'],
-        })
-      }
+      // if (!data.cnaeId) {
+      //   ctx.addIssue({
+      //     code: z.ZodIssueCode.custom,
+      //     message: 'CNAE é obrigatório.',
+      //     path: ['cnaeId'],
+      //   })
+      // }
 
       if (!data.cnpj) {
         ctx.addIssue({
@@ -89,10 +89,10 @@ export const ProfessionalInfo = () => {
       registryTypeId: data?.registryTypeId || '',
       registry: data?.registry || '',
       registryUf: data?.registryUf || '',
-      cnaeId: data?.cnaeId || '',
+      // cnaeId: data?.cnaeId || '',
     },
   })
-  const [filterCnae, setFilterCnae] = useState('')
+  // const [filterCnae, setFilterCnae] = useState('')
   const [filterBranchActivity, setFilterBranchActivity] = useState('')
   const [filterRegistryType, setFilterRegistryType] = useState('')
 
@@ -111,17 +111,17 @@ export const ProfessionalInfo = () => {
     return item ? { label: item.name, value: item.id } : undefined
   }, [data.branchActivityId, responseBranchActivity])
 
-  const { data: responseCnae, isLoading: isLoadingCnaes } = useCnaes({
-    active: true,
-    filter: filterCnae,
-  })
+  // const { data: responseCnae, isLoading: isLoadingCnaes } = useCnaes({
+  //   active: true,
+  //   filter: filterCnae,
+  // })
 
-  const selectedCnae = useMemo(() => {
-    const item = responseCnae?.cnaes.data.find(
-      (cnae) => cnae.id === data.cnaeId,
-    )
-    return item ? { label: item.code, value: item.id } : undefined
-  }, [data.cnaeId, responseCnae])
+  // const selectedCnae = useMemo(() => {
+  //   const item = responseCnae?.cnaes.data.find(
+  //     (cnae) => cnae.id === data.cnaeId,
+  //   )
+  //   return item ? { label: item.code, value: item.id } : undefined
+  // }, [data.cnaeId, responseCnae])
 
   const { data: responseRegistryType, isLoading: isLoadingRegistryTypes } =
     useRegistryTypes({
@@ -207,7 +207,7 @@ export const ProfessionalInfo = () => {
                       </FormItem>
                     )}
                   />
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="cnaeId"
                     render={({ field }) => (
@@ -237,7 +237,7 @@ export const ProfessionalInfo = () => {
                         <FormMessage />
                       </FormItem>
                     )}
-                  />
+                  /> */}
                 </div>
               </div>
             </div>
