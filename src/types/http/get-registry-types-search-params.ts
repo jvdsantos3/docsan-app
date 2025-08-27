@@ -6,6 +6,7 @@ export const schema = z.object({
   order: z.enum(['asc', 'desc']).optional(),
   active: z.boolean().optional(),
   filter: z.string().trim().optional(),
+  branchActivityId: z.string().optional(),
 })
 
 export type GetRegistryTypesSearchParams = z.infer<typeof schema>

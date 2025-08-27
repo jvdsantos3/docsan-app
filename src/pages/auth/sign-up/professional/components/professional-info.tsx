@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { states } from '@/data/states'
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useBranchesActivity } from '@/http/use-branches-activity'
 import { ComboBox } from '@/components/ui/combobox'
 // import { useCnaes } from '@/http/use-cnaes'
@@ -97,6 +97,7 @@ export const ProfessionalInfo = () => {
   const [filterRegistryType, setFilterRegistryType] = useState('')
 
   const classification = form.watch('classification')
+  const branchActivityId = form.watch('branchActivityId')
 
   const { data: responseBranchActivity, isLoading: isLoadingBranchesActivity } =
     useBranchesActivity({
@@ -124,10 +125,13 @@ export const ProfessionalInfo = () => {
   // }, [data.cnaeId, responseCnae])
 
   const { data: responseRegistryType, isLoading: isLoadingRegistryTypes } =
-    useRegistryTypes({
-      active: true,
-      filter: filterRegistryType,
-    })
+    useRegistryTypes(
+      {
+        active: true,
+        filter: filterRegistryType,
+        branchActivityId
+      }
+    )
 
   const selectedRegistryType = useMemo(() => {
     const item = responseRegistryType?.registryTypes.data.find(
@@ -135,6 +139,13 @@ export const ProfessionalInfo = () => {
     )
     return item ? { label: item.name, value: item.id } : undefined
   }, [data.registryTypeId, responseRegistryType])
+
+  useEffect(() => {
+    if (branchActivityId) {
+      form.resetField('registryTypeId')
+      setFilterRegistryType('')
+    }
+  }, [branchActivityId, form])
 
   function onSubmit(data: ProfessionalInfoSchema) {
     setData({
@@ -299,9 +310,10 @@ export const ProfessionalInfo = () => {
                       value={field.value}
                       selectedItem={selectedRegistryType}
                       isLoading={isLoadingRegistryTypes}
+                      disabled={!branchActivityId}
                       className="w-full"
                       contentClassName="w-[var(--radix-popover-trigger-width)]"
-                      placeholder="Todos os tipos de registro"
+                      placeholder={!branchActivityId ? "Selecione um ramo de atuação primeiro" : "Tipos de registro"}
                       emptyMessage="Nenhum tipo de registro encontrado."
                       delay={300}
                       shouldFilter={false}
