@@ -5,10 +5,13 @@ import { ServiceForm } from '../components/service-form'
 import { toast } from 'sonner'
 import { useUpdateService } from '@/http/use-update-service'
 import type { UpdateServiceRequest } from '@/types/http/update-service-request'
+import { useService } from '@/http/use-service'
+import { ServiceFormSkeleton } from '../components/service-form-skeleton'
 
 export const EditService = () => {
   const navigate = useNavigate()
   const { id } = useParams<{ id: string }>()
+  const { data: service, isLoading } = useService(id ?? '')
   const { mutateAsync: updateServiceFn } = useUpdateService()
 
   const handleUpdateService = async (data: UpdateServiceRequest) => {
@@ -39,7 +42,11 @@ export const EditService = () => {
       </div>
 
       <div className="bg-white p-8 rounded-2xl space-y-6">
-        <ServiceForm onSubmit={handleUpdateService} />
+        {isLoading ? (
+          <ServiceFormSkeleton />
+        ) : (
+          <ServiceForm service={service} onSubmit={handleUpdateService} />
+        )}
       </div>
     </div>
   )
