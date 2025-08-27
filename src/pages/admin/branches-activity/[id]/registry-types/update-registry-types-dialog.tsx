@@ -11,6 +11,7 @@ import { useSearchParams } from 'react-router-dom'
 import { toast } from 'sonner'
 import type { UpdateRegistryTypeRequest } from '@/types/http/update-registry-type-request'
 import { RegistryTypeForm } from '@/components/forms/registry-type-form'
+import { RegistryTypeFormSkeleton } from '@/pages/admin/branches-activity/[id]/registry-types/skeletons/registry-type-form-skeleton'
 
 type UpdateRegistryTypeDialog = {
   open: boolean
@@ -34,6 +35,7 @@ export const UpdateRegistryTypeDialog = ({
       id: registryTypeId,
       data: {
         name: data.name,
+        fullName: data.fullName,
       },
     })
     toast.success('Tipo de registro atualizado com sucesso!', {
@@ -45,7 +47,19 @@ export const UpdateRegistryTypeDialog = ({
   }
 
   if (isLoading) {
-    return <div>Carregando...</div>
+    return (
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="bg-white">
+          <DialogHeader>
+            <DialogTitle>Editar tipo de registro</DialogTitle>
+            <DialogDescription></DialogDescription>
+          </DialogHeader>
+          <div>
+            <RegistryTypeFormSkeleton />
+          </div>
+        </DialogContent>
+      </Dialog>
+    )
   }
 
   if (!registryType) {
@@ -53,10 +67,13 @@ export const UpdateRegistryTypeDialog = ({
   }
 
   if (updateError) {
-    toast.error('Erro ao atualizar tipo de registro profissional. Tente novamente.', {
-      dismissible: true,
-      duration: 5000,
-    })
+    toast.error(
+      'Erro ao atualizar tipo de registro profissional. Tente novamente.',
+      {
+        dismissible: true,
+        duration: 5000,
+      },
+    )
   }
 
   return (

@@ -1,11 +1,14 @@
 import type { ColumnDef } from '@tanstack/react-table'
 import { BranchesActivityRowActions } from './branches-activity-row-actions'
+import { BranchNameCell } from './branch-name-cell'
 import { OrderButton } from '@/components/tables/order-button'
 import { ArrowUpDown } from 'lucide-react'
 import type { GetBranchesActivityResponse } from '@/types/http/get-branches-activity-response'
 import { Badge } from '@/components/ui/badge'
 
-export const columns: ColumnDef<GetBranchesActivityResponse['branchesActivity']['data'][number]>[] =
+type BranchActivityData = GetBranchesActivityResponse['branchesActivity']['data'][number]
+
+export const columns: ColumnDef<BranchActivityData>[] =
   [
     {
       accessorKey: 'name',
@@ -15,13 +18,7 @@ export const columns: ColumnDef<GetBranchesActivityResponse['branchesActivity'][
           <ArrowUpDown />
         </OrderButton>
       ),
-      cell: ({ row }) => {
-        return (
-          <span className="font-bold text-gray-900">
-            {row.getValue('name')}
-          </span>
-        )
-      },
+      cell: ({ row }) => <BranchNameCell row={row} />,
     },
     {
       accessorKey: 'isActive',

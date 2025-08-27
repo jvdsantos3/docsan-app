@@ -6,29 +6,30 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { useCreateRegistryType } from '@/http/use-create-registry-type'
-import type { CreateRegistryTypeRequest } from '@/types/http/create-registry-type-request'
+import type { RegistryTypeFormSchema } from '../forms/registry-type-form/schema'
 import { toast } from 'sonner'
 import { RegistryTypeForm } from '../forms/registry-type-form'
 
 type CreateRegistryTypeDialogProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
+  branchActivityId: string
 }
 
 export const CreateRegistryTypeDialog = ({
   open,
   onOpenChange,
+  branchActivityId,
 }: CreateRegistryTypeDialogProps) => {
   const { mutateAsync: createRegistryType, error: createError } =
     useCreateRegistryType()
 
-  const handleCreateRegistryType = async (
-    data: CreateRegistryTypeRequest,
-  ) => {
-
+  const handleCreateRegistryType = async (data: RegistryTypeFormSchema) => {
     await createRegistryType({
       data: {
         name: data.name,
+        fullName: data.fullName,
+        branchActivityId,
       },
     })
     toast.success('Tipo de registro criado com sucesso!', {
@@ -54,14 +55,16 @@ export const CreateRegistryTypeDialog = ({
       >
         <DialogHeader>
           <DialogTitle>Adicionar novo tipo de registro</DialogTitle>
-          <DialogDescription>Crie um novo tipo de registro profissional.</DialogDescription>
+          <DialogDescription>
+            Crie um novo tipo de registro profissional.
+          </DialogDescription>
         </DialogHeader>
 
         <div>
           <RegistryTypeForm
             onCancel={() => onOpenChange(false)}
             onSubmit={handleCreateRegistryType}
-          /> 
+          />
         </div>
       </DialogContent>
     </Dialog>

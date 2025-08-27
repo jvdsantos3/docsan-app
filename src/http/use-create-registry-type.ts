@@ -4,7 +4,6 @@ import type { CreateRegistryTypeRequest } from '@/types/http/create-registry-typ
 
 export function useCreateRegistryType() {
   const queryClient = useQueryClient()
-
   return useMutation({
     mutationFn: async ({
       data,

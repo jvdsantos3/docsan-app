@@ -17,7 +17,7 @@ import { BranchesActivity } from './pages/admin/branches-activity'
 import { CNAEs } from './pages/admin/cnaes'
 import { Professionals } from './pages/admin/professionals'
 import { Chat } from './pages/chat'
-import { RegistryTypes } from './pages/admin/registry-types'
+import { RegistryTypesByBranch } from './pages/admin/branches-activity/[id]/registry-types'
 import { ProtectedLayout } from './protected-layout'
 import { ForgotPassword } from './pages/auth/forgot-password'
 import { ResetPassword } from './pages/auth/reset-password'
@@ -52,8 +52,8 @@ export function Router() {
         <Route element={<ProtectedLayout allowedRoles={['ADMIN']} />}>
           <Route path="admin" element={<AdminLayout />}>
             <Route path="branches-activity" element={<BranchesActivity />} />
+            <Route path="branches-activity/:id/registry-types" element={<RegistryTypesByBranch />} />
             <Route path="cnae" element={<CNAEs />} />
-            <Route path="registry-types" element={<RegistryTypes />} />
             <Route path="professionals" element={<Professionals />} />
 
             <Route path="services">

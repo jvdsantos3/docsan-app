@@ -32,6 +32,7 @@ export const RegistryTypeForm = ({
     resolver: zodResolver(registryTypeFormSchema),
     defaultValues: {
       name: '',
+      fullName: ''
     },
   })
 
@@ -49,6 +50,7 @@ export const RegistryTypeForm = ({
     if (registryType) {
       form.reset({
         name: registryType.name,
+        fullName: registryType.fullName,
       })
     }
   }, [registryType, form])
@@ -60,13 +62,29 @@ export const RegistryTypeForm = ({
           <div className="grid grid-cols-1 md:grid-cols-1 gap-4 items-start">
             <FormField
               control={form.control}
-              name="name"
+              name="fullName"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Nome do tipo de registro profissional</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="Dê um nome para um novo tipo de registro profissional"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Sigla</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Indique a sigla deste tipo de registro profissional"
                       {...field}
                     />
                   </FormControl>

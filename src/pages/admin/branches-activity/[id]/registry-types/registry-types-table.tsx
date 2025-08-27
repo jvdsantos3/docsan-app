@@ -3,8 +3,8 @@ import { useRegistryTypes } from '@/http/use-registry-types'
 import { useSearchParams } from 'react-router-dom'
 import { RegistryTypesPagination } from './registry-types-pagination'
 import { columns } from './columns'
-import { RegistryTypesTableSkeleton } from './registry-types-table-skeleton'
-import { RegistryTypesPaginationSkeleton } from './registry-types-pagination-skeleton'
+import { RegistryTypesTableSkeleton } from './skeletons/registry-types-table-skeleton'
+import { RegistryTypesPaginationSkeleton } from './skeletons/registry-types-pagination-skeleton'
 import { RegistryTypesFilters } from './registry-types-filters'
 import { UpdateRegistryTypeDialog } from './update-registry-types-dialog'
 
@@ -21,7 +21,7 @@ export const RegistryTypesTable = () => {
   })
   const modalType = searchParams.get('modal')
   const registryTypeId = searchParams.get('registryTypeId')
-  
+
   function handleCloseDialog() {
     setSearchParams((prev) => {
       prev.delete('modal')
@@ -48,7 +48,10 @@ export const RegistryTypesTable = () => {
       ) : (
         <>
           <div>
-            <DataTable columns={columns} data={response?.registryTypes.data || []} />
+            <DataTable
+              columns={columns}
+              data={response?.registryTypes.data || []}
+            />
             <RegistryTypesPagination
               currentPage={page}
               totalPages={response?.registryTypes.last || 1}

@@ -26,10 +26,6 @@ const data = {
           url: '/admin/branches-activity',
         },
         {
-          title: 'Tipos de registro',
-          url: '/admin/registry-types',
-        },
-        {
           title: 'Leads',
           url: '/admin/leads',
         },
