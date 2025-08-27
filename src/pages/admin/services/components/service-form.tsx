@@ -20,27 +20,22 @@ import {
 } from './schema'
 import { zodResolver } from '@hookform/resolvers/zod'
 import type { Service } from '@/types/service'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 import { BannerUpload } from './banner-upload'
-import { useCreateService } from '@/http/use-create-service'
-import { toast } from 'sonner'
-import { useNavigate } from 'react-router-dom'
 
 type ServiceFormProps = {
   service?: Service
+  onSubmit: (data: ServiceSchema) => void | Promise<void>
 }
 
-const defaultValues = {
-  name: '',
-  summary: '',
-  description: '',
-}
-
-export const ServiceForm = ({ service }: ServiceFormProps) => {
-  const navigate = useNavigate()
+export const ServiceForm = ({ service, onSubmit }: ServiceFormProps) => {
   const form = useForm<ServiceSchema>({
     resolver: zodResolver(serviceSchema),
-    defaultValues,
+    defaultValues: {
+      name: service?.name ?? '',
+      summary: service?.summary ?? '',
+      description: service?.description ?? '',
+    },
   })
   const {
     value,
@@ -51,7 +46,6 @@ export const ServiceForm = ({ service }: ServiceFormProps) => {
     maxLength: MAX_LENGTH,
     initialValue: service?.summary ?? '',
   })
-  const { mutateAsync: createServiceFn } = useCreateService()
 
   const {
     control,
@@ -66,20 +60,6 @@ export const ServiceForm = ({ service }: ServiceFormProps) => {
     },
     [setValue],
   )
-
-  const onSubmit = async (data: ServiceSchema) => {
-    await createServiceFn(data)
-    toast.success('Serviço criado com sucesso!', { richColors: true })
-    navigate('/admin/services')
-  }
-
-  useEffect(() => {
-    if (service) {
-      setValue('name', service.name)
-      setValue('summary', service.summary)
-      setValue('description', service.description)
-    }
-  }, [service, setValue])
 
   return (
     <Form {...form}>

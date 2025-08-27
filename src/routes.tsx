@@ -22,6 +22,7 @@ import { ForgotPassword } from './pages/auth/forgot-password'
 import { ResetPassword } from './pages/auth/reset-password'
 import { Services as ServicesManage } from './pages/admin/services'
 import { NewService } from './pages/admin/services/new-service'
+import { EditService } from './pages/admin/services/edit-service'
 
 export function Router() {
   return (
@@ -58,6 +59,7 @@ export function Router() {
             <Route path="services">
               <Route index element={<ServicesManage />} />
               <Route path="new" element={<NewService />} />
+              <Route path="edit/:id" element={<EditService />} />
             </Route>
           </Route>
         </Route>

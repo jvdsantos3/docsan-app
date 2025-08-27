@@ -1,18 +1,20 @@
 import { Button } from '@/components/ui/button'
 import { CornerUpLeft } from 'lucide-react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { ServiceForm } from '../components/service-form'
-import { useCreateService } from '@/http/use-create-service'
 import { toast } from 'sonner'
-import type { CreateServiceRequest } from '@/types/http/create-service-request'
+import { useUpdateService } from '@/http/use-update-service'
+import type { UpdateServiceRequest } from '@/types/http/update-service-request'
 
-export const NewService = () => {
+export const EditService = () => {
   const navigate = useNavigate()
-  const { mutateAsync: createServiceFn } = useCreateService()
+  const { id } = useParams<{ id: string }>()
+  const { mutateAsync: updateServiceFn } = useUpdateService()
 
-  const handleCreateService = async (data: CreateServiceRequest) => {
-    await createServiceFn(data)
-    toast.success('Serviço criado com sucesso!', { richColors: true })
+  const handleUpdateService = async (data: UpdateServiceRequest) => {
+    if (!id) return
+    await updateServiceFn({ id, data })
+    toast.success('Serviço atualizado com sucesso!', { richColors: true })
     navigate('/admin/services')
   }
 
@@ -29,16 +31,15 @@ export const NewService = () => {
 
       <div>
         <h1 className="font-lato font-bold text-3xl text-blue-1000">
-          Adicionar Serviço
+          Alterar Serviço
         </h1>
         <p className="font-lato font-normal text-base text-gray-800 mt-4">
-          Adicione um novo serviço à plataforma, definindo suas características
-          e funcionalidades.
+          Altere as informações do serviço selecionado.
         </p>
       </div>
 
       <div className="bg-white p-8 rounded-2xl space-y-6">
-        <ServiceForm onSubmit={handleCreateService} />
+        <ServiceForm onSubmit={handleUpdateService} />
       </div>
     </div>
   )

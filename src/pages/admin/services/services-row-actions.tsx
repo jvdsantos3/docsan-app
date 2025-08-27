@@ -19,6 +19,7 @@ import {
   StarOff,
   Trash2,
 } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 type ServicesRowActionsProps<TData> = {
   row: Row<TData>
@@ -28,6 +29,7 @@ export function ServicesRowActions<TData>({
   row,
 }: ServicesRowActionsProps<TData>) {
   const service = row.original as Service
+  const navigate = useNavigate()
   const { mutateAsync: toggleStatus } = useToggleStatusService()
   const { mutateAsync: toggleHighlight } = useToggleHighlightService()
 
@@ -37,6 +39,10 @@ export function ServicesRowActions<TData>({
 
   const handleToggleHighlight = async () => {
     await toggleHighlight(service.id)
+  }
+
+  const handleUpdateService = () => {
+    navigate(`/admin/services/edit/${service.id}`)
   }
 
   return (
@@ -49,7 +55,7 @@ export function ServicesRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={handleUpdateService}>
             <Pencil />
             Editar
           </DropdownMenuItem>
