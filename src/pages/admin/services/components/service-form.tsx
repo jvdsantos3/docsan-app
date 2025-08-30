@@ -22,6 +22,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import type { Service } from '@/types/service'
 import { useCallback } from 'react'
 import { BannerUpload } from './banner-upload'
+import { TiptapEditor } from '@/components/tiptap'
 
 type ServiceFormProps = {
   service?: Service
@@ -140,11 +141,16 @@ export const ServiceForm = ({ service, onSubmit }: ServiceFormProps) => {
               <FormItem>
                 <FormLabel>Descrição</FormLabel>
                 <FormControl>
-                  <Textarea
+                  <TiptapEditor
+                    content={service?.description}
+                    onContentChange={(value) => field.onChange(value)}
+                  />
+                  {/* <Textarea
                     {...field}
                     placeholder="Descreva o que o serviço faz"
-                  />
+                  /> */}
                 </FormControl>
+                {service?.description}
                 <FormMessage />
               </FormItem>
             )}
