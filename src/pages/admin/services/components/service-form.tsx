@@ -122,7 +122,9 @@ export const ServiceForm = ({ service, onSubmit }: ServiceFormProps) => {
             name="file"
             render={() => (
               <FormItem>
-                <FormLabel>Imagem (Banner de apresentação)</FormLabel>
+                <FormLabel htmlFor={undefined}>
+                  Imagem (Banner de apresentação)
+                </FormLabel>
                 <FormControl>
                   <BannerUpload
                     maxSize={MAX_FILE_SIZE}
@@ -139,21 +141,13 @@ export const ServiceForm = ({ service, onSubmit }: ServiceFormProps) => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Descrição</FormLabel>
+                <FormLabel htmlFor={undefined}>Descrição</FormLabel>
                 <FormControl>
                   <TiptapEditor
                     content={service?.description}
-                    onContentChange={(value) => {
-                      console.log(value)
-                      field.onChange(value)
-                    }}
+                    onContentChange={(value) => field.onChange(value)}
                   />
-                  {/* <Textarea
-                    {...field}
-                    placeholder="Descreva o que o serviço faz"
-                  /> */}
                 </FormControl>
-                {field.value}
                 <FormMessage />
               </FormItem>
             )}

@@ -24,9 +24,9 @@ const serviceBaners = [
 ]
 
 export const FeatureSection = () => {
-  const { data } = useServices({ highlight: true, limit: 6 })
+  const { data: services } = useServices({ highlight: true, limit: 6 })
 
-  if (!data) return null
+  if (!services) return null
 
   return (
     <section className="mb-18 flex flex-col gap-20">
@@ -44,7 +44,7 @@ export const FeatureSection = () => {
       <div className="flex flex-col gap-12">
         <Carousel>
           <CarouselContent>
-            {data.services.data.map((service) => {
+            {services?.data.map((service) => {
               const serviceBannerIndex = Math.floor(
                 serviceBaners.length * Math.random(),
               )

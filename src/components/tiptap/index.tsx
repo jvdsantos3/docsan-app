@@ -5,6 +5,8 @@ import TextAlign from '@tiptap/extension-text-align'
 import { TextStyleKit } from '@tiptap/extension-text-style'
 import { useMemo } from 'react'
 import { TiptapEditorHeader } from './tiptap-editor-header'
+import TurndownService from 'turndown'
+import { marked } from 'marked'
 
 type TiptapEditorProps = {
   content?: string
@@ -21,10 +23,12 @@ export const TiptapEditor = ({
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       TextStyleKit,
     ],
-    content,
+    content: marked.parse(content?.replace(/\\n/g, '\n') ?? ''),
     onUpdate: ({ editor }) => {
-      // const markdown = editor.storage.markdown.getMarkdown()
-      // onContentChange?.(markdown)
+      const turndown = new TurndownService({ headingStyle: 'atx' })
+      const html = editor.getHTML()
+      const md = turndown.turndown(html)
+      onContentChange?.(md)
     },
   })
 

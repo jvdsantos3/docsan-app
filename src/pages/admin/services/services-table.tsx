@@ -11,7 +11,7 @@ export const ServicesTable = () => {
   const [page] = useQueryState('page', parseAsInteger.withDefault(1))
   const [filter] = useQueryState('filter', { defaultValue: '' })
   const [status] = useQueryState('status', { defaultValue: '' })
-  const { data, isLoading } = useServices({
+  const { data: services, isLoading } = useServices({
     page,
     filter,
     status:
@@ -33,7 +33,7 @@ export const ServicesTable = () => {
         </div>
       ) : (
         <div>
-          <DataTable columns={columns} data={data?.services.data || []} />
+          <DataTable columns={columns} data={services?.data || []} />
           <AppPagination currentPage={1} totalPages={1} />
         </div>
       )}

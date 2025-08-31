@@ -13,6 +13,7 @@ import type { Row } from '@tanstack/react-table'
 import {
   CircleCheckBig,
   CircleOff,
+  Eye,
   MoreHorizontal,
   Pencil,
   Star,
@@ -32,6 +33,10 @@ export function ServicesRowActions<TData>({
   const navigate = useNavigate()
   const { mutateAsync: toggleStatus } = useToggleStatusService()
   const { mutateAsync: toggleHighlight } = useToggleHighlightService()
+
+  const handleViewDetails = () => {
+    navigate(`/services/${service.id}`)
+  }
 
   const handleToggleStatus = async () => {
     await toggleStatus(service.id)
@@ -55,6 +60,10 @@ export function ServicesRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
+          <DropdownMenuItem onClick={handleViewDetails}>
+            <Eye className="text-blue-source" />
+            Ver detalhes
+          </DropdownMenuItem>
           <DropdownMenuItem onClick={handleUpdateService}>
             <Pencil />
             Editar

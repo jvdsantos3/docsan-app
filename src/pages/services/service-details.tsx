@@ -32,7 +32,7 @@ export const ServiceDetails = () => {
             </h1>
             <p>{service?.summary}</p>
             <div className="mt-12">
-              <Markdown>{service?.description}</Markdown>
+              <Markdown>{service?.description.replace(/\\n/g, '\n')}</Markdown>
             </div>
           </div>
 

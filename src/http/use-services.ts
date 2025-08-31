@@ -12,7 +12,7 @@ export const useServices = (params: GetServicesSearchParams = {}) => {
       const response = await api.get<GetServicesResponse>(
         `/services?${searchParams}`,
       )
-      return response.data
+      return response.data.services
     },
     placeholderData: keepPreviousData,
   })
