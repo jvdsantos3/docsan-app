@@ -2,8 +2,13 @@ import type { Professional } from '../professional'
 import type { Service } from '../service'
 
 export type GetServiceResponse = {
-  service: Omit<Service, 'imageUrl'> & {
+  service: Service & {
     professionals: Professional[]
-    imageBase64?: string | null
+    image?: {
+      name: string
+      type: string
+      size: number
+      base64: string
+    }
   }
 }

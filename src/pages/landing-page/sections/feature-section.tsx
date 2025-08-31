@@ -1,16 +1,33 @@
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { services } from "@/data/mockups/services";
-import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
+} from '@/components/ui/card'
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from '@/components/ui/carousel'
+import { useServices } from '@/http/use-services'
+import { cn } from '@/lib/utils'
+import { Link } from 'react-router-dom'
+
+const serviceBaners = [
+  '/service-banner-1.svg',
+  '/service-banner-2.svg',
+  '/service-banner-3.svg',
+]
 
 export const FeatureSection = () => {
+  const { data } = useServices({ highlight: true, limit: 6 })
+
+  if (!data) return null
+
   return (
     <section className="mb-18 flex flex-col gap-20">
       <div className="max-w-[39rem] flex flex-col gap-6 self-center text-center">
@@ -25,36 +42,55 @@ export const FeatureSection = () => {
       </div>
 
       <div className="flex flex-col gap-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {services.slice(0, 3).map((service) => (
-            <Card key={service.id}>
-              <img
-                src={service.imageUrl}
-                alt={service.title}
-                className="w-full h-56 object-cover rounded-t-md"
-              />
-              <CardHeader>
-                <CardTitle className="line-clamp-1">{service.title}</CardTitle>
-                <CardDescription className="line-clamp-3 h-16">
-                  {service.description}
-                </CardDescription>
-              </CardHeader>
-              <CardFooter>
-                <div className="w-full grid grid-cols-1 xl:grid-cols-2 gap-3">
-                  <Button variant="outline" className="font-bold text-blue-source" asChild>
-                    <Link to={`services/${service.id}`}>Ver detalhes</Link>
-                  </Button>
-                  <Button className="font-bold">Quero contratar</Button>
-                </div>
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
+        <Carousel>
+          <CarouselContent>
+            {data.services.data.map((service) => {
+              const serviceBannerIndex = Math.floor(
+                serviceBaners.length * Math.random(),
+              )
+              const serviceBanner = serviceBaners[serviceBannerIndex]
+              const imageSrc = service.image?.base64
+                ? `data:image/${service.image.type};base64,${service.image.base64}`
+                : serviceBanner
 
-        <Button className={cn("self-center")} asChild>
+              return (
+                <CarouselItem key={service.id} className="basis-1/3">
+                  <Card key={service.id}>
+                    <img
+                      src={imageSrc}
+                      alt={service.name}
+                      className="w-full h-56 object-cover"
+                    />
+                    <CardHeader>
+                      <CardTitle className="line-clamp-1">
+                        {service.name}
+                      </CardTitle>
+                      <CardDescription className="line-clamp-3 h-16">
+                        {service.summary}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardFooter>
+                      <Button
+                        variant="outline"
+                        className="w-full font-bold text-blue-source border-blue-source"
+                        asChild
+                      >
+                        <Link to={`services/${service.id}`}>Ver detalhes</Link>
+                      </Button>
+                    </CardFooter>
+                  </Card>
+                </CarouselItem>
+              )
+            })}
+          </CarouselContent>
+          <CarouselPrevious />
+          <CarouselNext />
+        </Carousel>
+
+        <Button className={cn('self-center')} asChild>
           <Link to="/services">Ver todos os serviços</Link>
         </Button>
       </div>
     </section>
-  );
-};
+  )
+}
