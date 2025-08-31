@@ -143,14 +143,17 @@ export const ServiceForm = ({ service, onSubmit }: ServiceFormProps) => {
                 <FormControl>
                   <TiptapEditor
                     content={service?.description}
-                    onContentChange={(value) => field.onChange(value)}
+                    onContentChange={(value) => {
+                      console.log(value)
+                      field.onChange(value)
+                    }}
                   />
                   {/* <Textarea
                     {...field}
                     placeholder="Descreva o que o serviço faz"
                   /> */}
                 </FormControl>
-                {service?.description}
+                {field.value}
                 <FormMessage />
               </FormItem>
             )}

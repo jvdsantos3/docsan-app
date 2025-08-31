@@ -1,11 +1,10 @@
-import { useEditor, EditorContent, EditorContext, Editor } from '@tiptap/react'
+import { useEditor, EditorContent, EditorContext } from '@tiptap/react'
 // import { FloatingMenu, BubbleMenu } from '@tiptap/react/menus'
 import StarterKit from '@tiptap/starter-kit'
 import TextAlign from '@tiptap/extension-text-align'
 import { TextStyleKit } from '@tiptap/extension-text-style'
 import { useMemo } from 'react'
 import { TiptapEditorHeader } from './tiptap-editor-header'
-import { Markdown } from 'tiptap-markdown'
 
 type TiptapEditorProps = {
   content?: string
@@ -19,17 +18,15 @@ export const TiptapEditor = ({
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Markdown,
       TextAlign.configure({ types: ['heading', 'paragraph'] }),
       TextStyleKit,
     ],
     content,
     onUpdate: ({ editor }) => {
-      const markdown = editor.storage.markdown.getMarkdown()
-      onContentChange?.(markdown)
+      // const markdown = editor.storage.markdown.getMarkdown()
+      // onContentChange?.(markdown)
     },
   })
-
 
   const providerValue = useMemo(() => ({ editor }), [editor])
 

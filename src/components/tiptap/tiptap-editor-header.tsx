@@ -8,8 +8,11 @@ import {
   Bold,
   ChevronDown,
   Italic,
+  List,
+  ListOrdered,
   Redo2,
   Strikethrough,
+  TextQuote,
   Underline,
   Undo2,
 } from 'lucide-react'
@@ -19,12 +22,15 @@ import { cn } from '@/lib/utils'
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu'
+import { useState } from 'react'
 
 export const TiptapEditorHeader = ({ editor }: { editor: Editor }) => {
+  const [openLists, setOpenLists] = useState(false)
   const editorState = useEditorState({
     editor,
     selector: (ctx) => {
@@ -150,6 +156,63 @@ export const TiptapEditorHeader = ({ editor }: { editor: Editor }) => {
             </DropdownMenuRadioGroup>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* Lists */}
+        <DropdownMenu open={openLists} onOpenChange={setOpenLists}>
+          <DropdownMenuTrigger asChild>
+            <Button
+              type="button"
+              size="icon"
+              variant="ghost"
+              aria-expanded={openLists}
+              className={cn(
+                (editorState.isBulletList || editorState.isOrderedList) &&
+                  'bg-blue-100/50 hover:bg-blue-50',
+              )}
+            >
+              {editorState.isBulletList ? (
+                <List className="size-4" />
+              ) : editorState.isOrderedList ? (
+                <ListOrdered className="size-4" />
+              ) : (
+                <List className="size-4" />
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="start">
+            <DropdownMenuItem
+              className={cn(
+                editorState.isBulletList && 'bg-blue-100/50 hover:bg-blue-50!',
+              )}
+              onSelect={() => editor.chain().focus().toggleBulletList().run()}
+            >
+              <List className="size-4" />
+              <span>Lista com marcadores</span>
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              className={cn(
+                editorState.isOrderedList && 'bg-blue-100/50 hover:bg-blue-50!',
+              )}
+              onSelect={() => editor.chain().focus().toggleOrderedList().run()}
+            >
+              <ListOrdered className="size-4" />
+              <span>Lista ordenada</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <Button
+          type="button"
+          size="icon"
+          variant="ghost"
+          aria-label="Block quote"
+          className={cn(
+            editorState.isBlockquote && 'bg-blue-100/50 hover:bg-blue-50',
+          )}
+          onClick={() => editor.chain().focus().toggleBlockquote().run()}
+        >
+          <TextQuote className="size-4" />
+        </Button>
       </div>
 
       <Separator orientation="vertical" className="h-4/5!" />
