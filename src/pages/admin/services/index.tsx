@@ -1,6 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
 import { ServicesTable } from './services-table'
+import { Link } from 'react-router-dom'
 
 export const Services = () => {
   return (
@@ -15,9 +16,11 @@ export const Services = () => {
           </p>
         </div>
 
-        <Button className="font-bold w-full md:w-auto" onClick={() => {}}>
-          <Plus />
-          Adicionar Serviço
+        <Button className="font-bold w-full md:w-auto" asChild>
+          <Link to="new">
+            <Plus />
+            Adicionar Serviço
+          </Link>
         </Button>
       </div>
 

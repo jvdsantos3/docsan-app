@@ -6,15 +6,21 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
+import { useToggleHighlightService } from '@/http/use-toggle-highlight-service'
+import { useToggleStatusService } from '@/http/use-toggle-status-service'
+import type { Service } from '@/types/service'
 import type { Row } from '@tanstack/react-table'
-import { MoreHorizontal, Trash2 } from 'lucide-react'
-
-type Service = {
-  id: string
-  imageUrl: string
-  title: string
-  description: string
-}
+import {
+  CircleCheckBig,
+  CircleOff,
+  Eye,
+  MoreHorizontal,
+  Pencil,
+  Star,
+  StarOff,
+  Trash2,
+} from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 type ServicesRowActionsProps<TData> = {
   row: Row<TData>
@@ -24,6 +30,25 @@ export function ServicesRowActions<TData>({
   row,
 }: ServicesRowActionsProps<TData>) {
   const service = row.original as Service
+  const navigate = useNavigate()
+  const { mutateAsync: toggleStatus } = useToggleStatusService()
+  const { mutateAsync: toggleHighlight } = useToggleHighlightService()
+
+  const handleViewDetails = () => {
+    navigate(`/services/${service.id}`)
+  }
+
+  const handleToggleStatus = async () => {
+    await toggleStatus(service.id)
+  }
+
+  const handleToggleHighlight = async () => {
+    await toggleHighlight(service.id)
+  }
+
+  const handleUpdateService = () => {
+    navigate(`/admin/services/edit/${service.id}`)
+  }
 
   return (
     <div>
@@ -35,7 +60,40 @@ export function ServicesRowActions<TData>({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
-          <DropdownMenuItem>Editar</DropdownMenuItem>
+          <DropdownMenuItem onClick={handleViewDetails}>
+            <Eye className="text-blue-source" />
+            Ver detalhes
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleUpdateService}>
+            <Pencil />
+            Editar
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleToggleHighlight}>
+            {service.isHighlighted ? (
+              <>
+                <StarOff />
+                Remover dos destaques
+              </>
+            ) : (
+              <>
+                <Star className="text-yellow-500" />
+                Destacar
+              </>
+            )}
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleToggleStatus}>
+            {service.isActive ? (
+              <>
+                <CircleOff className="text-gray-700" />
+                Inativar
+              </>
+            ) : (
+              <>
+                <CircleCheckBig className="text-green-600" />
+                Ativar
+              </>
+            )}
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem>
             <Trash2 className="text-[#d82020]" />

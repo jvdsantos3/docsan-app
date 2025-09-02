@@ -29,7 +29,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [token, setToken] = useState<string | null>(getToken)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-
   function isTokenExpired(token: string): boolean {
     const payload: AccessTokenPayload = jwtDecode(token)
     const currentTime = Math.floor(Date.now() / 1000)

@@ -29,6 +29,10 @@ const data = {
           title: 'Leads',
           url: '/admin/leads',
         },
+        {
+          title: 'Serviços',
+          url: '/admin/services',
+        },
       ],
     },
     {

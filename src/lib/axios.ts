@@ -24,10 +24,13 @@ let failedRequestsQueue: Array<{
 const headers = {
   Accept: 'application/json',
   'Content-Type': 'application/json',
+  // 'Access-Control-Allow-Origin': '*'
 }
 
 export const api = axios.create({
   baseURL: baseUrl,
+  // withCredentials: true,
+  // headers
 })
 
 api.interceptors.request.use(
